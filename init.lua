@@ -1,20 +1,23 @@
-SCRIPTS_PATH = '../../../../scripts/?.lua'
-package.path=table.concat({SCRIPTS_PATH, package.path}, ';')
+local chord = require 'musictheory/chord'
+local figure = require 'musictheory/figure'
+local meter = require 'musictheory/meter'
+local mode = require 'musictheory/mode'
+local note = require 'musictheory/note'
+local pitch = require 'musictheory/pitch'
+local quality = require 'musictheory/quality'
+local scale = require 'musictheory/scale'
+local song = require 'musictheory/song'
+local util = require 'musictheory/util'
 
---------------------------------------------------------------------------------
-
-require 'instruments' -- Done
-require 'note' -- Done
-require 'pitch' -- Done
-
--- In progress:
-require 'util'
-require 'mode'
-
--- require 'meter' -- require
--- require 'figure' -- require
--- require 'quality' -- require
-
--- require 'chord' -- require  quality figure
--- require 'scale' -- require chord
--- require 'song' -- require chord figure meter
+return {
+  chord=chord,
+  figure=figure,
+  meter=meter,
+  mode=mode,
+  note=note,
+  pitch=pitch,
+  quality=quality,
+  scale=scale,
+  song=song,
+  util=util,
+}

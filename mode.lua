@@ -1,13 +1,13 @@
-require 'util'
-require 'pitch'
-require 'class'
+require 'llx'
+require 'musictheory/util'
+require 'musictheory/pitch'
 
-class 'Mode' {
+Mode = class 'Mode' {
   __init = function(self, semitoneIntervals, name)
     self.semitoneIntervals = semitoneIntervals
     self.semitoneIndices = intervalsToIndices(semitoneIntervals)
 
-    self.pitchIntervals = Spiral(list.generate{
+    self.pitchIntervals = Spiral(List.generate{
       lambda=function(number, semitoneInterval)
         return PitchInterval{number=number,
                              semitoneInterval=semitoneInterval}
@@ -60,22 +60,21 @@ class 'Mode' {
 }
 
 local function generateModes(modes, intervals, globalNames)
-  if globalNames then
-    assert(#globalNames == #intervals)
-  end
-  local x = range(10)
-  print(type(x))
-  for i in range(#intervals) do
-    name = globalNames[i]
-    newIntervals = rotate(intervals, i)
-    mode = Mode(newIntervals, name)
-    modes[newIntervals] = mode
-    setattr(Mode, name, mode)
-  end
+  -- if globalNames then
+  --   assert(#globalNames == #intervals)
+  -- end
+  -- local x = range(10)
+  -- for i in range(#intervals) do
+  --   name = globalNames[i]
+  --   newIntervals = rotate(intervals, i)
+  --   mode = Mode(newIntervals, name)
+  --   modes[newIntervals] = mode
+  --   setattr(Mode, name, mode)
+  -- end
 end
 
 
-diatonicIntervals = list{PitchInterval.whole,
+diatonicIntervals = List{PitchInterval.whole,
                          PitchInterval.whole,
                          PitchInterval.half,
                          PitchInterval.whole,
@@ -83,7 +82,7 @@ diatonicIntervals = list{PitchInterval.whole,
                          PitchInterval.whole,
                          PitchInterval.half}
 
-diatonicModesNames = list{
+diatonicModesNames = List{
   "ionian",
   "dorian",
   "phrygian",
@@ -98,14 +97,14 @@ generateModes(diatonicModes, diatonicIntervals, diatonicModesNames)
 Mode.major = Mode.ionian
 Mode.minor = Mode.aeolian
 
-wholeTone = list{PitchInterval.whole,
+wholeTone = List{PitchInterval.whole,
                  PitchInterval.whole,
                  PitchInterval.whole,
                  PitchInterval.whole,
                  PitchInterval.whole,
                  PitchInterval.whole}
 
-chromatic = list{PitchInterval.half,
+chromatic = List{PitchInterval.half,
                  PitchInterval.half,
                  PitchInterval.half,
                  PitchInterval.half,
@@ -116,35 +115,3 @@ chromatic = list{PitchInterval.half,
                  PitchInterval.half,
                  PitchInterval.half,
                  PitchInterval.half}
-
-
-if false then
-  require 'unit'
-
-  TestCase 'ModeTest' {
-    test_init = function(self)
-      self.assertTrue(False)
-    end,
-
-    test_relative = function(self)
-      self.assertTrue(False)
-    end,
-
-    test_rotate = function(self)
-      self.assertTrue(False)
-    end,
-
-    test_getitem = function(self)
-      self.assertTrue(False)
-    end,
-
-    test_len = function(self)
-      self.assertTrue(False)
-    end,
-
-    test_repr = function(self)
-      self.assertTrue(False)
-    end,
-  }
-end
-

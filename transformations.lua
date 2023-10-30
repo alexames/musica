@@ -85,11 +85,3 @@ def makeConsecutive(durationSequence):
     time += duration
     return newNote
   return function
-
-
-if __name == "__main":
-  import unittest
-  class TransformationsTest(unittest.TestCase):
-    pass
-
-  unittest.main()

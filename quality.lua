@@ -1,86 +1,48 @@
-require 'util'
-require 'pitch'
+require 'llx'
+require 'musictheory/util'
+require 'musictheory/pitch'
 
-class Quality:
-  def __init(self,
-               *,
-               pitchIntervals=nil,
-
-               pitches=nil,
-
-               name=nil):
+Quality = class 'Quality' {
+  __init = function(self, pitchIntervals, pitches, name)
     self.name = name
-    if pitchIntervals and pitchIntervals[0] ~= PitchInterval.unison:
-      pitchIntervals = [interval - pitchIntervals[0]
-                        for interval in pitchIntervals]
-    elseif pitches:
+    if pitchIntervals and pitchIntervals[0] ~= PitchInterval.unison then
+      -- pitchIntervals = [interval - pitchIntervals[0]
+      --                   for interval in pitchIntervals]
+    elseif pitches then
       pitches = sorted(pitches)
-      pitchIntervals = [pitch - pitches[0]
-                        for pitch in pitches]
-
+      -- pitchIntervals = [pitch - pitches[0]
+      --                   for pitch in pitches]
+    end
     self.pitchIntervals = pitchIntervals
+  end;
 
-
-  def __getitem(self, key):
+  __getitem = function(self, key)
     return self.pitchIntervals[key]
+  end;
 
-
-  def __eq(self, other):
+  __eq = function(self, other)
     return self.pitchIntervals == other.pitchIntervals
+  end;
 
-
-  def __len(self):
+  __len = function(self)
     return #self.pitchIntervals
+  end;
 
-
-  def __repr(self):
-    if self == Quality.major:
+  __repr = function(self)
+    if self == Quality.major then
       return "Quality.major"
-    elseif self == Quality.minor:
+    elseif self == Quality.minor then
       return "Quality.minor"
-    elseif self == Quality.augmented:
+    elseif self == Quality.augmented then
       return "Quality.augmented"
-    elseif self == Quality.diminished:
+    elseif self == Quality.diminished then
       return "Quality.diminished"
-    return "Quality(pitchIntervals=%s)" % (self.pitchIntervals,)
+    end
+    return "Quality(pitchIntervals=%s)" % (self.pitchIntervals)
+  end;
+}
 
-
-Quality.major = Quality(pitchIntervals=[PitchInterval.unison, PitchInterval.majorThird, PitchInterval.perfectFifth])
-Quality.minor = Quality(pitchIntervals=[PitchInterval.unison, PitchInterval.minorThird, PitchInterval.perfectFifth])
-Quality.augmented = Quality(pitchIntervals=[PitchInterval.unison, PitchInterval.majorThird, PitchInterval.augmentedFifth])
-Quality.diminished = Quality(pitchIntervals=[PitchInterval.unison, PitchInterval.minorThird, PitchInterval.diminishedFifth])
-
-
-if __name == "__main":
-  import unittest
-  require 'scale'
-  require 'mode'
-
-  class QualityTest(unittest.TestCase):
-    def test_init(self):
-      scale = Scale(tonic=Pitch.c4, mode=Mode.major)
-      self.assertEqual(Quality(pitches=scale[0, 2, 4]), Quality.major)
-
-      scale = Scale(tonic=Pitch.c4, mode=Mode.minor)
-      self.assertEqual(Quality(pitches=scale[0, 2, 4]), Quality.minor)
-
-
-    def test_pitchIntervals(self):
-      self.assertEqual(Quality.major.pitchIntervals,
-                       [PitchInterval.unison, PitchInterval.majorThird, PitchInterval.perfectFifth])
-
-
-    def test_eq(self):
-      scale = Scale(tonic=Pitch.c4, mode=Mode.minor)
-      self.assertTrue(Quality(pitches=scale[0, 2, 4]) == Quality.minor)
-
-
-    def test_len(self):
-      self.assertEqual(#Quality.major, 3)
-
-
-    def test_repr(self):
-      self.assertEqual(eval(repr(Quality.major)), Quality.major)
-
-
-  unittest.main()
+Quality.major = Quality{pitchIntervals={PitchInterval.unison, PitchInterval.majorThird, PitchInterval.perfectFifth}}
+Quality.minor = Quality{pitchIntervals={PitchInterval.unison, PitchInterval.minorThird, PitchInterval.perfectFifth}}
+Quality.augmented = Quality{pitchIntervals={PitchInterval.unison, PitchInterval.majorThird, PitchInterval.augmentedFifth}}
+Quality.diminished = Quality{pitchIntervals={PitchInterval.unison, PitchInterval.minorThird, PitchInterval.diminishedFifth}}

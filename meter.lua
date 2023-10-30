@@ -1,63 +1,67 @@
+require 'llx'
 
-class Pulse:
-  def __init(self, duration=1):
-    self.duration = duration
+Pulse = class 'Pulse' {
+  __init = function(self, duration)
+    self.duration = duration or 1
+  end
+}
 
-class StressedPulse(Pulse):
-  def isStressed(self):
-    return True
+StressedPulse = class 'StressedPulse' :extends(Pulse) {
+  isStressed = function(self)
+    return true
+  end
+}
 
-class UnstressedPulse(Pulse):
-  def isStressed(self):
-    return False
+UnstressedPulse = class UnstressedPulse : extends(Pulse) {
+  isStressed = function(self)
+    return false
+  end
+}
 
-# The sequence of stressed and unstressed beats in a phrase.
-class Meter:
-  def __init(self, pulses=nil):
+-- The sequence of stressed and unstressed beats in a phrase.
+Meter = class 'Meter' {
+  __init = function(self, pulses)
     self.pulseSequence = pulses
+  end;
 
+  duration = function(self)
+    -- return sum(pulse.duration for pulse in self.pulseSequence)
+  end;
 
-  def duration(self):
-    return sum(pulse.duration for pulse in self.pulseSequence)
-
-
-  def beats(self, numberOfBeats):
+  beats = function(self, numberOfBeats)
     return numberOfBeats
+  end;
 
+  pulses = function(self, numberOfPulses)
+    error(NotImplementedError())
+  end;
 
-  def pulses(self, numberOfPulses):
-    raise NotImplementedError()
-
-
-  def measures(self, numberOfMeasures):
+  measures = function(self, numberOfMeasures)
     return numberOfMeasures * self.duration()
+  end;
+}
 
 
-class MeterProgression:
-  def __init(self, periods):
+class 'MeterProgression' {
+  __init = function(self, periods)
     self.periods = periods
+  end;
+
+  duration = function(self)
+    -- return sum(meter.duration() * measures
+    --            for meter, measures in self.periods)
+  end;
+}
 
 
-  def duration(self):
-    return sum(meter.duration() * measures
-               for meter, measures in self.periods)
+-- A sequence of durations and intensities.
+class 'Rhythm' {
 
+}
 
-# A sequence of durations and intensities.
-class Rhythm:
-  pass
-
-fourFour = Meter([StressedPulse(),
+fourFour = Meter(List{StressedPulse(),
                   UnstressedPulse(),
                   StressedPulse(),
-                  UnstressedPulse()])
+                  UnstressedPulse()})
 
 commonMeter = fourFour
-
-
-if __name == "__main":
-  import unittest
-  class PitchTest(unittest.TestCase):
-    pass
-
-  unittest.main()

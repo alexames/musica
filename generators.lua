@@ -1,7 +1,7 @@
 from copy import deepcopy
 
-require 'note'
-require 'util'
+require 'musictheory/note'
+require 'musictheory/util'
 
 def produceValue(value):
   while True:

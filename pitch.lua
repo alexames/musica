@@ -1,15 +1,10 @@
-SCRIPTS_PATH = ';../../../../scripts/?.lua'
-package.path=package.path .. SCRIPTS_PATH
+require 'llx'
+require 'musictheory/util'
 
---------------------------------------------------------------------------------
-
-require 'default'
-require 'list'
-require 'util'
-require 'printValue'
+trace()
 
 -- Pitch Classes
-class 'PitchClass' {
+PitchClass = class 'PitchClass' {
   __init = function(self, args)
     self.name = args.name
     self.index = args.index
@@ -32,18 +27,20 @@ PitchClass[6] = PitchClass.F
 PitchClass[7] = PitchClass.G
 
 
-majorPitchIntervals = list{2, 2, 1, 2, 2, 2, 1}
-majorPitchIndices = Spiral(unpack(intervalsToIndices(majorPitchIntervals)))
-minorPitchIntervals = list{2, 1, 2, 2, 1, 2, 2}
+majorPitchIntervals = List{2, 2, 1, 2, 2, 2, 1}
+majorPitchIndices = Spiral(table.unpack(intervalsToIndices(majorPitchIntervals)))
+minorPitchIntervals = List{2, 1, 2, 2, 1, 2, 2}
 minorPitchIndices = intervalsToIndices(minorPitchIntervals)
 
+trace()
+printtable(minorPitchIntervals)
+trace()
 
 middleOctave = 4
 
 sharp = 1
 natural = 0
 flat = -1
-
 
 local lowestPitchIndices = {
   [PitchClass.A] = 21,
@@ -55,7 +52,6 @@ local lowestPitchIndices = {
   [PitchClass.G] = 30
 }
 
-
 IntervalQuality = {
   major = UniqueSymbol('IntervalQuality.major'),
   minor = UniqueSymbol('IntervalQuality.minor'),
@@ -64,8 +60,8 @@ IntervalQuality = {
   perfect = UniqueSymbol('IntervalQuality.perfect'),
 }
 
-
-class 'PitchInterval' {
+trace()
+PitchInterval = class 'PitchInterval' {
   __init = function(self, args)
     local number = args.number
     local quality = args.quality
@@ -80,19 +76,19 @@ class 'PitchInterval' {
     else
       self.accidentals = accidentals
     end
-  end,
+  end;
 
   isPerfect = function(self)
     return PitchInterval.perfectIntervals:contains(self.number % 7)
-  end,
+  end;
 
   isEnharmonic = function(self, other)
     return int(self) == int(other)
-  end,
+  end;
 
   __numberToSemitones = function(self)
     return majorPitchIndices[self.number]
-  end,
+  end;
 
   __qualityToAccidental = function(self, quality)
     if self:isPerfect() then
@@ -115,7 +111,7 @@ class 'PitchInterval' {
       end
     end
     return accidentals
-  end,
+  end;
 
   __add = function(self, other)
     -- If you're adding to another pitch interval, the result is a pitch interval
@@ -128,25 +124,25 @@ class 'PitchInterval' {
     if getmetatable(other) == Pitch then
       return other + self
     end
-  end,
+  end;
 
   __sub = function(self, other)
     return PitchInterval{number=self.number - other.number,
                          semitoneInterval=int(self) - int(other)}
-  end,
+  end;
 
   __mul = function(self, coeffecient)
     return PitchInterval{number=coeffecient * self.number,
                          semitoneInterval=coeffecient * int(self)}
-  end,
+  end;
 
   __eq = function(self, other)
     return self.number == other.number and self.accidentals == other.accidentals
-  end,
+  end;
 
   __int = function(self)
     return self:__numberToSemitones() + self.accidentals
-  end,
+  end;
 
   __reprPerfectQualities={[-1]="diminished", [0]="perfect", [1]="augmented"},
   __reprImperfectQualities={[-2]="diminished", [-1]="minor", [0]="major", [1]="augmented"},
@@ -175,7 +171,7 @@ class 'PitchInterval' {
     return reprArgs('PitchInterval',
                     {{'number', self.number},
                      {'accidentals', self.accidentals, 0}})
-  end,
+  end;
 
   half     = 1,
   halfstep = 1,
@@ -186,11 +182,12 @@ class 'PitchInterval' {
   wholestep = 2,
   wholetone = 2,
 
-  perfectIntervals = list{0, 3, 4},
-  imperfectIntervals = list{1, 2, 5, 6},
+  perfectIntervals = List{0, 3, 4},
+  imperfectIntervals = List{1, 2, 5, 6},
 }
 
 
+trace()
 PitchInterval.unison           = PitchInterval{number=0, quality=IntervalQuality.perfect}
 PitchInterval.augmentedUnison  = PitchInterval{number=0, quality=IntervalQuality.augmented}
 
@@ -226,7 +223,7 @@ PitchInterval.dimishedOctave   = PitchInterval{number=7, quality=IntervalQuality
 PitchInterval.octave           = PitchInterval{number=7, quality=IntervalQuality.perfect}
 
 
-class 'Pitch' {
+Pitch = class 'Pitch' {
   __init = function(self, args)
     local pitchClass = args.pitchClass
     local octave = args.octave or middleOctave
@@ -241,27 +238,27 @@ class 'Pitch' {
     else
       self.accidentals = accidentals
     end
-  end,
+  end;
 
   isEnharmonic = function(self, other)
     return int(self) == int(other)
-  end,
+  end;
 
   __int = function(self)
     return lowestPitchIndices[self.pitchClass] + (self.octave * 12) + self.accidentals
-  end,
+  end;
 
   __eq = function(self, other)
     return int(self) == int(other)
-  end,
+  end;
 
   __lt = function(self, other)
     return int(self) < int(other)
-  end,
+  end;
 
   __le = function(self, other)
     return int(self) <= int(other)
-  end,
+  end;
 
   __add = function(self, pitchInterval)
     pitchClass = PitchClass[(self.pitchClass.index + pitchInterval.number - 1) % 7 + 1]
@@ -270,7 +267,7 @@ class 'Pitch' {
     return Pitch{pitchClass=pitchClass,
                  octave=octave,
                  pitchIndex=pitchIndex}
-  end,
+  end;
 
   __sub = function(self, other)
     if getmetatable(other) == Pitch then
@@ -285,13 +282,13 @@ class 'Pitch' {
       return Pitch{pitchClass=pitchClass,
                    pitchIndex=pitchIndex}
     end
-  end,
+  end;
 
   __call = function(self, octaveTransposition)
     return Pitch{pitchClass = self.pitchClass,
                  octave=PitchInterval.octave * octaveTransposition,
                  accidentals=self.accidentals}
-  end,
+  end;
 
 
   __repr = function(self)
@@ -333,6 +330,7 @@ local accidentalArgs = {
   {suffix='Flat', accidental=flat},
   {suffix='Sharp', accidental=sharp},
 }
+
 while currentPitch < 128 do
   for pitchClass, interval in zip(PitchClass, minorPitchIntervals) do
     for unused, args in ipairs(accidentalArgs) do
@@ -344,146 +342,4 @@ while currentPitch < 128 do
     currentPitch = currentPitch + interval
   end
   currentOctave = currentOctave + 1
-end
-
-if false then
-  require 'unit'
-
-  TestCase 'PitchIntervalTest' {
-    test_init = function(self)
-      EXPECT_EQ(Pitch.c4, Pitch{pitchClass=PitchClass.C, octave=4, accidentals=natural})
-      EXPECT_EQ(Pitch.c4, Pitch{pitchClass=PitchClass.C, octave=4})
-      EXPECT_EQ(Pitch.c4.pitchClass, PitchClass.C)
-      EXPECT_EQ(Pitch.c4.octave, 4)
-      EXPECT_EQ(Pitch.c4.accidentals, 0)
-      EXPECT_EQ(Pitch.c4, Pitch{pitchClass=PitchClass.C, pitchIndex=72})
-      EXPECT_EQ(Pitch.cSharp4, Pitch{pitchClass=PitchClass.C, pitchIndex=73})
-      EXPECT_EQ(Pitch.cFlat4, Pitch{pitchClass=PitchClass.C, pitchIndex=71})
-      EXPECT_EQ(Pitch{pitchClass=PitchClass.C, octave=4, accidentals=2 * sharp},
-                Pitch{pitchClass=PitchClass.C, pitchIndex=74})
-    end,
-
-
-    test_isPerfect = function(self)
-      EXPECT_TRUE(PitchInterval.unison:isPerfect())
-      EXPECT_FALSE(PitchInterval.majorSecond:isPerfect())
-      EXPECT_FALSE(PitchInterval.majorThird:isPerfect())
-      EXPECT_TRUE(PitchInterval.perfectFourth:isPerfect())
-      EXPECT_TRUE(PitchInterval.perfectFifth:isPerfect())
-      EXPECT_FALSE(PitchInterval.majorSixth:isPerfect())
-      EXPECT_FALSE(PitchInterval.majorSeventh:isPerfect())
-      EXPECT_TRUE(PitchInterval.octave:isPerfect())
-
-      EXPECT_FALSE(PitchInterval{number=8}:isPerfect())
-      EXPECT_FALSE(PitchInterval{number=9}:isPerfect())
-      EXPECT_TRUE(PitchInterval{number=10}:isPerfect())
-      EXPECT_TRUE(PitchInterval{number=11}:isPerfect())
-      EXPECT_FALSE(PitchInterval{number=12}:isPerfect())
-      EXPECT_FALSE(PitchInterval{number=13}:isPerfect())
-    end,
-
-
-    test_addPitchInterval = function(self)
-      EXPECT_EQ(PitchInterval.majorThird + PitchInterval.minorThird,
-                PitchInterval.perfectFifth)
-      EXPECT_EQ(PitchInterval.minorThird + PitchInterval.majorThird,
-                PitchInterval.perfectFifth)
-      EXPECT_EQ(PitchInterval.majorThird + PitchInterval.majorThird,
-                PitchInterval.augmentedFifth)
-      EXPECT_EQ(PitchInterval.majorSecond + PitchInterval.octave,
-                PitchInterval{number=8})
-    end,
-
-
-    test_addPitch = function(self)
-      EXPECT_EQ(Pitch.c4 + PitchInterval.majorThird, Pitch.e4)
-      EXPECT_EQ(PitchInterval.majorThird + Pitch.c4, Pitch.e4)
-
-      EXPECT_EQ(Pitch.c4 + PitchInterval.minorThird, Pitch.eFlat4)
-      EXPECT_EQ(PitchInterval.minorThird + Pitch.c4, Pitch.eFlat4)
-
-      eFlat4 = PitchInterval.minorThird + Pitch.c4
-      EXPECT_EQ(eFlat4.pitchClass, PitchClass.E)
-      EXPECT_EQ(eFlat4.octave, 4)
-      EXPECT_EQ(eFlat4.accidentals, flat)
-
-      EXPECT_EQ(Pitch.c4 + PitchInterval.octave, Pitch.c5)
-      EXPECT_EQ(PitchInterval.octave + Pitch.c4, Pitch.c5)
-    end,
-
-
-    test_subPitchInterval = function(self)
-      EXPECT_EQ(PitchInterval.majorThird - PitchInterval.minorThird,
-                PitchInterval.augmentedUnison)
-      EXPECT_EQ(PitchInterval.octave - PitchInterval.perfectFifth,
-                PitchInterval.perfectFourth)
-    end,
-
-
-    test_int = function(self)
-    end,
-
-
-    test_repr = function(self)
-    end,
-  }
-
-  TestCase 'PitchTest' {
-    test_init = function(self)
-    end,
-
-    test_isEnharmonic = function(self)
-      EXPECT_TRUE(Pitch.c4:isEnharmonic(Pitch.c4))
-      -- EXPECT_TRUE(Pitch.c4:isEnharmonic(Pitch.bSharp4))
-      -- EXPECT_TRUE(Pitch.gSharp4:isEnharmonic(Pitch.aFlat5))
-
-      -- EXPECT_FALSE(Pitch.c4:isEnharmonic(Pitch.d4))
-    end,
-
-    test_int = function(self)
-    end,
-
-    test_eq = function(self)
-    end,
-
-    test_ne = function(self)
-    end,
-
-    test_gt = function(self)
-    end,
-
-    test_ge = function(self)
-    end,
-
-    test_lt = function(self)
-    end,
-
-    test_le = function(self)
-    end,
-
-    test_add = function(self)
-      EXPECT_EQ(Pitch.c4 + PitchInterval.majorThird, Pitch.e4)
-      EXPECT_EQ(Pitch.c4 + PitchInterval.octave, Pitch.c5)
-      EXPECT_EQ(Pitch.c4 + PitchInterval.augmentedThird, Pitch.eSharp4)
-    end,
-
-
-    test_subPitch = function(self)
-      EXPECT_EQ(Pitch.c4 - Pitch.a4, PitchInterval.minorThird)
-      EXPECT_EQ(Pitch.e4 - Pitch.c4, PitchInterval.majorThird)
-      EXPECT_EQ(Pitch.c5 - Pitch.c4, PitchInterval.octave)
-      EXPECT_EQ(Pitch.eSharp4 - Pitch.c4, PitchInterval.augmentedThird)
-    end,
-
-    test_subPitchInterval = function(self)
-      EXPECT_EQ(Pitch.e4 - PitchInterval.majorThird, Pitch.c4)
-      EXPECT_EQ(Pitch.c5 - PitchInterval.octave, Pitch.c4)
-      EXPECT_EQ(Pitch.eSharp4 - PitchInterval.augmentedThird, Pitch.c4)
-    end,
-
-    test_repr = function(self)
-    end,
-  }
-
-  RunUnitTests()
 end
