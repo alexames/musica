@@ -6,9 +6,6 @@ require 'musictheory/figure'
 
 Chord = class 'Chord' {
   __init = function(self, args)
-                    -- root,
-                    -- quality,
-                    -- pitches
     if args.pitches then
       self.root = args.pitches[0]
       self.quality = Quality{pitches=args.pitches}

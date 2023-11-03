@@ -1,8 +1,6 @@
 require 'llx'
 require 'musictheory/util'
 
-trace()
-
 -- Pitch Classes
 PitchClass = class 'PitchClass' {
   __init = function(self, args)
@@ -32,10 +30,6 @@ majorPitchIndices = Spiral(table.unpack(intervalsToIndices(majorPitchIntervals))
 minorPitchIntervals = List{2, 1, 2, 2, 1, 2, 2}
 minorPitchIndices = intervalsToIndices(minorPitchIntervals)
 
-trace()
-printtable(minorPitchIntervals)
-trace()
-
 middleOctave = 4
 
 sharp = 1
@@ -60,7 +54,6 @@ IntervalQuality = {
   perfect = UniqueSymbol('IntervalQuality.perfect'),
 }
 
-trace()
 PitchInterval = class 'PitchInterval' {
   __init = function(self, args)
     local number = args.number
@@ -186,8 +179,6 @@ PitchInterval = class 'PitchInterval' {
   imperfectIntervals = List{1, 2, 5, 6},
 }
 
-
-trace()
 PitchInterval.unison           = PitchInterval{number=0, quality=IntervalQuality.perfect}
 PitchInterval.augmentedUnison  = PitchInterval{number=0, quality=IntervalQuality.augmented}
 
@@ -332,7 +323,9 @@ local accidentalArgs = {
 }
 
 while currentPitch < 128 do
-  for pitchClass, interval in zip(PitchClass, minorPitchIntervals) do
+  for pitchClass, interval in zip({ivalues(PitchClass)}, {ivalues(minorPitchIntervals)}) do
+    pitchClass = PitchClass[1]
+    interval = interval[1]
     for unused, args in ipairs(accidentalArgs) do
       local pitchName = pitchClass.name:lower() .. args.suffix .. currentOctave
       Pitch[pitchName] = Pitch{pitchClass=pitchClass,
