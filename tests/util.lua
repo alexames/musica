@@ -26,12 +26,32 @@ test_class 'UtilTest' {
 }
 
 test_class 'RingTest' {
-
+  [test 'nolooping'] = function(self)
+    local ring = Ring{3, 6, 9}
+    EXPECT_EQ(ring[0], 3)
+    EXPECT_EQ(ring[1], 6)
+    EXPECT_EQ(ring[2], 9)
+  end,
+  [test 'positive_modulo'] = function(self)
+    local ring = Ring{3, 6, 9}
+    EXPECT_EQ(ring[3], 3)
+    EXPECT_EQ(ring[4], 6)
+  end,
+  [test 'negative_index'] = function(self)
+    local ring = Ring{3, 6, 9}
+    EXPECT_EQ(ring[-3], 3)
+    EXPECT_EQ(ring[-2], 6)
+    EXPECT_EQ(ring[-1], 9)
+  end,
+  [test 'negative_modulo'] = function(self)
+    local ring = Ring{3, 6, 9}
+    EXPECT_EQ(ring[-4], 9)
+  end,
 }
 
 test_class 'SpiralTest' {
   [test 'index'] = function(self)
-    spiral = Spiral(0, 3, 5)
+    spiral = Spiral{0, 3, 5}
     EXPECT_EQ(spiral[-4], -10)
     EXPECT_EQ(spiral[-3], -7)
     EXPECT_EQ(spiral[-2], -5)

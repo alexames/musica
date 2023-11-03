@@ -96,45 +96,44 @@ function reprArgs(className, args)
   return className .. '(' .. parameters .. ')'
 end
 
+-- rings and spirals are 0 based!
 Ring = class 'Ring' {
-  __init = function(self, ...)
-    self.values = list(args)
+  __init = function(self, args)
+    self._values = args
   end,
 
   __index = function(self, key)
-    return self.values[key % #self.values]
-
-    -- if type(key) == 'number' then
-    --   return self.values[key % #self.values]
-    -- else
-    --   return [self[index] for index in range(key.start, key.stop, key.step)]
-    -- end
+    if type(key) == 'number' then
+      local values = rawget(self, '_values')
+      local length = #values
+      key = (key % length) + #self
+      key = (key % length) + 1
+      return values[key]
+    else
+      return self.__defaultindex(self, key)
+    end
   end
 }
 
 Spiral = class 'Spiral' {
-  __init = function(self, ...)
-    self.extensionInterval = arg[#arg]
-    self.modulus = #arg - 1
-    self.values = {}
-    for i=1, self.modulus do
-      self.values[i-1] = arg[i]
-    end
-  end,
-
-  __len = function(self)
-    return self.modulus
+  __init = function(self, args)
+    self._values = args
   end,
 
   __index = function(self, key)
-    local extensionOffset = math.floor(key / self.modulus)
-    return self.values[key % self.modulus] + self.extensionInterval * extensionOffset
-    -- if isinstance(key, int) then
-    --   extensionOffset = key // #self
-    --   return self.values[key % #self] + self.extensionInterval * extensionOffset
-    -- else
-    --   return [self[index] for index in range(key.start, key.stop, key.step)]
-    -- end
+    if type(key) == 'number' then
+      local values = rawget(self, '_values')
+      local length = #values
+      local multiplicitive_operand = values[length]
+      local modulus = length - 1
+      local coefficient = key // modulus
+
+      key = (key % modulus) + #self
+      key = (key % modulus) + 1
+      return values[key] + coefficient * multiplicitive_operand
+    else
+      return self.__defaultindex(self, key)
+    end
   end,
 
   -- __repr = function(self)
