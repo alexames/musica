@@ -47,6 +47,11 @@ test_class 'RingTest' {
     local ring = Ring{3, 6, 9}
     EXPECT_EQ(ring[-4], 9)
   end,
+  [test 'table'] = function(self)
+    local ring = Ring{3, 6, 9}
+    EXPECT_EQ(ring[{-4, -3, -2, -1, 0, 1, 2, 3, 4}],
+              List{9, 3, 6, 9, 3, 6, 9, 3, 6,})
+  end,
 }
 
 test_class 'SpiralTest' {
@@ -61,5 +66,6 @@ test_class 'SpiralTest' {
     EXPECT_EQ(spiral[2], 5)
     EXPECT_EQ(spiral[3], 8)
     EXPECT_EQ(spiral[4], 10)
+    EXPECT_EQ(spiral[{0, 1, 2, 3, 4}], List{0, 3, 5, 8, 10})
   end
 }

@@ -109,6 +109,12 @@ Ring = class 'Ring' {
       key = (key % length) + #self
       key = (key % length) + 1
       return values[key]
+    elseif type(key) == 'table' then
+      local results = List{}
+      for i, v in pairs(key) do
+        results[i] = self[v]
+      end
+      return results
     else
       return self.__defaultindex(self, key)
     end
@@ -131,6 +137,12 @@ Spiral = class 'Spiral' {
       key = (key % modulus) + #self
       key = (key % modulus) + 1
       return values[key] + coefficient * multiplicitive_operand
+    elseif type(key) == 'table' then
+      local results = List{}
+      for i, v in pairs(key) do
+        results[i] = self[v]
+      end
+      return results
     else
       return self.__defaultindex(self, key)
     end
