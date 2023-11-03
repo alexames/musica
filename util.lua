@@ -34,15 +34,7 @@ function tern(cond, trueValue, falseValue)
   end
 end
 
-
 function rotate(l, n)
-  -- print(valueToString(l))
-  -- print(valueToString(n-1))
-  -- print(valueToString(l(n-1)))
-  -- print(valueToString(l(nil, n-1)))
-  -- print(valueToString(getmetatable(l(n-1))))
-  -- print(valueToString(getmetatable(l(nil, n-1))))
-
   return l(n-1) + l(nil,n-1)
 end
 
@@ -65,7 +57,6 @@ end
 -- function zipTuple(*args)
 --   return [t for t in zip(*args)]
 -- end
-
 
 noValue=UniqueSymbol()
 
