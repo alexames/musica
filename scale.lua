@@ -1,9 +1,7 @@
-
-require 'mode'
-require 'pitch'
-require 'util'
-require 'chord'
-
+require 'musictheory/chord'
+require 'musictheory/mode'
+require 'musictheory/pitch'
+require 'musictheory/util'
 
 class 'Scale' {
   __init = function(self, tonic, mode)
