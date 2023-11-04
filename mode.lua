@@ -3,16 +3,16 @@ require 'musictheory/util'
 require 'musictheory/pitch'
 
 Mode = class 'Mode' {
-  __init = function(self, semitoneIntervals, name)
-    self.semitoneIntervals = semitoneIntervals
-    self.semitoneIndices = intervalsToIndices(semitoneIntervals)
+  __init = function(self, semitone_intervals, name)
+    self.semitone_intervals = semitone_intervals
+    self.semitone_indices = intervalsToIndices(semitone_intervals)
 
     self.pitchIntervals = Spiral(List.generate{
-      lambda=function(number, semitoneInterval)
+      lambda=function(number, semitone_interval)
         return PitchInterval{number=number,
-                             semitoneInterval=semitoneInterval}
+                             semitone_interval=semitone_interval}
       end,
-      list=self.semitoneIndices,
+      list=self.semitone_indices,
       filter=function(n) return n % 2 == 0 end
     })
     self.pitchIntervals = Spiral()
@@ -21,15 +21,15 @@ Mode = class 'Mode' {
     if name then
       self.name = name
     else
-      mode = diatonicModes.get(self.semitoneIntervals, nil)
+      mode = diatonic_modes.get(self.semitone_intervals, nil)
       self.name = mode and mode.name
     end
   end,
 
   relative = function(self, mode)
-    for i in range(#self.semitoneIntervals) do
-      relativeIntervals = rotate(self.semitoneIntervals, i)
-      if relativeIntervals == mode.semitoneIntervals then
+    for i in range(#self.semitone_intervals) do
+      relativeIntervals = rotate(self.semitone_intervals, i)
+      if relativeIntervals == mode.semitone_intervals then
         return i
       end
     end
@@ -37,11 +37,11 @@ Mode = class 'Mode' {
   end,
 
   rotate = function(self, rotation)
-    return Mode(rotate(self.semitoneIntervals, rotation))
+    return Mode(rotate(self.semitone_intervals, rotation))
   end,
 
   __eq = function(self, other)
-    return self.semitoneIntervals == other.semitoneIntervals
+    return self.semitone_intervals == other.semitone_intervals
   end,
 
   __index = function(self, key)
@@ -49,17 +49,17 @@ Mode = class 'Mode' {
   end,
 
   __len = function(self)
-    return #self.semitoneIntervals
+    return #self.semitone_intervals
   end,
 
   -- __repr = function(self)
   --   return string.format("Mode(%s, %s)",
-  --                        self.semitoneIntervals,
+  --                        self.semitone_intervals,
   --                        self.name and ("'" + self.name + "'") or 'nil')
   -- end,
 }
 
-local function generateModes(modes, intervals, globalNames)
+local function generate_modes(modes, intervals, globalNames)
   -- if globalNames then
   --   assert(#globalNames == #intervals)
   -- end
@@ -82,7 +82,7 @@ diatonicIntervals = List{PitchInterval.whole,
                          PitchInterval.whole,
                          PitchInterval.half}
 
-diatonicModesNames = List{
+diatonic_modes_names = List{
   "ionian",
   "dorian",
   "phrygian",
@@ -92,17 +92,17 @@ diatonicModesNames = List{
   "locrian",
 }
 
-diatonicModes = {}
-generateModes(diatonicModes, diatonicIntervals, diatonicModesNames)
+diatonic_modes = {}
+generate_modes(diatonic_modes, diatonicIntervals, diatonic_modes_names)
 Mode.major = Mode.ionian
 Mode.minor = Mode.aeolian
 
-wholeTone = List{PitchInterval.whole,
-                 PitchInterval.whole,
-                 PitchInterval.whole,
-                 PitchInterval.whole,
-                 PitchInterval.whole,
-                 PitchInterval.whole}
+whole_tone = List{PitchInterval.whole,
+                  PitchInterval.whole,
+                  PitchInterval.whole,
+                  PitchInterval.whole,
+                  PitchInterval.whole,
+                  PitchInterval.whole}
 
 chromatic = List{PitchInterval.half,
                  PitchInterval.half,
@@ -115,3 +115,4 @@ chromatic = List{PitchInterval.half,
                  PitchInterval.half,
                  PitchInterval.half,
                  PitchInterval.half}
+

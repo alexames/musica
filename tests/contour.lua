@@ -105,3 +105,7 @@ test_class 'ChordTest' {
                C])
   end;
 }
+
+if main_file() then
+  unit.run_unit_tests()
+end

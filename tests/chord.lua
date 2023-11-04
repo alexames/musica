@@ -58,3 +58,7 @@ test_class 'ChordTest' {
     EXPECT_TRUE(False)
   end;
 }
+
+if main_file() then
+  unit.run_unit_tests()
+end

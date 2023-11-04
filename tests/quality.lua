@@ -1,4 +1,5 @@
-require 'unit'
+local unit = require 'unit'
+require 'llx'
 require 'musictheory/quality'
 
 test_class 'QualityTest' {
@@ -10,8 +11,8 @@ test_class 'QualityTest' {
     EXPECT_EQ(Quality{pitches=scale:pitches(0, 2, 4)}, Quality.minor)
   end;
 
-  [test('pitchIntervals')] = function(self)
-    EXPECT_EQ(Quality.major.pitchIntervals,
+  [test('pitch_intervals')] = function(self)
+    EXPECT_EQ(Quality.major.pitch_intervals,
               List{PitchInterval.unison, PitchInterval.majorThird, PitchInterval.perfectFifth})
   end;
 
@@ -28,3 +29,7 @@ test_class 'QualityTest' {
     EXPECT_EQ(eval(repr(Quality.major)), Quality.major)
   end;
 }
+
+if main_file() then
+  unit.run_unit_tests()
+end

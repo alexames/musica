@@ -1,4 +1,5 @@
-require 'unit'
+local unit = require 'unit'
+require 'llx'
 require 'musictheory/scale'
 
 test_class 'ScaleTest' {
@@ -117,3 +118,7 @@ test_class 'ScaleTest' {
     EXPECT_TRUE(False)
   end;
 }
+
+if main_file() then
+  unit.run_unit_tests()
+end

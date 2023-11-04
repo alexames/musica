@@ -1,4 +1,5 @@
-require 'unit'
+local unit = require 'unit'
+require 'llx'
 require 'musictheory/pitch'
 
 test_class 'PitchTest' {
@@ -68,3 +69,7 @@ test_class 'PitchTest' {
   -- [test 'repr'] = function(self)
   -- end,
 }
+
+if main_file() then
+  unit.run_unit_tests()
+end

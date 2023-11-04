@@ -1,6 +1,7 @@
+local unit = require 'unit'
+require 'llx'
 require 'musictheory/pitch'
 require 'musictheory/pitch_interval'
-require 'unit'
 
 test_class 'PitchIntervalTest' {
   [test 'is_perfect'] = function(self)
@@ -61,3 +62,7 @@ test_class 'PitchIntervalTest' {
   -- [test 'repr'] = function(self)
   -- end,
 }
+
+if main_file() then
+  unit.run_unit_tests()
+end

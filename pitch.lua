@@ -148,8 +148,8 @@ while current_pitch < 128 do
     for unused, args in ipairs(accidentalArgs) do
       local pitch_name = pitch_class.name:lower() .. args.suffix .. current_octave
       Pitch[pitch_name] = Pitch{pitch_class=pitch_class,
-                               octave=current_octave,
-                               accidentals=args.accidental}
+                                octave=current_octave,
+                                accidentals=args.accidental}
     end
     current_pitch = current_pitch + interval
   end

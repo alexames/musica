@@ -1,4 +1,5 @@
-require 'unit'
+local unit = require 'unit'
+require 'llx'
 require 'musictheory/util'
 
 test_class 'UtilTest' {
@@ -87,3 +88,7 @@ test_class 'SpiralTest' {
     EXPECT_EQ(octave[{0, 2, 4}], List{0, 4, 7})
   end
 }
+
+if main_file() then
+  unit.run_unit_tests()
+end
