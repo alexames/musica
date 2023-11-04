@@ -19,15 +19,6 @@ level = 0
 same = 0
 up = 1
 
-function int(value)
-  if type(value) == 'number' then
-    return math.floor(value)
-  else
-    return value:__int()
-  end
-end
-
-
 function tern(cond, trueValue, falseValue)
   if cond then return trueValue
   else return falseValue
@@ -163,7 +154,7 @@ function intervalsToIndices(intervals)
   indices = List{}
   for interval in intervals:ivalues() do
     indices:insert(index)
-    index = index + int(interval)
+    index = index + tointeger(interval)
   end
   indices:insert(index)
   return indices
