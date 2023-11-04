@@ -56,7 +56,7 @@ test_class 'RingTest' {
 
 test_class 'SpiralTest' {
   [test 'index'] = function(self)
-    spiral = Spiral{0, 3, 5}
+    local spiral = Spiral{0, 3, 5}
     EXPECT_EQ(spiral[-4], -10)
     EXPECT_EQ(spiral[-3], -7)
     EXPECT_EQ(spiral[-2], -5)
@@ -67,5 +67,23 @@ test_class 'SpiralTest' {
     EXPECT_EQ(spiral[3], 8)
     EXPECT_EQ(spiral[4], 10)
     EXPECT_EQ(spiral[{0, 1, 2, 3, 4}], List{0, 3, 5, 8, 10})
+  end,
+
+  [test 'octave'] = function(self)
+    local octave = Spiral{0, 2, 4, 5, 7, 9, 11, 12}
+    EXPECT_EQ(octave[-1], -1)
+    EXPECT_EQ(octave[0], 0)
+    EXPECT_EQ(octave[1], 2)
+    EXPECT_EQ(octave[2], 4)
+    EXPECT_EQ(octave[3], 5)
+    EXPECT_EQ(octave[7], 12)
+    EXPECT_EQ(octave[8], 14)
+    EXPECT_EQ(octave[9], 16)
+    EXPECT_EQ(octave[10], 17)
+    EXPECT_EQ(octave[11], 19)
+    EXPECT_EQ(octave[12], 21)
+    EXPECT_EQ(octave[13], 23)
+    EXPECT_EQ(octave[14], 24)
+    EXPECT_EQ(octave[{0, 2, 4}], List{0, 4, 7})
   end
 }
