@@ -2,7 +2,7 @@ require 'unit'
 require 'musictheory/contour'
 
 -- Mary had a little lamb
-local mary = [
+local mary = {
   Note(pitch=Pitch.e4, duration=1),
   Note(pitch=Pitch.d4, duration=1),
   Note(pitch=Pitch.c4, duration=1),
@@ -36,7 +36,7 @@ local mary = [
   Note(pitch=Pitch.d4, duration=1),
 
   Note(pitch=Pitch.c4, duration=4),
-]
+}
 
 test_class 'ChordTest' {
   [test 'directionalContour'] = function(self)
