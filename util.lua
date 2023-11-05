@@ -126,7 +126,7 @@ Spiral = class 'Spiral' {
       end
       return results
     else
-      return self.__defaultindex(self, key)
+      return Spiral.__defaultindex(self, key)
     end
   end,
 

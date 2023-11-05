@@ -61,7 +61,6 @@ PitchInterval = class 'PitchInterval' {
 
   __add = function(self, other)
     self, other = metamethod_args(PitchInterval, self, other)
-
     if PitchInterval.isinstance(other) then
       -- If we are adding to another PitchInterval, the result is a PitchInterval.
       return PitchInterval{
@@ -79,6 +78,7 @@ PitchInterval = class 'PitchInterval' {
   end,
 
   __mul = function(self, coeffecient)
+    self, coeffecient = metamethod_args(PitchInterval, self, coeffecient)
     return PitchInterval{number=coeffecient * self.number,
                          semitoneInterval=coeffecient * tointeger(self)}
   end,
