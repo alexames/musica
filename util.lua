@@ -19,15 +19,6 @@ level = 0
 same = 0
 up = 1
 
-function tern(cond, trueValue, falseValue)
-  if cond then return trueValue
-  else return falseValue
-  end
-end
-
-function rotate(l, n)
-  return l(n-1) + l(nil,n-1)
-end
 
 -- function byPairs(l)
 --   return zip(l[:-1], l[1:])
