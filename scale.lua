@@ -12,23 +12,23 @@ class 'Scale' {
     end
     self.tonic = tonic
     self.mode = mode
-  end;
+  end,
 
   getPitches = function(self)
     -- return [self.tonic + pitchInterval
     --         for pitchInterval in self.mode.pitchIntervals.values]
-  end;
+  end,
 
-  toPitch = function(self, scaleIndex)
-    if scaleIndex == nil then
+  toPitch = function(self, scale_index)
+    if scale_index == nil then
       -- return nil
     end
-    return self.tonic + self.mode[scaleIndex]
-  end;
+    return self.tonic + self.mode[scale_index]
+  end,
 
   toPitches = function(self, scaleIndices)
-    -- return [self.toPitch(scaleIndex) for scaleIndex in scaleIndices]
-  end;
+    -- return [self.toPitch(scale_index) for scale_index in scaleIndices]
+  end,
 
   toScaleIndex = function(self, pitch)
     if isinstance(pitch, int) then
@@ -41,54 +41,54 @@ class 'Scale' {
     offsetModulus = pitchIndexOffset % int(self.mode.octaveInterval)
     offsetOctave = math.floor(pitchIndexOffset / int(self.mode.octaveInterval))
     -- try:
-    --   scaleIndexModulus = [int(pitch - self.tonic)
+    --   scale_indexModulus = [int(pitch - self.tonic)
     --                        for pitch in self.getPitches()].index(offsetModulus)
-    --   return scaleIndexModulus + #self * offsetOctave
+    --   return scale_indexModulus + #self * offsetOctave
     -- except:
     --   return nil
-  end;
+  end,
 
   toScaleIndices = function(self, pitches)
     -- return [self.toScaleIndex(pitch) for pitch in pitches]
-  end;
+  end,
 
   relative = function(self, arg)
-    -- scaleIndex=nil, mode=nil, direction=up
+    -- scale_index=nil, mode=nil, direction=up
     if direction ~= up and direction ~= down then
       -- raise ValueError("must specify up or down")
     end
 
     if mode then
-      scaleIndex = self.mode.relative(mode)
-      if not scaleIndex then
+      scale_index = self.mode.relative(mode)
+      if not scale_index then
         error("unrelated mode")
       end
       if direction == down then
-        scaleIndex = scaleIndex - #self
+        scale_index = scale_index - #self
       end
-    elseif scaleIndex ~= nil then
-      mode = self.mode:rotate(scaleIndex)
+    elseif scale_index ~= nil then
+      mode = self.mode:rotate(scale_index)
     end
 
-    tonicScaleIndex = self.toScaleIndex(int(self.tonic)) + scaleIndex
-    tonic = self:toPitch(tonicScaleIndex)
+    tonic_scale_index = self.toScaleIndex(int(self.tonic)) + scale_index
+    tonic = self:toPitch(tonic_scale_index)
 
     return Scale{tonic=tonic, mode=mode}
-  end;
+  end,
 
 
   parallel = function(self, mode)
     return Scale{tonic=self.tonic, mode=mode}
-  end;
+  end,
 
 
   __eq = function(self, other)
     return self.tonic == other.tonic and self.mode == other.mode
-  end;
+  end,
 
   __len = function(self)
     return #self.mode
-  end;
+  end,
 
   __index = function(self, key)
     if isinstance(key, int) then
@@ -101,7 +101,7 @@ class 'Scale' {
     else
       -- return [self.toPitch(index) for index in key]
     end
-  end;
+  end,
 
   contains = function(self, other)
     if isinstance(other, int) or isinstance(other, Pitch) then
@@ -121,16 +121,15 @@ class 'Scale' {
     myPitchIndices = canonicalize(self.getPitches(), octaveInterval)
     -- return all(index in myPitchIndices
     --            for index in otherPitchIndices)
-  end;
+  end,
 
   __repr = function(self)
     return string.format("Scale{tonic=%s, mode=%s}", self.tonic, self.mode)
-  end;
+  end,
 }
 
-
--- function findChord(scale, quality, nth=0, *, direction=up, scaleIndices=[0,2,4])
-function findChord(args)
+-- function find_chord(scale, quality, nth=0, *, direction=up, scaleIndices=[0,2,4])
+function find_chord(args)
   numberFound = 0
   -- Search one octave at a time.
   local start = 0
