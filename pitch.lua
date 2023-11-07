@@ -64,7 +64,7 @@ Pitch = class 'Pitch' {
   end,
 
   __add = function(self, pitch_interval)
-    assert(PitchInterval.isinstance(pitch_interval))
+    assert(isinstance(pitch_interval, PitchInterval))
     local pitch_class = PitchClass[(self.pitch_class.index + pitch_interval.number - 1) % 7 + 1]
     local octave = math.floor(self.octave + (self.pitch_class.index + pitch_interval.number - 1) / 7)
     local pitch_index = tointeger(self) + tointeger(pitch_interval)
@@ -75,12 +75,12 @@ Pitch = class 'Pitch' {
 
   __sub = function(self, other)
     self, other = metamethod_args(Pitch, self, other)
-    if Pitch.isinstance(other) then
+    if isinstance(other, Pitch) then
       local self_pitchClass_octave = (self.pitch_class.index - 1) + self.octave * 7
       local other_pitch_class_octave = (other.pitch_class.index - 1) + other.octave * 7
       return PitchInterval{number=self_pitchClass_octave - other_pitch_class_octave,
                            semitoneInterval=tointeger(self) - tointeger(other)}
-    elseif PitchInterval.isinstance(other) then
+    elseif isinstance(other, PitchInterval) then
       local pitch_class = PitchClass[(self.pitch_class.index - other.number - 1) % 7 + 1]
       local octave = self.octave + math.floor((self.pitch_class.index - other.number - 1) / 7)
       local pitch_index = tointeger(self) - tointeger(other)

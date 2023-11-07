@@ -4,7 +4,7 @@ require 'musictheory/pitch'
 
 Mode = class 'Mode' {
   __init = function(self, semitone_intervals)
-    assert(List.isinstance(semitone_intervals))
+    assert(isinstance(semitone_intervals, List))
     self.semitone_intervals = semitone_intervals
     self.semitone_indices = intervalsToIndices(semitone_intervals)
 

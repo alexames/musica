@@ -61,12 +61,12 @@ PitchInterval = class 'PitchInterval' {
 
   __add = function(self, other)
     self, other = metamethod_args(PitchInterval, self, other)
-    if PitchInterval.isinstance(other) then
+    if isinstance(other, PitchInterval) then
       -- If we are adding to another PitchInterval, the result is a PitchInterval.
       return PitchInterval{
         number=self.number + other.number,
         semitoneInterval=tointeger(self) + tointeger(other)}
-    elseif Pitch.isinstance(other) then
+    elseif isinstance(other, Pitch) then
       -- If we are adding to a Pitch, the result is a pitch.
       return other + self
     end

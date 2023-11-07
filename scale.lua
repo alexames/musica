@@ -31,7 +31,7 @@ class 'Scale' {
   end,
 
   toScaleIndex = function(self, pitch)
-    if isinstance(pitch, int) then
+    if isinstance(pitch, Number) then
       pitchIndex = pitch
     else
       pitchIndex = int(pitch)
@@ -91,7 +91,7 @@ class 'Scale' {
   end,
 
   __index = function(self, key)
-    if isinstance(key, int) then
+    if isinstance(key, Number) then
       return self.toPitch(key)
     elseif isinstance(key, range) or isinstance(key, slice) then
       start = key.start or 0
