@@ -34,7 +34,7 @@ Pitch = class 'Pitch' {
     self.pitch_class = pitch_class
     self.octave = octave
     if pitch_index ~= nil then
-      naturalPitch = lowest_pitch_indices[pitch_class] + (self.octave * 12)
+      local naturalPitch = lowest_pitch_indices[pitch_class] + (self.octave * 12)
       self.accidentals = pitch_index - naturalPitch
     else
       self.accidentals = accidentals
@@ -96,8 +96,8 @@ Pitch = class 'Pitch' {
   end,
 
   __tostring = function(self)
-    local fmt = 'Pitch{pitch_class=%s, octave=%s, pitch_index=%s}'
-    return fmt:format(self.pitch_class, self.octave, self.pitch_index)
+    local fmt = 'Pitch{pitch_class=%s, octave=%s, accidentals=%s}'
+    return fmt:format(self.pitch_class, self.octave, self.accidentals)
   end,
 
   -- __repr = function(self)
