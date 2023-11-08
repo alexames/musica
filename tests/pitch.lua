@@ -11,6 +11,8 @@ test_class 'PitchTest' {
     EXPECT_EQ(Pitch.c4.accidentals, 0)
     EXPECT_EQ(Pitch.c4, Pitch{pitch_class=PitchClass.C, pitch_index=72})
     EXPECT_EQ(Pitch.csharp4, Pitch{pitch_class=PitchClass.C, pitch_index=73})
+    EXPECT_EQ(Pitch.csharp4.accidentals, 1)
+    EXPECT_EQ((Pitch.c4 + PitchInterval.augmented_unison).accidentals, 1)
     EXPECT_EQ(Pitch.cflat4, Pitch{pitch_class=PitchClass.C, pitch_index=71})
     EXPECT_EQ(Pitch{pitch_class=PitchClass.C, octave=4, accidentals=2 * sharp},
               Pitch{pitch_class=PitchClass.C, pitch_index=74})

@@ -11,14 +11,14 @@ PitchInterval = class 'PitchInterval' {
   __init = function(self, args)
     local number = args.number
     local quality = args.quality
-    local semitoneInterval = args.semitoneInterval
+    local semitone_interval = args.semitone_interval
     local accidentals = args.accidentals or 0
 
     self.number = number
     if quality then
       self.accidentals = self:_quality_to_accidental(quality)
-    elseif semitoneInterval then
-      self.accidentals = semitoneInterval - self:_number_to_semitones()
+    elseif semitone_interval then
+      self.accidentals = semitone_interval - self:_number_to_semitones()
     else
       self.accidentals = accidentals
     end
@@ -65,7 +65,7 @@ PitchInterval = class 'PitchInterval' {
       -- If we are adding to another PitchInterval, the result is a PitchInterval.
       return PitchInterval{
         number=self.number + other.number,
-        semitoneInterval=tointeger(self) + tointeger(other)}
+        semitone_interval=tointeger(self) + tointeger(other)}
     elseif isinstance(other, Pitch) then
       -- If we are adding to a Pitch, the result is a pitch.
       return other + self
@@ -74,13 +74,13 @@ PitchInterval = class 'PitchInterval' {
 
   __sub = function(self, other)
     return PitchInterval{number=self.number - other.number,
-                         semitoneInterval=tointeger(self) - tointeger(other)}
+                         semitone_interval=tointeger(self) - tointeger(other)}
   end,
 
   __mul = function(self, coeffecient)
     self, coeffecient = metamethod_args(PitchInterval, self, coeffecient)
     return PitchInterval{number=coeffecient * self.number,
-                         semitoneInterval=coeffecient * tointeger(self)}
+                         semitone_interval=coeffecient * tointeger(self)}
   end,
 
   __eq = function(self, other)
@@ -91,34 +91,36 @@ PitchInterval = class 'PitchInterval' {
     return self:_number_to_semitones() + self.accidentals
   end,
 
-  -- __reprPerfectQualities={[-1]="diminished", [0]="perfect", [1]="augmented"},
-  -- __reprImperfectQualities={[-2]="diminished", [-1]="minor", [0]="major", [1]="augmented"},
-  -- __reprNumbers={"Unison", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Octave"},
+  __reprPerfectQualities={[-1]="diminished", [0]="perfect", [1]="augmented"},
+  __reprImperfectQualities={[-2]="diminished", [-1]="minor", [0]="major", [1]="augmented"},
+  __reprNumbers={[0]="unison", "second", "third", "fourth", "fifth", "sixth", "seventh", "octave"},
 
-  -- __repr = function(self)
-  --   if self.number == 0 and self.accidentals == 0 then
-  --     return "PitchInterval.unison"
-  --   elseif self.number == 7 and self.accidentals == 0 then
-  --     return "PitchInterval.octave"
-  --   elseif 0 <= self.number <= 7 then
-  --     if self:is_perfect() then
-  --       if -1 <= self.accidentals <= 1 then
-  --         return ("PitchInterval."
-  --                 + PitchInterval.__reprPerfectQualities[self.accidentals]
-  --                 + PitchInterval.__reprNumbers[self.number])
-  --       end
-  --     else
-  --       if -2 <= self.accidentals <= 1 then
-  --         return ("PitchInterval."
-  --                 + PitchInterval.__reprImperfectQualities[self.accidentals]
-  --                 + PitchInterval.__reprNumbers[self.number])
-  --       end
-  --     end
-  --   end
-  --   return reprArgs('PitchInterval',
-  --                   {{'number', self.number},
-  --                    {'accidentals', self.accidentals, 0}})
-  -- end,
+  __tostring = function(self)
+    if self.number == 0 and self.accidentals == 0 then
+      return "PitchInterval.unison"
+    elseif self.number == 7 and self.accidentals == 0 then
+      return "PitchInterval.octave"
+    elseif (0 <= self.number) and (self.number <= 7) then
+      if self:is_perfect() then
+        if (-1 <= self.accidentals) and (self.accidentals <= 1) then
+          return ("PitchInterval."
+                  .. PitchInterval.__reprPerfectQualities[self.accidentals]
+                  .. '_'
+                  .. PitchInterval.__reprNumbers[self.number])
+        end
+      else
+        if (-2 <= self.accidentals) and (self.accidentals <= 1) then
+          return ("PitchInterval."
+                  .. PitchInterval.__reprImperfectQualities[self.accidentals]
+                  .. '_'
+                  .. PitchInterval.__reprNumbers[self.number])
+        end
+      end
+    end
+    return reprArgs('PitchInterval',
+                    {{'number', self.number},
+                     {'accidentals', self.accidentals, 0}})
+  end,
 
   half     = 1,
   halfstep = 1,

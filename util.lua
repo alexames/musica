@@ -64,17 +64,16 @@ function reprArgs(className, args)
     return result
   end
 
-  results = list.generate{
-      lambda=function(arg)
-        return reprArg(arg[1],
-                       #arg > 1 and arg[2] or noValue,
-                       #arg > 2 and arg[3] or noValue)
-      end,
-      list=args}
-  parameters = table.concat(filter(function(result)
-                                     return result ~= nil
-                                   end, results),
-                            ", ")
+  local results = {}
+  for i, v in pairs(args) do
+    local result = reprArg(arg[1],
+                           #arg > 1 and arg[2] or noValue,
+                           #arg > 2 and arg[3] or noValue)
+    if result then
+      table.insert(results, result)
+    end
+  end
+  parameters = table.concat(results, ", ")
   return className .. '(' .. parameters .. ')'
 end
 
