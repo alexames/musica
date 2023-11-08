@@ -82,7 +82,7 @@ Chord = class 'Chord' {
     return #self.quality
   end;
 
-  __getitem = function(self, key)
+  __index = function(self, key)
     if isinstance(key, int) then
       return self:toPitch(key)
     elseif isinstance(key, range) then

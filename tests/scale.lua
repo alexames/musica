@@ -9,7 +9,7 @@ test_class 'ScaleTest' {
                      List{Pitch.c4, Pitch.d4, Pitch.e4, Pitch.f4, Pitch.g4, Pitch.a5, Pitch.b5})
   end;
 
-  [test 'toPitch'] = function(self)
+  [test 'toPitch' - 'teslktj'] = function(self)
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
     EXPECT_EQUAL(scale.toPitch(-8), Pitch.b3)
     EXPECT_EQUAL(scale.toPitch(-7), Pitch.c3)
