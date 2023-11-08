@@ -22,16 +22,15 @@ test_class 'ModeTest' {
   end,
 
   [test 'rotate'] = function(self)
-    EXPECT_EQ(Mode.major >> 5, Mode.minor)
-    EXPECT_EQ(Mode.minor >> 2, Mode.major)
-    EXPECT_EQ(Mode.major << 2, Mode.minor)
-    EXPECT_EQ(Mode.minor << 5, Mode.major)
+    EXPECT_EQ(Mode.major << 5, Mode.minor)
+    EXPECT_EQ(Mode.minor << 2, Mode.major)
+    EXPECT_EQ(Mode.major >> 2, Mode.minor)
+    EXPECT_EQ(Mode.minor >> 5, Mode.major)
   end,
 
   [test 'len'] = function(self)
     EXPECT_EQ(#Mode.major, 7)
   end,
-
 
   [test 'index'] = function(self)
     EXPECT_EQ(Mode.major[0], PitchInterval.unison)
@@ -43,6 +42,16 @@ test_class 'ModeTest' {
     EXPECT_EQ(Mode.major[6], PitchInterval.major_seventh)
     EXPECT_EQ(Mode.major[7], PitchInterval.octave)
     EXPECT_EQ(Mode.major[14], 2 * PitchInterval.octave)
+
+    EXPECT_EQ(Mode.minor[0], PitchInterval.unison)
+    EXPECT_EQ(Mode.minor[1], PitchInterval.major_second)
+    EXPECT_EQ(Mode.minor[2], PitchInterval.minor_third)
+    EXPECT_EQ(Mode.minor[3], PitchInterval.perfect_fourth)
+    EXPECT_EQ(Mode.minor[4], PitchInterval.perfect_fifth)
+    EXPECT_EQ(Mode.minor[5], PitchInterval.minor_sixth)
+    EXPECT_EQ(Mode.minor[6], PitchInterval.minor_seventh)
+    EXPECT_EQ(Mode.minor[7], PitchInterval.octave)
+    EXPECT_EQ(Mode.minor[14], 2 * PitchInterval.octave)
   end,
 
   -- [test 'repr'] = function(self)

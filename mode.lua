@@ -18,7 +18,7 @@ Mode = class 'Mode' {
 
   relative = function(self, mode)
     for i=1, #self.semitone_intervals do
-      relativeIntervals = self.semitone_intervals >> i
+      relativeIntervals = self.semitone_intervals << i
       if relativeIntervals == mode.semitone_intervals then
         return i
       end
@@ -39,12 +39,12 @@ Mode = class 'Mode' {
   end,
 
   __index = function(self, index)
-    if type(index) == 'number' then
+    if isinstance(index, Number) then
       if index < 0 then
         index = #self + index
       end
       return rawget(self, 'pitch_intervals')[index]
-    elseif type(index) == 'table' then
+    elseif isinstance(index, Table) then
       local results = List{}
       for i, v in ipairs(index) do
         results[i] = self[v]
@@ -59,11 +59,10 @@ Mode = class 'Mode' {
     return #self.semitone_intervals
   end,
 
-  -- __repr = function(self)
-  --   return string.format('Mode(%s, %s)',
-  --                        self.semitone_intervals,
-  --                        self.name and ("'" + self.name + "'") or 'nil')
-  -- end,
+  __tostring = function(self)
+    return string.format('Mode(%s)',
+                         self.semitone_intervals)
+  end,
 }
 
 diatonic_intervals = List{
@@ -88,7 +87,7 @@ diatonic_modes_names = List{
 
 assert(#diatonic_modes_names == #diatonic_intervals)
 for i, name in ipairs(diatonic_modes_names) do
-  Mode[name] = Mode(diatonic_intervals >> (i - 1))
+  Mode[name] = Mode(diatonic_intervals << (i - 1))
 end
 
 Mode.major = Mode.ionian
