@@ -1,6 +1,7 @@
 require 'llx'
 require 'musictheory/chord'
 require 'musictheory/mode'
+require 'musictheory/modes'
 require 'musictheory/pitch'
 require 'musictheory/util'
 
@@ -163,17 +164,3 @@ Scale = class 'Scale' {
 --     end
 --   end
 -- end
-
-
-scale = Scale(Pitch.c4, Mode.minor)
-print(scale)
-print(scale[0])
-print(scale[1])
-print(scale[2])
-print(scale[3])
-print(scale[4])
-print(scale[5])
-print(scale[6])
-print(scale[7])
-print(scale[8])
-print(scale[{0, 2, 4}])
