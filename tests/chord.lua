@@ -6,27 +6,27 @@ test_class 'ChordTest' {
     EXPECT_TRUE(False)
   end;
 
-  [test 'getPitches'] = function(self)
+  [test 'get_pitches'] = function(self)
     EXPECT_TRUE(False)
   end;
 
-  [test 'getQuality'] = function(self)
+  [test 'get_quality'] = function(self)
     EXPECT_TRUE(False)
   end;
 
-  [test 'toPitch'] = function(self)
+  [test 'to_pitch'] = function(self)
     EXPECT_TRUE(False)
   end;
 
-  [test 'toPitches'] = function(self)
+  [test 'to_pitches'] = function(self)
     EXPECT_TRUE(False)
   end;
 
-  [test 'toExtendedPitch'] = function(self)
+  [test 'to_extended_pitch'] = function(self)
     EXPECT_TRUE(False)
   end;
 
-  [test 'toExtendedPitches'] = function(self)
+  [test 'to_extended_pitches'] = function(self)
     EXPECT_TRUE(False)
   end;
 
