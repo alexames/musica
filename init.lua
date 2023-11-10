@@ -18,13 +18,17 @@ local util =             require 'musictheory/util'             -- No     | No
 
 return {
   chord=chord,
+  contour=contour,
   figure=figure,
+  interval_quality=interval_quality,
   meter=meter,
   mode=mode,
   note=note,
   pitch=pitch,
+  pitch_interval=pitch_interval,
   quality=quality,
   scale=scale,
+  scale_index=scale_index,
   song=song,
   util=util,
 }
