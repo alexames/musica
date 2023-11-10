@@ -1,7 +1,7 @@
 require 'llx'
 
 ScaleIndex = List{
-  tonic = 0,
+  first = 0
   second = 1,
   third = 2,
   fourth = 3,
