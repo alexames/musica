@@ -1,5 +1,5 @@
 require 'musictheory/tests/chord'
--- require 'musictheory/tests/contour'
+require 'musictheory/tests/contour'
 require 'musictheory/tests/figure'
 require 'musictheory/tests/meter'
 require 'musictheory/tests/mode'
