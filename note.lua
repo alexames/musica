@@ -28,7 +28,8 @@ class 'Note' {
     return self.time + self.duration
   end;
 
-  __repr = function(self)
-    return format("Note{pitch=%s, time=%s, duration=%s, volume=%s}", self.pitch, self.time, self.duration, self.volume)
+  __tostring = function(self)
+    return string.format("Note{pitch=%s, time=%s, duration=%s, volume=%s}",
+                         self.pitch, self.time, self.duration, self.volume)
   end;
 }
