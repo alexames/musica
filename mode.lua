@@ -2,14 +2,14 @@ require 'llx'
 require 'musictheory/util'
 require 'musictheory/pitch'
 
+local Union = types.Union
+
 Mode = class 'Mode' {
   __init = function(self, semitone_intervals)
-    assert(isinstance(semitone_intervals, List))
+    check_arg_types{self=Mode, semitone_intervals=List}
     self.semitone_intervals = semitone_intervals
-    self.semitone_indices = intervals_to_indices(semitone_intervals)
-
     local pitch_intervals = {}
-    for i, v in ipairs(self.semitone_indices) do
+    for i, v in ipairs(intervals_to_indices(semitone_intervals)) do
       pitch_intervals[i] = PitchInterval{number=i - 1,
                                          semitone_interval=v}
     end
@@ -17,6 +17,7 @@ Mode = class 'Mode' {
   end,
 
   relative = function(self, mode)
+    check_arg_types{self=Mode, mode=Mode}
     for i=1, #self.semitone_intervals do
       local relative_intervals = self.semitone_intervals << i
       if relative_intervals == mode.semitone_intervals then
@@ -27,18 +28,22 @@ Mode = class 'Mode' {
   end,
 
   __shr = function(self, n)
+    check_arg_types{self=Mode, n=Integer}
     return Mode(self.semitone_intervals >> n)
   end,
 
   __shl = function(self, n)
+    check_arg_types{self=Mode, n=Integer}
     return Mode(self.semitone_intervals << n)
   end,
 
   __eq = function(self, other)
+    check_arg_types{self=Mode, other=Mode}
     return self.semitone_intervals == other.semitone_intervals
   end,
 
   __index = function(self, index)
+    check_arg_types{self=Mode, index=Union{Number, Table, String}}
     if isinstance(index, Number) then
       if index < 0 then
         index = #self + index
@@ -56,62 +61,13 @@ Mode = class 'Mode' {
   end,
 
   __len = function(self)
+    check_arg_types{self=Mode}
     return #self.semitone_intervals
   end,
 
   __tostring = function(self)
+    check_arg_types{self=Mode}
     return string.format('Mode(%s)',
                          self.semitone_intervals)
   end,
-}
-
-diatonic_intervals = List{
-  PitchInterval.whole,
-  PitchInterval.whole,
-  PitchInterval.half,
-  PitchInterval.whole,
-  PitchInterval.whole,
-  PitchInterval.whole,
-  PitchInterval.half,
-}
-
-diatonic_modes_names = List{
-  'ionian',
-  'dorian',
-  'phrygian',
-  'lydian',
-  'mixolydian',
-  'aeolian',
-  'locrian',
-}
-
-assert(#diatonic_modes_names == #diatonic_intervals)
-for i, name in ipairs(diatonic_modes_names) do
-  Mode[name] = Mode(diatonic_intervals << (i - 1))
-end
-
-Mode.major = Mode.ionian
-Mode.minor = Mode.aeolian
-
-whole_tone = List{
-  PitchInterval.whole,
-  PitchInterval.whole,
-  PitchInterval.whole,
-  PitchInterval.whole,
-  PitchInterval.whole,
-  PitchInterval.whole,
-}
-
-chromatic = List{
-  PitchInterval.half,
-  PitchInterval.half,
-  PitchInterval.half,
-  PitchInterval.half,
-  PitchInterval.half,
-  PitchInterval.half,
-  PitchInterval.half,
-  PitchInterval.half,
-  PitchInterval.half,
-  PitchInterval.half,
-  PitchInterval.half,
 }
