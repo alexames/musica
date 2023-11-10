@@ -4,9 +4,9 @@ require 'musictheory/pitch_interval'
 require 'musictheory/util'
 
 major_pitch_intervals = List{2, 2, 1, 2, 2, 2, 1}
-major_pitch_indices = Spiral(intervalsToIndices(major_pitch_intervals))
+major_pitch_indices = Spiral(intervals_to_indices(major_pitch_intervals))
 minor_pitch_intervals = List{2, 1, 2, 2, 1, 2, 2}
-minor_pitch_indices = intervalsToIndices(minor_pitch_intervals)
+minor_pitch_indices = intervals_to_indices(minor_pitch_intervals)
 
 local middle_octave = 4
 
@@ -34,8 +34,8 @@ Pitch = class 'Pitch' {
     self.pitch_class = pitch_class
     self.octave = octave
     if pitch_index ~= nil then
-      local naturalPitch = lowest_pitch_indices[pitch_class] + (self.octave * 12)
-      self.accidentals = pitch_index - naturalPitch
+      local natural_pitch = lowest_pitch_indices[pitch_class] + (self.octave * 12)
+      self.accidentals = pitch_index - natural_pitch
     else
       self.accidentals = accidentals
     end
@@ -76,10 +76,10 @@ Pitch = class 'Pitch' {
   __sub = function(self, other)
     self, other = metamethod_args(Pitch, self, other)
     if isinstance(other, Pitch) then
-      local self_pitchClass_octave = (self.pitch_class.index - 1) + self.octave * 7
+      local self_pitch_class_octave = (self.pitch_class.index - 1) + self.octave * 7
       local other_pitch_class_octave = (other.pitch_class.index - 1) + other.octave * 7
-      return PitchInterval{number=self_pitchClass_octave - other_pitch_class_octave,
-                           semitoneInterval=tointeger(self) - tointeger(other)}
+      return PitchInterval{number=self_pitch_class_octave - other_pitch_class_octave,
+                           semitone_interval=tointeger(self) - tointeger(other)}
     elseif isinstance(other, PitchInterval) then
       local pitch_class = PitchClass[(self.pitch_class.index - other.number - 1) % 7 + 1]
       local octave = self.octave + math.floor((self.pitch_class.index - other.number - 1) / 7)
@@ -89,9 +89,9 @@ Pitch = class 'Pitch' {
     end
   end,
 
-  __call = function(self, octaveTransposition)
+  __call = function(self, octave_transposition)
     return Pitch{pitch_class = self.pitch_class,
-                 octave=PitchInterval.octave * octaveTransposition,
+                 octave=PitchInterval.octave * octave_transposition,
                  accidentals=self.accidentals}
   end,
 
@@ -103,7 +103,7 @@ Pitch = class 'Pitch' {
   -- __repr = function(self)
   --   if lowest_pitch_indices[PitchClass.A] <= tointeger(self) and tointeger(self) < 128
   --      and flat <= self.accidentals <= sharp then
-  --     pitch_className = self.pitch_class.name:lower()
+  --     pitch_class_name = self.pitch_class.name:lower()
   --     if self.accidentals == flat then
   --       accidental = "Flat"
   --     elseif self.accidentals == sharp then
@@ -111,30 +111,30 @@ Pitch = class 'Pitch' {
   --     else
   --       accidental = ""
   --     end
-  --     return "Pitch." + pitch_className + accidental + str(self.octave)
+  --     return "Pitch." + pitch_class_name + accidental + str(self.octave)
   --   end
 
   --   if self.accidentals then
   --     coeffecient = abs(self.accidentals)
   --     if coeffecient > 1 then
-  --       coeffecientString = "%s * " % coeffecient
+  --       coeffecient_string = "%s * " % coeffecient
   --     else
-  --       coeffecientString = ""
+  --       coeffecient_string = ""
   --     end
-  --     accidentalString = string.format(", accidentals=%s%s",
-  --       coeffecientString,
+  --     accidental_string = string.format(", accidentals=%s%s",
+  --       coeffecient_string,
   --       tern(self.accidentals > 0, "sharp", "flat"))
   --   else
-  --     accidentalString = ""
+  --     accidental_string = ""
   --   end
   --   return string.format("Pitch{%s, octave=%s%s}",
-  --     self.pitch_class.name, self.octave, accidentalString)
+  --     self.pitch_class.name, self.octave, accidental_string)
   -- end
 }
 
 local current_pitch = lowest_pitch_indices[PitchClass.A]
 local current_octave = 0
-local accidentalArgs = {
+local accidental_args = {
   {suffix='', accidental=natural},
   {suffix='flat', accidental=flat},
   {suffix='sharp', accidental=sharp},
@@ -145,7 +145,7 @@ while current_pitch < 128 do
       in zip({ivalues(PitchClass)}, {ivalues(minor_pitch_intervals)}) do
     pitch_class = pitch_class[1]
     interval = interval[1]
-    for unused, args in ipairs(accidentalArgs) do
+    for unused, args in ipairs(accidental_args) do
       local pitch_name = pitch_class.name:lower() .. args.suffix .. current_octave
       Pitch[pitch_name] = Pitch{pitch_class=pitch_class,
                                 octave=current_octave,

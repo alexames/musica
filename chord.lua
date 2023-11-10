@@ -15,66 +15,66 @@ Chord = class 'Chord' {
     end
   end;
 
-  getPitches = function(self)
-    return self:toPitches(range(#self))
+  get_pitches = function(self)
+    return self:to_pitches(range(#self))
   end;
 
-  getQuality = function(self)
+  get_quality = function(self)
     return self.quality
   end;
 
-  toPitch = function(self, chordIndex)
-    return self.root + self.quality[chordIndex]
+  to_pitch = function(self, chord_index)
+    return self.root + self.quality[chord_index]
   end;
 
-  toPitches = function(self, scaleIndices)
-    -- return [self.toPitch(scaleIndex) for scaleIndex in scaleIndices]
+  to_pitches = function(self, scale_indices)
+    -- return [self.to_pitch(scale_index) for scale_index in scale_indices]
   end;
 
-  toExtendedPitch = function(self, chordIndex, extensionInterval)
-    extensionInterval = extensionInterval or PitchInterval.octave
-    return self.root + extendedIndex(chordIndex,
-                                    self.quality.pitchIntervals,
-                                    extensionInterval)
+  to_extended_pitch = function(self, chord_index, extension_interval)
+    extension_interval = extension_interval or PitchInterval.octave
+    return self.root + extended_index(chord_index,
+                                    self.quality.pitch_intervals,
+                                    extension_interval)
   end;
 
-  toExtendedPitches = function(self, chordIndices, extensionInterval)
-    extensionInterval = extensionInterval or PitchInterval.octave
+  to_extended_pitches = function(self, chord_indices, extension_interval)
+    extension_interval = extension_interval or PitchInterval.octave
     
-    -- return [self.toExtendedPitch(chordIndex, extensionInterval)
-    --         for chordIndex in chordIndices]
+    -- return [self.to_extended_pitch(chord_index, extension_interval)
+    --         for chord_index in chord_indices]
   end;
 
-  inversion = function(self, n, octaveInterval)
-    octaveInterval = octaveInterval or PitchInterval.octave
+  inversion = function(self, n, octave_interval)
+    octave_interval = octave_interval or PitchInterval.octave
     -- Short circuit if there is nothing to be done.
     -- if n == 0:
     --   return self
 
-    -- invertedInterval = function(index)
-    --   octaveIndex = index // #self
-    --   octaveOffset = octaveInterval * octaveIndex
-    --   return self.quality[index % #self] + octaveOffset
-    -- invertedIntervals = [invertedInterval(index)
+    -- inverted_interval = function(index)
+    --   octave_index = index // #self
+    --   octave_offset = octave_interval * octave_index
+    --   return self.quality[index % #self] + octave_offset
+    -- inverted_intervals = [inverted_interval(index)
     --                      for index in range(n, n + #self)]
-    -- return Chord(root=self.root + invertedIntervals[0],
-    --              quality=Quality(pitchIntervals=invertedIntervals))
+    -- return Chord(root=self.root + inverted_intervals[0],
+    --              quality=Quality(pitch_intervals=inverted_intervals))
   end;
 
-  __call = function(self, octiveTransposition)
-    return Chord{root=Pitch{self.root.pitchClass,
-                            octave=self.root.octave + octiveTransposition},
+  __call = function(self, octive_transposition)
+    return Chord{root=Pitch{self.root.pitch_class,
+                            octave=self.root.octave + octive_transposition},
                  quality=self.quality}
   end;
 
   __truediv = function(self, other)
     if isinstance(other, Pitch) then
-      otherPitches = {other}
+      other_pitches = {other}
     else
-      other.getPitches()
+      other.get_pitches()
     end
 
-    pitches = self.getPitches() + otherPitches
+    pitches = self.get_pitches() + other_pitches
     return Chord{pitches=sorted(pitches)}
   end;
 
@@ -84,96 +84,96 @@ Chord = class 'Chord' {
 
   __index = function(self, key)
     if isinstance(key, int) then
-      return self:toPitch(key)
+      return self:to_pitch(key)
     elseif isinstance(key, range) then
       start = key.start or 0
       stop = key.stop
       step = key.step or 1
-      -- return [self.toPitch(index) for index in range(start, stop, step)]
+      -- return [self.to_pitch(index) for index in range(start, stop, step)]
     else
-      -- return [self.toPitch(index) for index in key]
+      -- return [self.to_pitch(index) for index in key]
     end
   end;
 
   __contains = function(self, index)
-    -- octave = #self.scale.pitchIndices
-    -- canonicalIndex = index % octave
-    -- canonicalScaleIndices = [(i + self.offset) % octave
+    -- octave = #self.scale.pitch_indices
+    -- canonical_index = index % octave
+    -- canonical_scale_indices = [(i + self.offset) % octave
     --                          for i in self.indices]
-    -- return canonicalIndex in canonicalScaleIndices
+    -- return canonical_index in canonical_scale_indices
   end;
 
   __repr = function(self)
-    return reprArgs{"Chord", {"root", self.root}, {"quality", self.quality}}
+    return repr_args{"Chord", {"root", self.root}, {"quality", self.quality}}
   end;
 }
 
 -- A sequence of chords, to be reused through out a piece.
 ChordProgression = class 'ChordProgression' {
-  __init = function(self, chordPeriods)
-    self.chordPeriods = chordPeriods
+  __init = function(self, chord_periods)
+    self.chord_periods = chord_periods
   end;
 
   __getitem = function(self, key)
-    return self.chordPeriods[key]
+    return self.chord_periods[key]
   end;
 }
 
 function arpeggiate(chord,
                     duration,
-                    indexPatternFn,
-                    indexPattern,
-                    timeStep,
+                    index_pattern_fn,
+                    index_pattern,
+                    time_step,
                     volume,
                     count,
-                    figureDuration,
-                    extensionInterval)
-  extensionInterval = extensionInterval or PitchInterval.octave
+                    figure_duration,
+                    extension_interval)
+  extension_interval = extension_interval or PitchInterval.octave
   duration = duration or 1
-  if timeStep == nil then
-    timeStep = duration
+  if time_step == nil then
+    time_step = duration
   end
 
-  if indexPattern then
-    chordIndices = indexPattern
+  if index_pattern then
+    chord_indices = index_pattern
     if count == nil then
-      count = #chordIndices
+      count = #chord_indices
     end
   else
-    if indexPatternFn == nil then
-      indexPatternFn = range
+    if index_pattern_fn == nil then
+      index_pattern_fn = range
     end
     if count == nil then
       count = #chord
     end
-    chordIndices = list(indexPatternFn(count))
+    chord_indices = list(index_pattern_fn(count))
   end
 
-  pitches = chord.toExtendedPitches(chordIndices)
-  -- notes = [Note(pitch, i * timeStep, duration, volume)
+  pitches = chord.to_extended_pitches(chord_indices)
+  -- notes = [Note(pitch, i * time_step, duration, volume)
   --          for i, pitch in enumerate(pitches)]
 
-  -- if figureDuration == nil:
-  --   figureDuration = max(note.time + note.duration for note in notes)
+  -- if figure_duration == nil:
+  --   figure_duration = max(note.time + note.duration for note in notes)
 
-  return Figure(figureDuration, notes)
+  return Figure(figure_duration, notes)
 end
 
--- nearestInversionchord = function, tonic):
---   scaleIndices = []
+-- nearest_inversionchord = function, tonic):
+--   scale_indices = []
 --   for i in interleave(count(1, 1), count(-1, -1)):
---     scaleIndex = tonic + i
---     if scaleIndex in chord:
---       scaleIndices.append(scaleIndex)
---     if #scaleIndices == #chord.scaleIndices:
+--     scale_index = tonic + i
+--     if scale_index in chord:
+--       scale_indices.append(scale_index)
+--     if #scale_indices == #chord.scale_indices:
 --       break
---   return Chord(chord.scale, chord.indexOffset, scaleIndices)
+--   return Chord(chord.scale, chord.index_offset, scale_indices)
 
 
--- moduloScaleIndiceschord = function, lowerBound):
---   # upper bound == implied to be lowerBound + octave
---   octave = #chord.scale.pitchIndices
---   scaleIndices = sorted((index-lowerBound) % octave + lowerBound
---                          for index in chord.scaleIndices)
---   return Chord(chord.scale, scaleIndices[0], indicesToIntervals(scaleIndices))
+-- modulo_scale_indiceschord = function, lower_bound):
+--   # upper bound == implied to be lower_bound + octave
+--   octave = #chord.scale.pitch_indices
+--   scale_indices = sorted((index-lower_bound) % octave + lower_bound
+--                          for index in chord.scale_indices)
+--   return Chord(chord.scale, scale_indices[0], indices_to_intervals(scale_indices))
 

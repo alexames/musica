@@ -36,11 +36,11 @@ Scale = class 'Scale' {
 
 --     pitch_index_offset = pitch_index - tointeger(self.tonic)
 --     offset_modulus = pitch_index_offset % tointeger(self.mode.octave_interval)
---     offsetOctave = math.floor(pitch_index_offset / tointeger(self.mode.octave_interval))
+--     offset_octave = math.floor(pitch_index_offset / tointeger(self.mode.octave_interval))
 --     -- try:
 --     --   scale_index_modulus = [tointeger(pitch - self.tonic)
 --     --                        for pitch in self.get_pitches()].index(offset_modulus)
---     --   return scale_index_modulus + #self * offsetOctave
+--     --   return scale_index_modulus + #self * offset_octave
 --     -- except:
 --     --   return nil
 --   end,
@@ -136,20 +136,20 @@ Scale = class 'Scale' {
 
 -- -- function find_chord(scale, quality, nth=0, *, direction=up, scale_indices=[0,2,4])
 -- function find_chord(args)
---   numberFound = 0
+--   number_found = 0
 --   -- Search one octave at a time.
 --   local start = 0
 --   local finish = direction * #scale
 --   while true do
 --     for root_scale_index in range(start, finish, direction) do
---       -- testQuality = Quality{pitches=scale[(i + root_scale_index for i in scale_indices)]}
+--       -- test_quality = Quality{pitches=scale[(i + root_scale_index for i in scale_indices)]}
 
---       if testQuality == quality then
---         if numberFound == nth then
+--       if test_quality == quality then
+--         if number_found == nth then
 --           return Chord{root=scale:to_pitch(root_scale_index),
 --                        quality=quality}
 --         end
---         numberFound = numberFound + 1
+--         number_found = number_found + 1
 --       end
 --     end
 --     start = start + direction * #scale
@@ -158,7 +158,7 @@ Scale = class 'Scale' {
 --     -- there won't be any matches going forward either. We should
 --     -- return nil. If there was at least one match though, we should
 --     -- keep searching until we find the nth match
---     if numberFound == 0 then
+--     if number_found == 0 then
 --       return nil
 --     end
 --   end

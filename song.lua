@@ -17,18 +17,18 @@ Part = class 'Part' : extends(Figure) {
 --   * Coda https://en.wikipedia.org/wiki/Coda_(music)
 --   * Bridge https://en.wikipedia.org/wiki/Bridge_(music)
 Section = class 'Section' {
-  __init = function(self, numberOfParts, meterProgression, chordProgression)
-    duration = meterProgression.duration()
-    -- self.parts = List{Part(duration) for unused in range(numberOfParts)}
-    self.meterProgression = meterProgression
+  __init = function(self, number_of_parts, meter_progression, chord_progression)
+    duration = meter_progression.duration()
+    -- self.parts = List{Part(duration) for unused in range(number_of_parts)}
+    self.meter_progression = meter_progression
     self.duration = duration
-    self.chordProgression = chordProgression
+    self.chord_progression = chord_progression
   end;
 
-  addParts = function(self, figureTuple)
-    for part, figure in zip(self.parts, figureTuple) do
+  add_parts = function(self, figure_tuple)
+    for part, figure in zip(self.parts, figure_tuple) do
       if figure then
-        part.addFigure(figure)
+        part.add_figure(figure)
       end
     end
   end;
@@ -45,19 +45,19 @@ Song = class 'Song' {
     self.instruments = List{Instrument.acoustic_grand} * tracks
   end;
 
-  makeSection = function(self, meterPeriods, chordPeriods)
-    if meterPeriods == nil then
-      meterPeriods = List{}
+  make_section = function(self, meter_periods, chord_periods)
+    if meter_periods == nil then
+      meter_periods = List{}
     end
-    if chordPeriods == nil then
-      chordPeriods = List{}
+    if chord_periods == nil then
+      chord_periods = List{}
     end
     return Section(self.tracks,
-                   MeterProgression(meterPeriods),
-                   ChordProgression(chordPeriods))
+                   MeterProgression(meter_periods),
+                   ChordProgression(chord_periods))
   end;
 
-  appendSection = function(self, section)
+  append_section = function(self, section)
     self.sections.append(deepcopy(section))
   end;
 

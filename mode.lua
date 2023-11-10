@@ -6,7 +6,7 @@ Mode = class 'Mode' {
   __init = function(self, semitone_intervals)
     assert(isinstance(semitone_intervals, List))
     self.semitone_intervals = semitone_intervals
-    self.semitone_indices = intervalsToIndices(semitone_intervals)
+    self.semitone_indices = intervals_to_indices(semitone_intervals)
 
     local pitch_intervals = {}
     for i, v in ipairs(self.semitone_indices) do
@@ -18,8 +18,8 @@ Mode = class 'Mode' {
 
   relative = function(self, mode)
     for i=1, #self.semitone_intervals do
-      relativeIntervals = self.semitone_intervals << i
-      if relativeIntervals == mode.semitone_intervals then
+      local relative_intervals = self.semitone_intervals << i
+      if relative_intervals == mode.semitone_intervals then
         return i
       end
     end

@@ -117,7 +117,7 @@ PitchInterval = class 'PitchInterval' {
         end
       end
     end
-    return reprArgs('PitchInterval',
+    return repr_args('PitchInterval',
                     {{'number', self.number},
                      {'accidentals', self.accidentals, 0}})
   end,

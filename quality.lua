@@ -3,29 +3,29 @@ require 'musictheory/util'
 require 'musictheory/pitch'
 
 Quality = class 'Quality' {
-  __init = function(self, pitchIntervals, pitches, name)
+  __init = function(self, pitch_intervals, pitches, name)
     self.name = name
-    if pitchIntervals and pitchIntervals[0] ~= PitchInterval.unison then
-      -- pitchIntervals = [interval - pitchIntervals[0]
-      --                   for interval in pitchIntervals]
+    if pitch_intervals and pitch_intervals[0] ~= PitchInterval.unison then
+      -- pitch_intervals = [interval - pitch_intervals[0]
+      --                   for interval in pitch_intervals]
     elseif pitches then
       pitches = sorted(pitches)
-      -- pitchIntervals = [pitch - pitches[0]
+      -- pitch_intervals = [pitch - pitches[0]
       --                   for pitch in pitches]
     end
-    self.pitchIntervals = pitchIntervals
+    self.pitch_intervals = pitch_intervals
   end;
 
   __getitem = function(self, key)
-    return self.pitchIntervals[key]
+    return self.pitch_intervals[key]
   end;
 
   __eq = function(self, other)
-    return self.pitchIntervals == other.pitchIntervals
+    return self.pitch_intervals == other.pitch_intervals
   end;
 
   __len = function(self)
-    return #self.pitchIntervals
+    return #self.pitch_intervals
   end;
 
   __repr = function(self)
@@ -38,11 +38,11 @@ Quality = class 'Quality' {
     elseif self == Quality.diminished then
       return "Quality.diminished"
     end
-    return "Quality(pitchIntervals=%s)" % (self.pitchIntervals)
+    return "Quality(pitch_intervals=%s)" % (self.pitch_intervals)
   end;
 }
 
-Quality.major = Quality{pitchIntervals={PitchInterval.unison, PitchInterval.majorThird, PitchInterval.perfectFifth}}
-Quality.minor = Quality{pitchIntervals={PitchInterval.unison, PitchInterval.minorThird, PitchInterval.perfectFifth}}
-Quality.augmented = Quality{pitchIntervals={PitchInterval.unison, PitchInterval.majorThird, PitchInterval.augmentedFifth}}
-Quality.diminished = Quality{pitchIntervals={PitchInterval.unison, PitchInterval.minorThird, PitchInterval.diminishedFifth}}
+Quality.major = Quality{pitch_intervals={PitchInterval.unison, PitchInterval.major_third, PitchInterval.perfect_fifth}}
+Quality.minor = Quality{pitch_intervals={PitchInterval.unison, PitchInterval.minor_third, PitchInterval.perfect_fifth}}
+Quality.augmented = Quality{pitch_intervals={PitchInterval.unison, PitchInterval.major_third, PitchInterval.augmented_fifth}}
+Quality.diminished = Quality{pitch_intervals={PitchInterval.unison, PitchInterval.minor_third, PitchInterval.diminished_fifth}}

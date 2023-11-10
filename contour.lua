@@ -3,6 +3,12 @@ require 'musictheory/note'
 require 'musictheory/util'
 require 'musictheory/scale'
 
+-- Directions
+down = -1
+level = 0
+same = 0
+up = 1
+
 -- Only lists whether notes are higher, lower, or the same as previous notes
 function directional_contour(melody)
   local contour = List{same}
@@ -34,13 +40,13 @@ function relative_contour(melody)
 end
 
 -- -- Gives the contour of a melody in pitch indices
--- function pitchIndex_contour(melody)
+-- function pitch_index_contour(melody)
 --   return [tointeger(note.pitch) for note in melody]
 -- end
 
 -- -- Gives the contour of a melody in pitch indices
--- function scaleIndex_contour(melody, scale)
---   return [scale.toScaleIndex(note.pitch) for note in melody]
+-- function scale_index_contour(melody, scale)
+--   return [scale.to_scale_index(note.pitch) for note in melody]
 -- end
 
 -- -- Gives the contour of a melody in pitch indices
@@ -49,6 +55,6 @@ end
 -- end
 
 -- -- Gives the contour of a melody in pitch indices
--- function pitchClass_contour(melody)
---   return [note.pitch.pitchClass for note in melody]
+-- function pitch_class_contour(melody)
+--   return [note.pitch.pitch_class for note in melody]
 -- end

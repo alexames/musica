@@ -11,7 +11,7 @@ class 'Note' {
     self.volume = arg.volume or 1.0
   end;
 
-  setStart = function(self, start)
+  set_start = function(self, start)
     self.duration = finish() - start
     self.time = start
   end;
@@ -20,7 +20,7 @@ class 'Note' {
     return self.time
   end;
 
-  setFinish = function(self, finish)
+  set_finish = function(self, finish)
     self.duration = finish - self.time
   end;
 
