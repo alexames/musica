@@ -1,11 +1,8 @@
 require 'llx'
+require 'musictheory/accidental'
 require 'musictheory/interval_quality'
 require 'musictheory/pitch_class'
 require 'musictheory/util'
-
-sharp = 1
-natural = 0
-flat = -1
 
 PitchInterval = class 'PitchInterval' {
   __init = function(self, args)
@@ -39,21 +36,21 @@ PitchInterval = class 'PitchInterval' {
   _quality_to_accidental = function(self, quality)
     if self:is_perfect() then
       if quality == IntervalQuality.diminished then
-        accidentals = flat
+        accidentals = Accidental.flat
       elseif quality == IntervalQuality.perfect then
-        accidentals = natural
+        accidentals = Accidental.natural
       elseif quality == IntervalQuality.augmented then
-        accidentals = sharp
+        accidentals = Accidental.sharp
       end
     else
       if quality == IntervalQuality.diminished then
-        accidentals = 2 * flat
+        accidentals = 2 * Accidental.flat
       elseif quality == IntervalQuality.minor then
-        accidentals = flat
+        accidentals = Accidental.flat
       elseif quality == IntervalQuality.major then
-        accidentals = natural
+        accidentals = Accidental.natural
       elseif quality == IntervalQuality.augmented then
-        accidentals = sharp
+        accidentals = Accidental.sharp
       end
     end
     return accidentals

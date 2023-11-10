@@ -1,6 +1,8 @@
 require 'llx'
+require 'musictheory/accidental'
 require 'musictheory/pitch_class'
 require 'musictheory/pitch_interval'
+require 'musictheory/spiral'
 require 'musictheory/util'
 
 major_pitch_intervals = List{2, 2, 1, 2, 2, 2, 1}
@@ -9,10 +11,6 @@ minor_pitch_intervals = List{2, 1, 2, 2, 1, 2, 2}
 minor_pitch_indices = intervals_to_indices(minor_pitch_intervals)
 
 local middle_octave = 4
-
-local sharp = 1
-local natural = 0
-local flat = -1
 
 local lowest_pitch_indices = {
   [PitchClass.A] = 21,
@@ -135,9 +133,9 @@ Pitch = class 'Pitch' {
 local current_pitch = lowest_pitch_indices[PitchClass.A]
 local current_octave = 0
 local accidental_args = {
-  {suffix='', accidental=natural},
-  {suffix='flat', accidental=flat},
-  {suffix='sharp', accidental=sharp},
+  {suffix='', accidental=Accidental.natural},
+  {suffix='flat', accidental=Accidental.flat},
+  {suffix='sharp', accidental=Accidental.sharp},
 }
 
 while current_pitch < 128 do
