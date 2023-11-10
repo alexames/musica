@@ -1,6 +1,7 @@
 local unit = require 'unit'
 require 'llx'
 require 'musictheory/mode'
+require 'musictheory/modes'
 
 test_class 'ModeTest' {
   [test 'init'] = function(self)
