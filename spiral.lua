@@ -1,4 +1,5 @@
 require 'llx'
+require 'musictheory/util'
 
 Spiral = class 'Spiral' {
   __init = function(self, args)
@@ -27,8 +28,7 @@ Spiral = class 'Spiral' {
     end
   end,
 
-  __repr = function(self)
-    values = self.values + (self.extensionInterval,)
-    return reprArgs("Spiral", [(value,) for value in values])
+  __tostring = function(self)
+    return "Spiral{".. table.concat(self._values, ', ') .. '}'
   end,
 }
