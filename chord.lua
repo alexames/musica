@@ -1,11 +1,26 @@
+require 'llx'
 require 'musictheory/note'
 require 'musictheory/pitch'
 require 'musictheory/quality'
 require 'musictheory/util'
 require 'musictheory/figure'
 
+local ChordArgumentsSchema = Schema{
+  __name=ChordArgumentsSchema,
+  type=Table,
+  properties={
+    root={type=Pitch},
+    pitches={
+      type=List,
+      items={type=Pitch},
+    },
+    quality={type=Quality},
+  },
+}
+
 Chord = class 'Chord' {
   __init = function(self, args)
+    check_arguments{self=Chord, args=ChordArgumentsSchema}
     if args.pitches then
       self.root = args.pitches[0]
       self.quality = Quality{pitches=args.pitches}
@@ -95,7 +110,7 @@ Chord = class 'Chord' {
     end
   end;
 
-  __contains = function(self, index)
+  contains = function(self, index)
     -- octave = #self.scale.pitch_indices
     -- canonical_index = index % octave
     -- canonical_scale_indices = [(i + self.offset) % octave
