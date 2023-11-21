@@ -1,8 +1,6 @@
 require 'llx'
-require 'musictheory/util'
 require 'musictheory/pitch'
-
-local Union = types.Union
+require 'musictheory/util'
 
 Mode = class 'Mode' {
   __init = function(self, semitone_intervals)
