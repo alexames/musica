@@ -62,6 +62,7 @@ Pitch = class 'Pitch' {
   end,
 
   __add = function(self, pitch_interval)
+    check_arguments{self=Pitch, pitch_interval=PitchInterval}
     assert(isinstance(pitch_interval, PitchInterval))
     local pitch_class = PitchClass[(self.pitch_class.index + pitch_interval.number - 1) % 7 + 1]
     local octave = math.floor(self.octave + (self.pitch_class.index + pitch_interval.number - 1) / 7)
