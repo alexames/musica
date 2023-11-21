@@ -56,9 +56,9 @@ Quality = class 'Quality' {
     self.pitch_intervals = pitch_intervals
   end,
 
-  __getitem = function(self, key)
-    return self.pitch_intervals[key]
-  end;
+  __index = multi_index(Quality, function(self, index)
+    return self.pitch_intervals[index]
+  end),
 
   __eq = function(self, other)
     return self.pitch_intervals == other.pitch_intervals

@@ -13,6 +13,22 @@ UniqueSymbol = class 'UniqueSymbol' {
   end,
 }
 
+function multi_index(cls, callback)
+  return function(self, index)
+    if isinstance(index, Number) then
+      return callback(self, index)
+    elseif isinstance(index, Table) then
+      local results = List{}
+      for i, v in ipairs(index) do
+        results[i] = self[v]
+      end
+      return results
+    else
+      return cls.__defaultindex(self, index)
+    end
+  end
+end
+
 
 -- function by_pairs(l)
 --   return zip(l[:-1], l[1:])

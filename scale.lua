@@ -87,19 +87,9 @@ Scale = class 'Scale' {
     return #self.mode
   end,
 
-  __index = function(self, index)
-    if isinstance(index, Number) then
-      return rawget(self, 'tonic') + rawget(self, 'mode')[index]
-    elseif isinstance(index, Table) then
-      local results = List{}
-      for i, v in ipairs(index) do
-        results[i] = self[v]
-      end
-      return results -- Make this a Chord
-    else
-      return Scale.__defaultindex(self, index)
-    end
-  end,
+  __index = multi_index(Scale, function(self, index)
+    return self.tonic + self.mode[index]
+  end),
 
   contains = function(self, other)
     local other_pitch_indices

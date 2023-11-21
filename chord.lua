@@ -1,9 +1,9 @@
 require 'llx'
+require 'musictheory/figure'
 require 'musictheory/note'
 require 'musictheory/pitch'
 require 'musictheory/quality'
 require 'musictheory/util'
-require 'musictheory/figure'
 
 local ChordByPitchesSchema = Schema{
   __name='ChordByPitchesSchema',
@@ -124,19 +124,8 @@ Chord = class 'Chord' {
     return #self.quality
   end,
 
-  __index = function(self, index)
-    if isinstance(index, Number) then
-      return self:to_pitch(index)
-    elseif isinstance(index, Table) then
-      local results = List{}
-      for i, v in ipairs(index) do
-        results[i] = self[v]
-      end
-      return results
-    else
-      return Chord.__defaultindex(self, index)
-    end
-  end,
+  __index = multi_index(Chord,
+                        function(self, index) return self:to_pitch(index) end),
 
   -- __index = function(self, key)
   --   if isinstance(key, int) then

@@ -42,23 +42,12 @@ Mode = class 'Mode' {
     return self.semitone_intervals == other.semitone_intervals
   end,
 
-  __index = function(self, index)
-    check_arguments{self=Mode, index=Union{Number, Table, String}}
-    if isinstance(index, Number) then
+  __index = multi_index(Mode, function(self, index)
       if index < 0 then
         index = #self + index
       end
-      return rawget(self, 'pitch_intervals')[index]
-    elseif isinstance(index, Table) then
-      local results = List{}
-      for i, v in ipairs(index) do
-        results[i] = self[v]
-      end
-      return results
-    else
-      return Mode.__defaultindex(self, index)
-    end
-  end,
+      return self.pitch_intervals[index]
+    end),
 
   __len = function(self)
     check_arguments{self=Mode}
