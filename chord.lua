@@ -5,60 +5,87 @@ require 'musictheory/quality'
 require 'musictheory/util'
 require 'musictheory/figure'
 
-local ChordArgumentsSchema = Schema{
-  __name=ChordArgumentsSchema,
+local ChordByPitchesSchema = Schema{
+  __name='ChordByPitchesSchema',
   type=Table,
   properties={
-    root={type=Pitch},
     pitches={
       type=List,
       items={type=Pitch},
     },
+  },
+  required={'pitches'},
+}
+
+local ChordByRootQuality = Schema{
+  __name='ChordByRootQuality',
+  type=Table,
+  properties={
+    root={type=Pitch},
     quality={type=Quality},
   },
+  required={'root', 'quality'},
+}
+
+local ChordArgumentsSchema = Schema{
+  __name='ChordArgumentsSchema',
+  type=Union{ChordByPitchesSchema, ChordByRootQuality},
 }
 
 Chord = class 'Chord' {
   __init = function(self, args)
     check_arguments{self=Chord, args=ChordArgumentsSchema}
     if args.pitches then
-      self.root = args.pitches[0]
+      self.root = args.pitches[1]
       self.quality = Quality{pitches=args.pitches}
     else
       self.root = args.root
       self.quality = args.quality or Quality.major
     end
-  end;
+  end,
 
   get_pitches = function(self)
     return self:to_pitches(range(#self))
-  end;
+  end,
 
   get_quality = function(self)
     return self.quality
-  end;
+  end,
 
   to_pitch = function(self, chord_index)
+    check_arguments{self=Chord, chord_index=Integer}
     return self.root + self.quality[chord_index]
-  end;
+  end,
 
   to_pitches = function(self, scale_indices)
-    -- return [self.to_pitch(scale_index) for scale_index in scale_indices]
-  end;
+    check_arguments{self=Chord,
+                    scale_indices=Schema{type=List, items{type=Integer}}}
+    local result = List{}
+    for i, scale_index in ipairs(scale_indices) do
+      result[i] = self:to_pitch(scale_index)
+    end
+    return result
+  end,
 
   to_extended_pitch = function(self, chord_index, extension_interval)
+    check_arguments{self=Chord,
+                    chord_index=Integer,
+                    extension_interval=Optional{Integer}}
     extension_interval = extension_interval or PitchInterval.octave
     return self.root + extended_index(chord_index,
-                                    self.quality.pitch_intervals,
-                                    extension_interval)
-  end;
+                                      self.quality.pitch_intervals,
+                                      extension_interval)
+  end,
 
   to_extended_pitches = function(self, chord_indices, extension_interval)
+    check_arguments{self=Chord,
+                    chord_index=Integer,
+                    extension_interval=Optional{Integer}}
     extension_interval = extension_interval or PitchInterval.octave
     
     -- return [self.to_extended_pitch(chord_index, extension_interval)
     --         for chord_index in chord_indices]
-  end;
+  end,
 
   inversion = function(self, n, octave_interval)
     octave_interval = octave_interval or PitchInterval.octave
@@ -74,13 +101,13 @@ Chord = class 'Chord' {
     --                      for index in range(n, n + #self)]
     -- return Chord(root=self.root + inverted_intervals[0],
     --              quality=Quality(pitch_intervals=inverted_intervals))
-  end;
+  end,
 
   __call = function(self, octive_transposition)
     return Chord{root=Pitch{self.root.pitch_class,
                             octave=self.root.octave + octive_transposition},
                  quality=self.quality}
-  end;
+  end,
 
   __truediv = function(self, other)
     if isinstance(other, Pitch) then
@@ -91,24 +118,38 @@ Chord = class 'Chord' {
 
     pitches = self.get_pitches() + other_pitches
     return Chord{pitches=sorted(pitches)}
-  end;
+  end,
 
   __len = function(self)
     return #self.quality
-  end;
+  end,
 
-  __index = function(self, key)
-    if isinstance(key, int) then
-      return self:to_pitch(key)
-    elseif isinstance(key, range) then
-      start = key.start or 0
-      stop = key.stop
-      step = key.step or 1
-      -- return [self.to_pitch(index) for index in range(start, stop, step)]
+  __index = function(self, index)
+    if isinstance(index, Number) then
+      return self:to_pitch(index)
+    elseif isinstance(index, Table) then
+      local results = List{}
+      for i, v in ipairs(index) do
+        results[i] = self[v]
+      end
+      return results
     else
-      -- return [self.to_pitch(index) for index in key]
+      return Chord.__defaultindex(self, index)
     end
-  end;
+  end,
+
+  -- __index = function(self, key)
+  --   if isinstance(key, int) then
+  --     return self:to_pitch(key)
+  --   elseif isinstance(key, range) then
+  --     start = key.start or 0
+  --     stop = key.stop
+  --     step = key.step or 1
+  --     -- return [self.to_pitch(index) for index in range(start, stop, step)]
+  --   else
+  --     -- return [self.to_pitch(index) for index in key]
+  --   end
+  -- end;
 
   contains = function(self, index)
     -- octave = #self.scale.pitch_indices
@@ -116,22 +157,22 @@ Chord = class 'Chord' {
     -- canonical_scale_indices = [(i + self.offset) % octave
     --                          for i in self.indices]
     -- return canonical_index in canonical_scale_indices
-  end;
+  end,
 
   __repr = function(self)
     return repr_args{"Chord", {"root", self.root}, {"quality", self.quality}}
-  end;
+  end,
 }
 
 -- A sequence of chords, to be reused through out a piece.
 ChordProgression = class 'ChordProgression' {
   __init = function(self, chord_periods)
     self.chord_periods = chord_periods
-  end;
+  end,
 
   __getitem = function(self, key)
     return self.chord_periods[key]
-  end;
+  end,
 }
 
 function arpeggiate(chord,
@@ -145,6 +186,7 @@ function arpeggiate(chord,
                     extension_interval)
   extension_interval = extension_interval or PitchInterval.octave
   duration = duration or 1
+
   if time_step == nil then
     time_step = duration
   end
@@ -192,3 +234,6 @@ end
 --                          for index in chord.scale_indices)
 --   return Chord(chord.scale, scale_indices[0], indices_to_intervals(scale_indices))
 
+c = Chord{pitches=List{Pitch.c4, Pitch.e4, Pitch.g4}}
+
+print(c[1])

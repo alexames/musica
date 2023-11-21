@@ -1,20 +1,60 @@
 require 'llx'
 require 'musictheory/util'
 require 'musictheory/pitch'
+require 'musictheory/pitch_interval'
+
+local QualityByPitches = Schema{
+  __name='QualityByPitches',
+  type=Table,
+  properties={
+    pitches={
+      type=List,
+      items={type=Pitch},
+    },
+    name={type=String},
+  },
+  required={'pitches'},
+}
+
+local QualityByPitchIntervals = Schema{
+  __name='QualityByPitchIntervals',
+  type=Table,
+  properties={
+    pitch_intervals={
+      type=List,
+      items={type=PitchInterval},
+    },
+    name={type=String},
+  },
+  required={'pitch_intervals'},
+}
+
+local QualityArgumentsSchema = Schema{
+  __name='QualityArgumentsSchema',
+  type=Union{QualityByPitches, QualityByPitchIntervals},
+}
 
 Quality = class 'Quality' {
-  __init = function(self, pitch_intervals, pitches, name)
-    self.name = name
-    if pitch_intervals and pitch_intervals[0] ~= PitchInterval.unison then
-      -- pitch_intervals = [interval - pitch_intervals[0]
-      --                   for interval in pitch_intervals]
+  __init = function(self, args)
+    check_arguments{self=Quality, args=QualityArgumentsSchema}
+
+    self.name = args.name
+    local pitch_intervals = args.pitch_intervals or List{}
+    local pitches = args.pitches
+    if pitch_intervals and pitch_intervals[1] ~= PitchInterval.unison then
+      local first_interval = pitch_intervals[1]
+      for i, interval in ipairs(pitch_intervals) do
+        pitch_intervals[i] = interval - first_interval
+      end
     elseif pitches then
-      pitches = sorted(pitches)
-      -- pitch_intervals = [pitch - pitches[0]
-      --                   for pitch in pitches]
+      pitches:sort()
+      local first_pitch = pitches[1]
+      for i, pitch in ipairs(pitches) do
+        pitch_intervals[i] = pitch - first_pitch
+      end
     end
     self.pitch_intervals = pitch_intervals
-  end;
+  end,
 
   __getitem = function(self, key)
     return self.pitch_intervals[key]
@@ -42,7 +82,7 @@ Quality = class 'Quality' {
   end;
 }
 
-Quality.major = Quality{pitch_intervals={PitchInterval.unison, PitchInterval.major_third, PitchInterval.perfect_fifth}}
-Quality.minor = Quality{pitch_intervals={PitchInterval.unison, PitchInterval.minor_third, PitchInterval.perfect_fifth}}
-Quality.augmented = Quality{pitch_intervals={PitchInterval.unison, PitchInterval.major_third, PitchInterval.augmented_fifth}}
-Quality.diminished = Quality{pitch_intervals={PitchInterval.unison, PitchInterval.minor_third, PitchInterval.diminished_fifth}}
+Quality.major = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.perfect_fifth}}
+Quality.minor = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.perfect_fifth}}
+Quality.augmented = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.augmented_fifth}}
+Quality.diminished = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.diminished_fifth}}
