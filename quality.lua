@@ -1,7 +1,7 @@
 require 'llx'
-require 'musictheory/util'
 require 'musictheory/pitch'
 require 'musictheory/pitch_interval'
+require 'musictheory/util'
 
 local QualityByPitches = Schema{
   __name='QualityByPitches',
@@ -37,9 +37,8 @@ local QualityArgumentsSchema = Schema{
 Quality = class 'Quality' {
   __init = function(self, args)
     check_arguments{self=Quality, args=QualityArgumentsSchema}
-
     self.name = args.name
-    local pitch_intervals = args.pitch_intervals or List{}
+    local pitch_intervals = args.pitch_intervals
     local pitches = args.pitches
     if pitch_intervals and pitch_intervals[1] ~= PitchInterval.unison then
       local first_interval = pitch_intervals[1]
@@ -47,6 +46,7 @@ Quality = class 'Quality' {
         pitch_intervals[i] = interval - first_interval
       end
     elseif pitches then
+      pitch_intervals = List{}
       pitches:sort()
       local first_pitch = pitches[1]
       for i, pitch in ipairs(pitches) do
@@ -68,7 +68,7 @@ Quality = class 'Quality' {
     return #self.pitch_intervals
   end;
 
-  __repr = function(self)
+  __tostring = function(self)
     if self == Quality.major then
       return "Quality.major"
     elseif self == Quality.minor then
@@ -78,7 +78,7 @@ Quality = class 'Quality' {
     elseif self == Quality.diminished then
       return "Quality.diminished"
     end
-    return "Quality(pitch_intervals=%s)" % (self.pitch_intervals)
+    return string.format("Quality{pitch_intervals=%s}", self.pitch_intervals)
   end;
 }
 

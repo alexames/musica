@@ -71,7 +71,7 @@ Chord = class 'Chord' {
     check_arguments{self=Chord,
                     chord_index=Integer,
                     extension_interval=Optional{Integer}}
-    extension_interval = extension_interval or PitchInterval.octave
+    local extension_interval = extension_interval or PitchInterval.octave
     return self.root + extended_index(chord_index,
                                       self.quality.pitch_intervals,
                                       extension_interval)
@@ -82,34 +82,40 @@ Chord = class 'Chord' {
                     chord_index=Integer,
                     extension_interval=Optional{Integer}}
     extension_interval = extension_interval or PitchInterval.octave
-    
-    -- return [self.to_extended_pitch(chord_index, extension_interval)
-    --         for chord_index in chord_indices]
+    local result = List{}
+    for i, chord_index in ipairs(chord_indices) do
+      result[i] = self:to_extended_pitch(chord_index, extension_interval)
+    end
+    return result
   end,
 
   inversion = function(self, n, octave_interval)
+    check_arguments{self=Chord,
+                    n=Integer,
+                    octave_interval=Optional{Integer}}
     octave_interval = octave_interval or PitchInterval.octave
     -- Short circuit if there is nothing to be done.
-    -- if n == 0:
-    --   return self
+    if n == 0 then
+      return self
+    end
 
-    -- inverted_interval = function(index)
-    --   octave_index = index // #self
-    --   octave_offset = octave_interval * octave_index
-    --   return self.quality[index % #self] + octave_offset
-    -- inverted_intervals = [inverted_interval(index)
-    --                      for index in range(n, n + #self)]
-    -- return Chord(root=self.root + inverted_intervals[0],
-    --              quality=Quality(pitch_intervals=inverted_intervals))
+    local inverted_intervals = List{}
+    for index=n, n + #self do
+      local octave_index = index // #self
+      local octave_offset = octave_interval * octave_index
+      inverted_intervals[i] = self.quality[index % #self + 1] + octave_offset
+    end
+    return Chord{root=self.root + inverted_intervals[1],
+                 quality=Quality{pitch_intervals=inverted_intervals}}
   end,
 
-  __call = function(self, octive_transposition)
-    return Chord{root=Pitch{self.root.pitch_class,
-                            octave=self.root.octave + octive_transposition},
-                 quality=self.quality}
-  end,
+  -- __call = function(self, octive_transposition)
+  --   return Chord{root=Pitch{self.root.pitch_class,
+  --                           octave=self.root.octave + octive_transposition},
+  --                quality=self.quality}
+  -- end,
 
-  __truediv = function(self, other)
+  __div = function(self, other)
     if isinstance(other, Pitch) then
       other_pitches = {other}
     else
@@ -127,29 +133,19 @@ Chord = class 'Chord' {
   __index = multi_index(Chord,
                         function(self, index) return self:to_pitch(index) end),
 
-  -- __index = function(self, key)
-  --   if isinstance(key, int) then
-  --     return self:to_pitch(key)
-  --   elseif isinstance(key, range) then
-  --     start = key.start or 0
-  --     stop = key.stop
-  --     step = key.step or 1
-  --     -- return [self.to_pitch(index) for index in range(start, stop, step)]
-  --   else
-  --     -- return [self.to_pitch(index) for index in key]
+  -- contains = function(self, index)
+  --   local octave = #self.scale.pitch_indices
+  --   local canonical_index = index % octave
+  --   local canonical_scale_indices = List{}
+  --   for i, scale_index in ipairs(self.indices) do
+  --     canonical_scale_indices[i] = (scale_index + self.offset) % octave
   --   end
-  -- end;
+  --   return canonical_index in canonical_scale_indices
+  -- end,
 
-  contains = function(self, index)
-    -- octave = #self.scale.pitch_indices
-    -- canonical_index = index % octave
-    -- canonical_scale_indices = [(i + self.offset) % octave
-    --                          for i in self.indices]
-    -- return canonical_index in canonical_scale_indices
-  end,
-
-  __repr = function(self)
-    return repr_args{"Chord", {"root", self.root}, {"quality", self.quality}}
+  __tostring = function(self)
+    -- return repr_args{"Chord", {"root", self.root}, {"quality", self.quality}}
+    return string.format('Chord{root=%s, quality=%s}', self.root, self.quality)
   end,
 }
 
@@ -223,6 +219,3 @@ end
 --                          for index in chord.scale_indices)
 --   return Chord(chord.scale, scale_indices[0], indices_to_intervals(scale_indices))
 
-c = Chord{pitches=List{Pitch.c4, Pitch.e4, Pitch.g4}}
-
-print(c[1])
