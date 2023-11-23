@@ -56,7 +56,7 @@ Quality = class 'Quality' {
     self.pitch_intervals = pitch_intervals
   end,
 
-  __index = multi_index(Quality, function(self, index)
+  __index = multi_index(function(self, index)
     return self.pitch_intervals[index]
   end),
 

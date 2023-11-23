@@ -13,7 +13,7 @@ UniqueSymbol = class 'UniqueSymbol' {
   end,
 }
 
-function multi_index(cls, callback)
+function multi_index(callback)
   return function(self, index)
     if isinstance(index, Number) then
       return callback(self, index)
@@ -24,7 +24,8 @@ function multi_index(cls, callback)
       end
       return results
     else
-      return cls.__defaultindex(self, index)
+      local __defaultindex = getmetafield(self, '__defaultindex')
+      return __defaultindex(self, index)
     end
   end
 end

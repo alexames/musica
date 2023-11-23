@@ -88,10 +88,6 @@ Scale = class 'Scale' {
     return #self.mode
   end,
 
-  __index = multi_index(Scale, function(self, index)
-    return self.tonic + self.mode[index]
-  end),
-
   contains = function(self, other)
     local other_pitch_indices
     if isinstance(other, Number) or isinstance(other, Pitch) then
@@ -120,6 +116,11 @@ Scale = class 'Scale' {
     end
     return true
   end,
+
+
+  __index = multi_index(function(self, index)
+    return self.tonic + self.mode[index]
+  end),
 
   __tostring = function(self)
     return string.format("Scale{tonic=%s, mode=%s}", self.tonic, self.mode)

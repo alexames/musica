@@ -130,8 +130,9 @@ Chord = class 'Chord' {
     return #self.quality
   end,
 
-  __index = multi_index(Chord,
-                        function(self, index) return self:to_pitch(index) end),
+  __index = multi_index(function(self, index)
+    return self:to_pitch(index)
+  end),
 
   -- contains = function(self, index)
   --   local octave = #self.scale.pitch_indices

@@ -6,7 +6,7 @@ Ring = class 'Ring' {
     self._values = args
   end,
 
-  __index = multi_index(Ring, function(self, key)
+  __index = multi_index(function(self, key)
     local values = self._values
     local length = #values
     key = (key % length) + #self

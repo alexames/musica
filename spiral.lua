@@ -6,7 +6,7 @@ Spiral = class 'Spiral' {
     self._values = args
   end,
 
-  __index = multi_index(Spiral, function(self, key)
+  __index = multi_index(function(self, key)
     local values = rawget(self, '_values')
     local length = #values
     local multiplicitive_operand = values[length]

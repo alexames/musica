@@ -40,10 +40,7 @@ Mode = class 'Mode' {
     return self.semitone_intervals == other.semitone_intervals
   end,
 
-  __index = multi_index(Mode, function(self, index)
-      if index < 0 then
-        index = #self + index
-      end
+  __index = multi_index(function(self, index)
       return self.pitch_intervals[index]
     end),
 
