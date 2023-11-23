@@ -45,9 +45,9 @@ end
 
 
 function intervals_to_indices(intervals)
-  index = 0
-  indices = List{}
-  for interval in intervals:ivalues() do
+  local index = 0
+  local indices = List{}
+  for i, interval in ipairs(intervals) do
     indices:insert(index)
     index = index + tointeger(interval)
   end
