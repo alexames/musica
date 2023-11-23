@@ -114,9 +114,8 @@ PitchInterval = class 'PitchInterval' {
         end
       end
     end
-    return repr_args('PitchInterval',
-                    {{'number', self.number},
-                     {'accidentals', self.accidentals, 0}})
+    return string.format('PitchInterval{number=%s,accidentals=%s}', 
+                         self.number, self.accidentals)
   end,
 
   half     = 1,

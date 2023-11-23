@@ -94,11 +94,6 @@ Pitch = class 'Pitch' {
                  accidentals=self.accidentals}
   end,
 
-  -- __tostring = function(self)
-  --   local fmt = 'Pitch{pitch_class=%s, octave=%s, accidentals=%s}'
-  --   return fmt:format(self.pitch_class, self.octave, self.accidentals)
-  -- end,
-
   __tostring = function(self)
     if lowest_pitch_indices[PitchClass.A] <= tointeger(self)
         and tointeger(self) < 128
@@ -111,7 +106,8 @@ Pitch = class 'Pitch' {
       elseif self.accidentals == sharp then
         accidental = "sharp"
       end
-      return "Pitch." .. pitch_class_name .. accidental .. tostring(self.octave)
+      return String.format(
+          "Pitch.%s%s%s", pitch_class_name, accidental, tostring(self.octave))
     end
 
     if self.accidentals then

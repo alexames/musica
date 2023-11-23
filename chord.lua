@@ -145,7 +145,6 @@ Chord = class 'Chord' {
   -- end,
 
   __tostring = function(self)
-    -- return repr_args{"Chord", {"root", self.root}, {"quality", self.quality}}
     return string.format('Chord{root=%s, quality=%s}', self.root, self.quality)
   end,
 }
