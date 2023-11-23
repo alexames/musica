@@ -30,17 +30,6 @@ function multi_index(callback)
   end
 end
 
-
--- function by_pairs(l)
---   return zip(l[:-1], l[1:])
--- end
-
-
--- function get(sequence, index)
---   return [item[index] for item in sequence]
--- end
-
-
 -- function interleave(...)
 --   return (val for pair in zip(*lists)
 --               for val in pair)
