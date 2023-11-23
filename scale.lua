@@ -1,5 +1,6 @@
 require 'llx'
 require 'musictheory/chord'
+require 'musictheory/direction'
 require 'musictheory/mode'
 require 'musictheory/modes'
 require 'musictheory/pitch'

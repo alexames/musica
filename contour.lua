@@ -1,13 +1,8 @@
 require 'llx'
+require 'musictheory/direction'
 require 'musictheory/note'
-require 'musictheory/util'
 require 'musictheory/scale'
-
--- Directions
-down = -1
-level = 0
-same = 0
-up = 1
+require 'musictheory/util'
 
 -- Only lists whether notes are higher, lower, or the same as previous notes
 function directional_contour(melody)
