@@ -117,15 +117,15 @@ Pitch = class 'Pitch' {
       else
         coeffecient_string = ""
       end
-      accidental_string = string.format(", accidentals=%s%s",
+      accidental_string = String.format(", accidentals=%s%s",
         coeffecient_string,
         tern(self.accidentals > 0, "sharp", "flat"))
     else
       accidental_string = ""
     end
-    return string.format("Pitch{%s, octave=%s%s}",
+    return String.format("Pitch{%s, octave=%s%s}",
       self.pitch_class.name, self.octave, accidental_string)
-  end
+  end,
 }
 
 local current_pitch = lowest_pitch_indices[PitchClass.A]
@@ -151,5 +151,3 @@ while current_pitch < 128 do
   end
   current_octave = current_octave + 1
 end
-
-print(Pitch.c4)
