@@ -59,7 +59,8 @@ Chord = class 'Chord' {
 
   to_pitches = function(self, scale_indices)
     check_arguments{self=Chord,
-                    scale_indices=Schema{type=List, items{type=Integer}}}
+                    scale_indices=Schema{type=List,
+                                         items={type=Integer}}}
     local result = List{}
     for i, scale_index in ipairs(scale_indices) do
       result[i] = self:to_pitch(scale_index)
@@ -109,12 +110,6 @@ Chord = class 'Chord' {
                  quality=Quality{pitch_intervals=inverted_intervals}}
   end,
 
-  -- __call = function(self, octive_transposition)
-  --   return Chord{root=Pitch{self.root.pitch_class,
-  --                           octave=self.root.octave + octive_transposition},
-  --                quality=self.quality}
-  -- end,
-
   __div = function(self, other)
     if isinstance(other, Pitch) then
       other_pitches = {other}
@@ -134,15 +129,15 @@ Chord = class 'Chord' {
     return self:to_pitch(index)
   end),
 
-  -- contains = function(self, index)
-  --   local octave = #self.scale.pitch_indices
-  --   local canonical_index = index % octave
-  --   local canonical_scale_indices = List{}
-  --   for i, scale_index in ipairs(self.indices) do
-  --     canonical_scale_indices[i] = (scale_index + self.offset) % octave
-  --   end
-  --   return canonical_index in canonical_scale_indices
-  -- end,
+  contains = function(self, index)
+    local octave = #self.scale.pitch_indices
+    local canonical_index = index % octave
+    local canonical_scale_indices = List{}
+    for i, scale_index in ipairs(self.indices) do
+      canonical_scale_indices[i] = (scale_index + self.offset) % octave
+    end
+    return canonical_scale_indices:contains(canonical_index)
+  end,
 
   __tostring = function(self)
     return string.format('Chord{root=%s, quality=%s}', self.root, self.quality)
@@ -160,22 +155,29 @@ ChordProgression = class 'ChordProgression' {
   end,
 }
 
-function arpeggiate(chord,
-                    duration,
-                    index_pattern_fn,
-                    index_pattern,
-                    time_step,
-                    volume,
-                    count,
-                    figure_duration,
-                    extension_interval)
-  extension_interval = extension_interval or PitchInterval.octave
-  duration = duration or 1
+function arpeggiate()
+  check_arguments{args=Schema{
+    chord={type=Chord},
+    duration={type=Number},
+    index_pattern_fn={type=Function},
+    index_pattern={type=Table},
+    time_step={type=Number},
+    volume={type=Number},
+    count={type=Integer},
+    figure_duration={type=Number},
+    extension_interval={type=PitchInterval},
+  }}
+  local chord = args.chord
+  local duration = args.duration or 1.0
+  local index_pattern_fn = args.index_pattern_fn
+  local index_pattern = args.index_pattern
+  local time_step = args.time_step or duration
+  local volume = args.volume
+  local count = args.count
+  local figure_duration = args.figure_duration
+  local extension_interval = args.extension_interval or PitchInterval.octave
 
-  if time_step == nil then
-    time_step = duration
-  end
-
+  local chord_indices
   if index_pattern then
     chord_indices = index_pattern
     if count == nil then
@@ -188,7 +190,7 @@ function arpeggiate(chord,
     if count == nil then
       count = #chord
     end
-    chord_indices = list(index_pattern_fn(count))
+    chord_indices = List(index_pattern_fn(count))
   end
 
   pitches = chord.to_extended_pitches(chord_indices)
