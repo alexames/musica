@@ -25,6 +25,11 @@ Mode = class 'Mode' {
     return nil
   end,
 
+  octave_interval = function(self)
+    check_arguments{self=Mode}
+    return self[#self]
+  end,
+
   __shr = function(self, n)
     check_arguments{self=Mode, n=Integer}
     return Mode(self.semitone_intervals >> n)
