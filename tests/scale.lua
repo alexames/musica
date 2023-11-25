@@ -119,7 +119,7 @@ test_class 'ScaleTest' {
   end,
 
   [test 'tostring'] = function(self)
-    scale = Scale{tonic=Pitch.c4, mode=Mode.major}
+    local scale = Scale{tonic=Pitch.c4, mode=Mode.major}
     EXPECT_EQ(tovalue(tostring(scale)), scale)
   end,
 
