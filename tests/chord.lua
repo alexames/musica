@@ -1,10 +1,17 @@
-require 'unit'
+local unit = require 'unit'
 require 'musictheory/chord'
+require 'musictheory/pitch'
+require 'musictheory/quality'
 
 test_class 'ChordTest' {
   [test 'init'] = function(self)
     local chord = Chord{root=Pitch.c4, quality=Quality.major}
-    -- EXPECT_TRUE(False)
+    EXPECT_EQ(chord.root, Pitch.c4)
+    EXPECT_EQ(chord.quality, Quality.major)
+
+    local chord = Chord{pitches=List{Pitch.c5, Pitch.eflat5, Pitch.g5}}
+    EXPECT_EQ(chord.root, Pitch.c5)
+    EXPECT_EQ(chord.quality, Quality.minor)
   end,
 
   [test 'get_pitches'] = function(self)

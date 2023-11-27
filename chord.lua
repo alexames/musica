@@ -5,8 +5,8 @@ require 'musictheory/pitch'
 require 'musictheory/quality'
 require 'musictheory/util'
 
-local ChordByPitchesSchema = Schema{
-  __name='ChordByPitchesSchema',
+local ChordByPitches = Schema{
+  __name='ChordByPitches',
   type=Table,
   properties={
     pitches={
@@ -27,14 +27,14 @@ local ChordByRootQuality = Schema{
   required={'root', 'quality'},
 }
 
-local ChordArgumentsSchema = Schema{
-  __name='ChordArgumentsSchema',
-  type=Union{ChordByPitchesSchema, ChordByRootQuality},
+local ChordArgs = Schema{
+  __name='ChordArgs',
+  type=Union{ChordByPitches, ChordByRootQuality},
 }
 
 Chord = class 'Chord' {
   __init = function(self, args)
-    check_arguments{self=Chord, args=ChordArgumentsSchema}
+    check_arguments{self=Chord, args=ChordArgs}
     if args.pitches then
       self.root = args.pitches[1]
       self.quality = Quality{pitches=args.pitches}
@@ -45,10 +45,12 @@ Chord = class 'Chord' {
   end,
 
   get_pitches = function(self)
+    check_arguments{self=Chord}
     return self:to_pitches(range(#self))
   end,
 
   get_quality = function(self)
+    check_arguments{self=Chord}
     return self.quality
   end,
 
@@ -111,17 +113,20 @@ Chord = class 'Chord' {
   end,
 
   __div = function(self, other)
+    check_arguments{self=Chord}
+    local other_pitches
     if isinstance(other, Pitch) then
-      other_pitches = {other}
+      other_pitches = List{other}
     else
-      other.get_pitches()
+      other_pitches = other.get_pitches()
     end
 
-    pitches = self.get_pitches() + other_pitches
-    return Chord{pitches=sorted(pitches)}
+    local pitches = self.get_pitches() .. other_pitches
+    return Chord{pitches=pitches:sorted()}
   end,
 
   __len = function(self)
+    check_arguments{self=Chord}
     return #self.quality
   end,
 
@@ -130,6 +135,7 @@ Chord = class 'Chord' {
   end),
 
   contains = function(self, index)
+    check_arguments{self=Chord, index=Integer}
     local octave = #self.scale.pitch_indices
     local canonical_index = index % octave
     local canonical_scale_indices = List{}
@@ -140,6 +146,7 @@ Chord = class 'Chord' {
   end,
 
   __tostring = function(self)
+    check_arguments{self=Chord}
     return string.format('Chord{root=%s, quality=%s}', self.root, self.quality)
   end,
 }
