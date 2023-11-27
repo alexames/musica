@@ -4,8 +4,20 @@ require 'musictheory/interval_quality'
 require 'musictheory/pitch_class'
 require 'musictheory/util'
 
+local PitchIntervalArgs = Schema{
+  __name='PitchIntervalArgs',
+  type=Table,
+  properties={
+    number={type=Integer},
+    quality={type=Any}, -- need to handle circular dependencies better.
+    semitone_interval={type=Integer},
+    accidentals={type=Integer},
+  }
+}
+
 PitchInterval = class 'PitchInterval' {
   __init = function(self, args)
+    check_arguments{self=PitchInterval, args=PitchIntervalArgs}
     local number = args.number
     local quality = args.quality
     local semitone_interval = args.semitone_interval
@@ -22,10 +34,12 @@ PitchInterval = class 'PitchInterval' {
   end,
 
   is_perfect = function(self)
+    check_arguments{self=PitchInterval}
     return PitchInterval.perfect_intervals:contains(self.number % 7)
   end,
 
   is_enharmonic = function(self, other)
+    check_arguments{self=PitchInterval, other=PitchInterval}
     return tointeger(self) == tointeger(other)
   end,
 
@@ -57,6 +71,7 @@ PitchInterval = class 'PitchInterval' {
   end,
 
   __add = function(self, other)
+    check_arguments{self=PitchInterval, other=Union{Pitch,PitchInterval}}
     self, other = metamethod_args(PitchInterval, self, other)
     if isinstance(other, PitchInterval) then
       -- If we are adding to another PitchInterval, the result is a PitchInterval.
@@ -70,21 +85,25 @@ PitchInterval = class 'PitchInterval' {
   end,
 
   __sub = function(self, other)
+    check_arguments{self=PitchInterval, other=PitchInterval}
     return PitchInterval{number=self.number - other.number,
                          semitone_interval=tointeger(self) - tointeger(other)}
   end,
 
   __mul = function(self, coeffecient)
     self, coeffecient = metamethod_args(PitchInterval, self, coeffecient)
+    check_arguments{self=PitchInterval, coeffecient=Integer}
     return PitchInterval{number=coeffecient * self.number,
                          semitone_interval=coeffecient * tointeger(self)}
   end,
 
   __eq = function(self, other)
+    check_arguments{self=PitchInterval, other=PitchInterval}
     return self.number == other.number and self.accidentals == other.accidentals
   end,
 
   __tointeger = function(self)
+    check_arguments{self=PitchInterval}
     return self:_number_to_semitones() + self.accidentals
   end,
 
@@ -93,11 +112,12 @@ PitchInterval = class 'PitchInterval' {
   __reprNumbers={[0]="unison", "second", "third", "fourth", "fifth", "sixth", "seventh", "octave"},
 
   __tostring = function(self)
+    check_arguments{self=PitchInterval}
     if self.number == 0 and self.accidentals == 0 then
       return "PitchInterval.unison"
     elseif self.number == 7 and self.accidentals == 0 then
       return "PitchInterval.octave"
-    elseif (0 <= self.number) and (self.number <= 7) then
+    elseif 0 <= self.number and self.number <= 7 then
       if self:is_perfect() then
         if (-1 <= self.accidentals) and (self.accidentals <= 1) then
           return ("PitchInterval."
