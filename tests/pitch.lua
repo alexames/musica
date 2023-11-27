@@ -14,11 +14,8 @@ test_class 'PitchTest' {
     EXPECT_EQ(Pitch.csharp4.accidentals, 1)
     EXPECT_EQ((Pitch.c4 + PitchInterval.augmented_unison).accidentals, 1)
     EXPECT_EQ(Pitch.cflat4, Pitch{pitch_class=PitchClass.C, pitch_index=71})
-    EXPECT_EQ(Pitch{pitch_class=PitchClass.C, octave=4, accidentals=2 * sharp},
+    EXPECT_EQ(Pitch{pitch_class=PitchClass.C, octave=4, accidentals=2 * Accidental.sharp},
               Pitch{pitch_class=PitchClass.C, pitch_index=74})
-  end,
-
-  [test 'init'] = function(self)
   end,
 
   [test 'is_enharmonic'] = function(self)
@@ -28,26 +25,76 @@ test_class 'PitchTest' {
     EXPECT_FALSE(Pitch.c4:is_enharmonic(Pitch.d4))
   end,
 
-  -- [test 'int'] = function(self)
-  -- end,
+  [test 'tointeger'] = function(self)
+    EXPECT_EQ(tointeger(Pitch.a0), 21)
+    EXPECT_EQ(tointeger(Pitch.c4), 72)
 
-  -- [test 'eq'] = function(self)
-  -- end,
+    EXPECT_EQ(tointeger(Pitch.csharp4), 73)
+    EXPECT_EQ(tointeger(Pitch.dflat4), 73)
+  end,
 
-  -- [test 'ne'] = function(self)
-  -- end,
+  [test 'eq'] = function(self)
+    EXPECT_TRUE(Pitch.c4 == Pitch.c4)
+    EXPECT_TRUE(Pitch.c4 == Pitch.bsharp4)
+    EXPECT_TRUE(Pitch.c4 == Pitch{pitch_class=PitchClass.C,
+                                  octave=4,
+                                  accidentals=0})
+  end,
 
-  -- [test 'gt'] = function(self)
-  -- end,
+  [test 'lt'] = function(self)
+    EXPECT_TRUE(Pitch.c4 < Pitch.d4)
+    EXPECT_TRUE(Pitch.c4 < Pitch.csharp4)
+    EXPECT_TRUE(Pitch.c4 < Pitch{pitch_class=PitchClass.D,
+                                 octave=4,
+                                 accidentals=0})
+    EXPECT_TRUE(Pitch.c4 < Pitch{pitch_class=PitchClass.C,
+                                 octave=5,
+                                 accidentals=0})
+    EXPECT_TRUE(Pitch.c4 < Pitch{pitch_class=PitchClass.C,
+                                 octave=4,
+                                 accidentals=Accidental.sharp})
 
-  -- [test 'ge'] = function(self)
-  -- end,
+    EXPECT_FALSE(Pitch.c4 < Pitch.b4)
+    EXPECT_FALSE(Pitch.c4 < Pitch.cflat4)
+    EXPECT_FALSE(Pitch.c4 < Pitch{pitch_class=PitchClass.B,
+                                  octave=4,
+                                  accidentals=0})
+    EXPECT_FALSE(Pitch.c4 < Pitch{pitch_class=PitchClass.C,
+                                  octave=3,
+                                  accidentals=0})
+    EXPECT_FALSE(Pitch.c4 < Pitch{pitch_class=PitchClass.C,
+                                  octave=4,
+                                  accidentals=Accidental.flat})
+  end,
 
-  -- [test 'lt'] = function(self)
-  -- end,
+  [test 'le'] = function(self)
+    EXPECT_TRUE(Pitch.c4 <= Pitch.d4)
+    EXPECT_TRUE(Pitch.c4 <= Pitch.csharp4)
+    EXPECT_TRUE(Pitch.c4 <= Pitch{pitch_class=PitchClass.C,
+                                  octave=4,
+                                  accidentals=0})
+    EXPECT_TRUE(Pitch.c4 <= Pitch{pitch_class=PitchClass.D,
+                                  octave=4,
+                                  accidentals=0})
+    EXPECT_TRUE(Pitch.c4 <= Pitch{pitch_class=PitchClass.C,
+                                  octave=5,
+                                  accidentals=0})
+    EXPECT_TRUE(Pitch.c4 <= Pitch{pitch_class=PitchClass.C,
+                                  octave=4,
+                                  accidentals=Accidental.sharp})
 
-  -- [test 'le'] = function(self)
-  -- end,
+    EXPECT_FALSE(Pitch.c4 <= Pitch.b4)
+    EXPECT_FALSE(Pitch.c4 <= Pitch.cflat4)
+    EXPECT_FALSE(Pitch.c4 <= Pitch{pitch_class=PitchClass.B,
+                                   octave=4,
+                                   accidentals=0})
+    EXPECT_FALSE(Pitch.c4 <= Pitch{pitch_class=PitchClass.C,
+                                   octave=3,
+                                   accidentals=0})
+    EXPECT_FALSE(Pitch.c4 <= Pitch{pitch_class=PitchClass.C,
+                                   octave=4,
+                                   accidentals=Accidental.flat})
+  end,
 
   [test 'add'] = function(self)
     EXPECT_EQ(Pitch.c4 + PitchInterval.major_third, Pitch.e4)
@@ -55,21 +102,29 @@ test_class 'PitchTest' {
     EXPECT_EQ(Pitch.c4 + PitchInterval.augmented_third, Pitch.esharp4)
   end,
 
-  [test 'subPitch'] = function(self)
+  [test 'sub' - 'Pitch'] = function(self)
     EXPECT_EQ(Pitch.c4 - Pitch.a4, PitchInterval.minor_third)
     EXPECT_EQ(Pitch.e4 - Pitch.c4, PitchInterval.major_third)
     EXPECT_EQ(Pitch.c5 - Pitch.c4, PitchInterval.octave)
     EXPECT_EQ(Pitch.esharp4 - Pitch.c4, PitchInterval.augmented_third)
   end,
 
-  [test 'subPitchInterval'] = function(self)
+  [test 'sub' - 'PitchInterval'] = function(self)
     EXPECT_EQ(Pitch.e4 - PitchInterval.major_third, Pitch.c4)
     EXPECT_EQ(Pitch.c5 - PitchInterval.octave, Pitch.c4)
     EXPECT_EQ(Pitch.esharp4 - PitchInterval.augmented_third, Pitch.c4)
   end,
 
-  -- [test 'repr'] = function(self)
-  -- end,
+  [test 'tostring'] = function(self)
+    EXPECT_EQ(tovalue(tostring(Pitch.c4)), Pitch.c4)
+    EXPECT_EQ(tovalue(tostring(Pitch.csharp4)), Pitch.csharp4)
+    EXPECT_EQ(tovalue(tostring(Pitch.cflat4)), Pitch.cflat4)
+
+    local pitch = Pitch{pitch_class=PitchClass.C,
+                        octave=4,
+                        accidentals=-5}
+    EXPECT_EQ(tovalue(tostring(pitch)), pitch)
+  end,
 }
 
 if main_file() then

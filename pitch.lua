@@ -88,12 +88,6 @@ Pitch = class 'Pitch' {
     end
   end,
 
-  __call = function(self, octave_transposition)
-    return Pitch{pitch_class = self.pitch_class,
-                 octave=PitchInterval.octave * octave_transposition,
-                 accidentals=self.accidentals}
-  end,
-
   __tostring = function(self)
     if lowest_pitch_indices[PitchClass.A] <= tointeger(self)
         and tointeger(self) < 128
@@ -101,30 +95,32 @@ Pitch = class 'Pitch' {
         and self.accidentals <= Accidental.sharp then
       local pitch_class_name = self.pitch_class.name:lower()
       local accidental = ''
-      if self.accidentals == flat then
-        accidental = "flat"
-      elseif self.accidentals == sharp then
-        accidental = "sharp"
+      if self.accidentals == Accidental.flat then
+        accidental = 'flat'
+      elseif self.accidentals == Accidental.sharp then
+        accidental = 'sharp'
       end
       return String.format(
-          "Pitch.%s%s%s", pitch_class_name, accidental, tostring(self.octave))
+          'Pitch.%s%s%s', pitch_class_name, accidental, tostring(self.octave))
     end
 
+    local accidental_string
     if self.accidentals then
-      coeffecient = abs(self.accidentals)
+      local coeffecient = math.abs(self.accidentals)
+      local coeffecient_string
       if coeffecient > 1 then
-        coeffecient_string = "%s * " % coeffecient
+        coeffecient_string = String.format('%s * ', coeffecient)
       else
-        coeffecient_string = ""
+        coeffecient_string = ''
       end
-      accidental_string = String.format(", accidentals=%s%s",
-        coeffecient_string,
-        tern(self.accidentals > 0, "sharp", "flat"))
+      accidental_string = String.format(
+          ', accidentals=%s%s', coeffecient_string,
+          self.accidentals > 0 and 'Accidental.sharp' or 'Accidental.flat')
     else
-      accidental_string = ""
+      accidental_string = ''
     end
-    return String.format("Pitch{%s, octave=%s%s}",
-      self.pitch_class.name, self.octave, accidental_string)
+    return String.format('Pitch{pitch_class=%s, octave=%s%s}',
+      self.pitch_class, self.octave, accidental_string)
   end,
 }
 
