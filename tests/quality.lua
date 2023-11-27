@@ -13,7 +13,9 @@ test_class 'QualityTest' {
 
   [test('pitch_intervals')] = function(self)
     EXPECT_EQ(Quality.major.pitch_intervals,
-              List{PitchInterval.unison, PitchInterval.majorThird, PitchInterval.perfectFifth})
+              List{PitchInterval.unison,
+                   PitchInterval.majorThird,
+                   PitchInterval.perfectFifth})
   end;
 
   [test('eq')] = function(self)
