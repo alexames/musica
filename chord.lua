@@ -32,6 +32,19 @@ local ChordArgs = Schema{
   type=Union{ChordByPitches, ChordByRootQuality},
 }
 
+local function range(a, b, c)
+  local start = b and a or 1
+  local finish = b or a
+  local step = c or 1
+  local i = 1
+  local result = List{}
+  for value=start, finish, step do
+    result[i] = value
+    i = i + 1
+  end
+  return result
+end
+
 Chord = class 'Chord' {
   __init = function(self, args)
     check_arguments{self=Chord, args=ChordArgs}
@@ -46,7 +59,7 @@ Chord = class 'Chord' {
 
   get_pitches = function(self)
     check_arguments{self=Chord}
-    return self:to_pitches(range(#self))
+    return self:to_pitches(range(0, #self-1))
   end,
 
   get_quality = function(self)
@@ -56,7 +69,7 @@ Chord = class 'Chord' {
 
   to_pitch = function(self, chord_index)
     check_arguments{self=Chord, chord_index=Integer}
-    return self.root + self.quality[chord_index]
+    return self.root + self.quality[chord_index + 1]
   end,
 
   to_pitches = function(self, scale_indices)
@@ -103,26 +116,40 @@ Chord = class 'Chord' {
     end
 
     local inverted_intervals = List{}
+    local i = 1
     for index=n, n + #self do
       local octave_index = index // #self
       local octave_offset = octave_interval * octave_index
       inverted_intervals[i] = self.quality[index % #self + 1] + octave_offset
+      i = i + 1
     end
     return Chord{root=self.root + inverted_intervals[1],
                  quality=Quality{pitch_intervals=inverted_intervals}}
   end,
 
+  contains = function(self, pitch)
+    check_arguments{self=Chord, pitch=Pitch}
+    return self:get_pitches():find(pitch) ~= nil
+  end,
+
+  __eq = function(self, other)
+    check_arguments{self=Chord, other=Chord}
+    return self.root == other.root and self.quality == other.quality
+  end,
+
   __div = function(self, other)
-    check_arguments{self=Chord}
+    check_arguments{self=Chord, other=Union{Pitch,Chord}}
     local other_pitches
     if isinstance(other, Pitch) then
       other_pitches = List{other}
     else
-      other_pitches = other.get_pitches()
+      other_pitches = other:get_pitches()
     end
 
-    local pitches = self.get_pitches() .. other_pitches
-    return Chord{pitches=pitches:sorted()}
+    local pitches = self:get_pitches()
+    pitches = pitches .. other_pitches
+    pitches:sort()
+    return Chord{pitches=pitches}
   end,
 
   __len = function(self)
@@ -133,17 +160,6 @@ Chord = class 'Chord' {
   __index = multi_index(function(self, index)
     return self:to_pitch(index)
   end),
-
-  contains = function(self, index)
-    check_arguments{self=Chord, index=Integer}
-    local octave = #self.scale.pitch_indices
-    local canonical_index = index % octave
-    local canonical_scale_indices = List{}
-    for i, scale_index in ipairs(self.indices) do
-      canonical_scale_indices[i] = (scale_index + self.offset) % octave
-    end
-    return canonical_scale_indices:contains(canonical_index)
-  end,
 
   __tostring = function(self)
     check_arguments{self=Chord}

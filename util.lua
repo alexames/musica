@@ -59,11 +59,11 @@ end
 --   return [int(i2) - int(i1) for i1, i2 in by_pairs(indices)]
 
 
--- function extended_index(index, indices, interval)
---   extension_index = index // #indices
---   extension_offset = interval * extension_index
---   return indices[index % #indices] + extension_offset
-
+function extended_index(index, indices, interval)
+  local extension_index = index // #indices
+  local extension_offset = interval * extension_index
+  return indices[index % #indices + 1] + extension_offset
+end
 
 -- function extended_indices(indices, interval)
 --   return [extended_index(index, indices, interval)

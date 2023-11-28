@@ -2,7 +2,7 @@
 --                                                                 Tested | Docs
 --------------------------------------------------------------------------+-----
 local accidental =       require 'musictheory/accidental'
-local chord =            require 'musictheory/chord'            -- No     | No
+local chord =            require 'musictheory/chord'            -- Yes    | No
 local contour =          require 'musictheory/contour'          -- No     | No
 local direction =        require 'musictheory/direction'
 local figure =           require 'musictheory/figure'           -- No     | No
