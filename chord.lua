@@ -32,19 +32,6 @@ local ChordArgs = Schema{
   type=Union{ChordByPitches, ChordByRootQuality},
 }
 
-local function range(a, b, c)
-  local start = b and a or 1
-  local finish = b or a
-  local step = c or 1
-  local i = 1
-  local result = List{}
-  for value=start, finish, step do
-    result[i] = value
-    i = i + 1
-  end
-  return result
-end
-
 Chord = class 'Chord' {
   __init = function(self, args)
     check_arguments{self=Chord, args=ChordArgs}
