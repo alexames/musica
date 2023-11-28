@@ -43,6 +43,11 @@ function range(a, b, c)
   return result
 end
 
+function ipairs0(t)
+  local f, t, i = ipairs(t)
+  return f, t, -1
+end
+
 -- function interleave(...)
 --   return (val for pair in zip(*lists)
 --               for val in pair)
