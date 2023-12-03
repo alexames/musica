@@ -154,17 +154,6 @@ Chord = class 'Chord' {
   end,
 }
 
--- A sequence of chords, to be reused through out a piece.
-ChordProgression = class 'ChordProgression' {
-  __init = function(self, chord_periods)
-    self.chord_periods = chord_periods
-  end,
-
-  __getitem = function(self, key)
-    return self.chord_periods[key]
-  end,
-}
-
 function arpeggiate()
   check_arguments{args=Schema{
     chord={type=Chord},
