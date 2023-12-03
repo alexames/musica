@@ -1,119 +1,111 @@
 require 'llx'
 require 'musictheory/note'
 
-Cell = class 'Cell' {
-  __init = function(self)
-    self.notes = List{}
-  end;
+local FigureArgs = Schema{
+  __name='FigureArgs',
+  type=Table,
+  properties={
+    duration={type=Number},
+    notes={type=List, items={type=Table}},
+    melody={type=List, items={type=Table}},
+  },
 }
 
--- aka Motif
--- Should this really be distinct from a part?
 Figure = class 'Figure' {
-  -- __init = function(self, args)
-  --   -- duration=0, *, notes=nil, melody=nil
-  --   self.duration = duration
-  --   if notes then
-  --     -- self.notes = [deepcopy(note) for note in notes]
-  --   elseif melody then
-  --     time = 0
-  --     self.notes = List{}
-  --     for note in melody do
-  --       self.notes:insert(
-  --         Note(note.pitch, time, note.duration, note.volume))
-  --       time = time + note.duration
-  --     end
-  --   else
-  --     self.notes = list{}
-  --   end
-  -- end;
+  __init = function(self, args)
+    check_arguments{self=Figure, args=FigureArgs}
+    self.duration = args.duration
+    local notes = args.notes
+    local melody = args.melody
+    local new_notes = List{}
+    if notes then
+      for i, note in ipairs(notes) do
+        new_notes[i] = Note(note)
+      end
+    elseif melody then
+      local time = 0
+      for i, note in ipairs(melody) do
+        local new_note = Note(note)
+        new_note.time = time
+        time = time + new_note.duration
+        new_notes[i] = new_note
+      end
+    end
+    self.notes = new_notes
+  end,
 
-  -- addFigure = function(self, figure, start)
-  --   start = start or 0
-  --   for i, note in ipairs(figure.notes) do
-  --     newNote = deepcopy(note)
-  --     newNote.time = newNote.time + start
-  --     self.notes:insert(newNote)
-  -- end;
+  apply = function(self, transformation)
+    check_arguments{self=Figure, transformation=Function}
+    return Figure{self.duration, notes=map(transformation, self.notes)}
+  end,
 
-  -- appendFigure = function(self, figure)
-  --   for i, note in ipairs(figure.notes) do
-  --     newNote = deepcopy(note)
-  --     newNote.time = newNote.time + self.duration
-  --     self.notes:insert(newNote)
-  --   end
-  --   self.duration = self.duration + figure.duration
-  -- end;
+  __add = function(self, other)
+    check_arguments{self=Figure, other=Figure}
+    return merge({self, other})
+  end,
 
-  -- apply = function(self, transformation)
-  --   return Figure{self.duration, notes=map(transformation, self.notes)}
-  -- end;
+  __mul = function(self, repetitions)
+    check_arguments{self=Figure, repetitions=Integer}
+    return repeat_figure(self, repetitions)
+  end,
 
-  -- __add = function(self, other)
-  --   return merge({self, other})
-  -- end;
+  __concat = function(self, other)
+    check_arguments{self=Figure, other=Figure}
+    return concatenate({self, other})
+  end,
 
-  -- __mul = function(self, other)
-  --   return concatenate({self, other})
-  -- end;
+  __eq = function(self, other)
+    check_arguments{self=Figure, other=Figure}
+    return self.duration == other.duration and self.notes == other.notes
+  end,
 
-  -- __getitem = function(self, key)
-  --   return self.notes[key]
-  -- end;
-
-  -- __repr = function(self)
-  --   return string.format("Figure(duration=%s, notes=%s)", self.duration, repr(self.notes))
-  -- end;
+  __tostring = function(self)
+    check_arguments{self=Figure}
+    return string.format("Figure{duration=%s, notes=%s}",
+                          self.duration, tostring(self.notes))
+  end,
 }
 
 function merge(figures)
-  local result = List{}
   local duration = nil
+  local result = List{}
   for _, figure in ipairs(figures) do
     if duration == nil then
       duration = figure.duration
     elseif duration ~= figure.duration then
-      error(ValueError())
+      -- error(Value_error())
     end
-    for i, note in ipairs(figure) do
-      result.append(deepcopy(note))
+
+    for i, note in ipairs(figure.notes) do
+      result:insert(Note(note))
     end
   end
-  return Figure{duration, notes=result}
+  return Figure{duration=duration, notes=result}
 end
 
 function concatenate(figures)
   local offset = 0
   local result = List{}
-  for _, figure in ipairs(figures) do
-    for _, note in ipairs(figure) do
-      newNote = deepcopy(note)
-      newNote.time = newNote.time +offset
-      result.append(newNote)
+  for i, figure in ipairs(figures) do
+    for j, note in ipairs(figure.notes) do
+      new_note = Note(note)
+      new_note.time = new_note.time +offset
+      result:insert(new_note)
     end
     offset = offset + figure.duration
   end
   return Figure{duration=offset, notes=result}
 end
 
-function repeatfigure(figure, repeatCount, endings)
-  if endings then
-    local result = Figure{0, notes=List{}}
-    for _, ending in ipairs(endings) do
-      result = concatenate({result, figure, ending})
-    end
-    return result
-  else
-    repeatCount = repeatCount or 2
-    return concatenate(List{figure} * repeatCount)
-  end
+function repeat_figure(figure, repeat_count)
+  repeat_count = repeat_count or 2
+  return concatenate(List{figure} * repeat_count)
 end
 
-function repeatToFill(duration, figure)
-  local repeats = int(duration // figure.duration)
-  local result = Figure(0)
-  for index in range(repeats) do
-    result.addFigure(figure, index * figure.duration)
+function repeat_volta(figure, endings)
+  local figures = List{}
+  for i, ending in ipairs(endings) do
+    figures:extend({figure, ending})
   end
-  return result
+  return concatenate(figures)
 end
