@@ -11,7 +11,6 @@ local NoteArgs = Schema{
     duration={type=Number},
     volume={type=Number},
   },
-  required={'pitch', 'time', 'duration'},
 }
 
 --- A note, with a pitch, time, duration and volume
