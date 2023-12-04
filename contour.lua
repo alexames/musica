@@ -34,22 +34,29 @@ function relative_contour(melody)
   return contour
 end
 
--- -- Gives the contour of a melody in pitch indices
--- function pitch_index_contour(melody)
---   return [tointeger(note.pitch) for note in melody]
--- end
+-- Gives the contour of a melody in pitch indices
+function pitch_index_contour(melody)
+  local contour = List{}
+  for i, v in ipairs(melody) do
+    contour[i] = tointeger(note.pitch)
+  end
+  return contour
+end
 
--- -- Gives the contour of a melody in pitch indices
--- function scale_index_contour(melody, scale)
---   return [scale.to_scale_index(note.pitch) for note in melody]
--- end
+-- Gives the contour of a melody in pitch indices
+function scale_index_contour(melody, scale)
+  local contour = List{}
+  for i, v in ipairs(melody) do
+    contour[i] = scale.to_scale_index(note.pitch)
+  end
+  return contour
+end
 
--- -- Gives the contour of a melody in pitch indices
--- function chord_contour(melody)
---   pass
--- end
-
--- -- Gives the contour of a melody in pitch indices
--- function pitch_class_contour(melody)
---   return [note.pitch.pitch_class for note in melody]
--- end
+-- Gives the contour of a melody in pitch indices
+function pitch_class_contour(melody)
+  local contour = List{}
+  for i, v in ipairs(melody) do
+    contour[i] = note.pitch.pitch_class
+  end
+  return contour
+end
