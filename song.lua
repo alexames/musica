@@ -27,8 +27,9 @@ FigureInstance = class 'FigureInstance' {
 
   time_adjusted_notes = function(self)
     return function(instance, i)
+      i = i + 1
       local note = instance.figure.notes[i]
-      return i, Note{
+      return note and i, note and Note{
         pitch = note.pitch,
         time = note.time + instance.time,
         duration = note.duration,
@@ -59,10 +60,10 @@ function tomidifile(song)
     local channel = i -- not sure if this is correct?
     for j, figure_instance in ipairs(song_track) do
       for k, adjusted_note in figure_instance:time_adjusted_notes() do
-        local note_number = tointeger(note.pitch)
-        local volume_int = tointeger(note.volume * 255)
-        local note_begin = NoteBeginEvent(0, channel, note_number, volume_int)
-        local note_end = NoteEndEvent(0, channel, note_number, volume_int)
+        local note_number = tointeger(adjusted_note.pitch)
+        local volume_int = tointeger(adjusted_note.volume * 255)
+        local note_begin = midi.events.NoteBeginEvent(0, channel, note_number, volume_int)
+        local note_end = midi.events.NoteEndEvent(0, channel, note_number, volume_int)
         note_begin.time = adjusted_note.time
         note_end.time = adjusted_note:finish()
         events:insert(note_begin)
@@ -77,14 +78,28 @@ function tomidifile(song)
     local previous_time = 0
     for i, event in ipairs(events) do
       event.timeDelta = event.time - previous_time
+      previous_time = event.time
       midi_track.events:insert(event)
     end
   end
-
   return midi_file
 end
 
 local song = Song{}
+
+local part = song:make_part()
+part:insert(FigureInstance(
+  0,
+  Figure{
+    duration=4,
+    melody=List{
+      Note{pitch=Pitch.c4, duration=1.5, volume=1.0},
+      Note{pitch=Pitch.e4, duration=.5, volume=1.0},
+      Note{pitch=Pitch.g4, duration=1, volume=1.0},
+      Note{pitch=Pitch.e4, duration=1, volume=1.0},
+    },
+  }
+))
 
 local midi_file = tomidifile(song)
 local file <close> = io.open('test.mid', 'wb')
