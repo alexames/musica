@@ -97,27 +97,74 @@ end
 local song = Song{}
 
 local figure = Figure{
-  duration=8,
   notes=List{
-    Note{pitch=Pitch.c4, time=0, duration=1.5, volume=1.0},
-    Note{pitch=Pitch.e4, time=1.5, duration=.5, volume=1.0},
-    Note{pitch=Pitch.g4, time=2, duration=1, volume=1.0},
-    Note{pitch=Pitch.e4, time=3, duration=1, volume=1.0},
-    Note{pitch=Pitch.c3, time=4, duration=4, volume=1.0},
-    Note{pitch=Pitch.c4, time=4.125, duration=1, volume=1.0},
-    Note{pitch=Pitch.c5, time=4.25, duration=1, volume=1.0},
-    Note{pitch=Pitch.c6, time=4.375, duration=1, volume=1.0},
+    Note{pitch=Pitch.a5, time=0, duration=0.5, volume=0.8},
+    Note{pitch=Pitch.fsharp5, time=0.5, duration=0.25, volume=0.8},
+    Note{pitch=Pitch.g5, time=0.75, duration=0.25, volume=0.8},
+    Note{pitch=Pitch.d6, time=1, duration=0.5, volume=0.8},
+    Note{pitch=Pitch.a5, time=1.5, duration=0.25, volume=0.8},
+    Note{pitch=Pitch.fsharp5, time=1.75, duration=0.25, volume=0.8},
+    Note{pitch=Pitch.g5, time=2, duration=0.5, volume=0.8},
+    Note{pitch=Pitch.d6, time=2.5, duration=0.25, volume=0.8},
+    Note{pitch=Pitch.a5, time=3, duration=0.5, volume=0.8},
+    Note{pitch=Pitch.fsharp5, time=3.5, duration=0.25, volume=0.8},
+    Note{pitch=Pitch.g5, time=3.75, duration=0.25, volume=0.8},
+    Note{pitch=Pitch.d6, time=4, duration=0.5, volume=0.8},
+    Note{pitch=Pitch.a5, time=4.5, duration=0.25, volume=0.8},
+    Note{pitch=Pitch.fsharp5, time=4.75, duration=0.25, volume=0.8},
+    Note{pitch=Pitch.g5, time=5, duration=0.5, volume=0.8},
+    Note{pitch=Pitch.d6, time=5.5, duration=0.25, volume=0.8},
   },
 }
-local part
-part = song:make_part(midi.instrument.marimba)
+
+local chords = Figure{
+  notes=List{
+    Note{pitch=Pitch.a4, time=0, duration=2, volume=0.6},
+    Note{pitch=Pitch.c5, time=0, duration=2, volume=0.6},
+    Note{pitch=Pitch.e5, time=0, duration=2, volume=0.6},
+    
+    Note{pitch=Pitch.g4, time=2, duration=2, volume=0.6},
+    Note{pitch=Pitch.b4, time=2, duration=2, volume=0.6},
+    Note{pitch=Pitch.d5, time=2, duration=2, volume=0.6},
+    
+    Note{pitch=Pitch.f4, time=4, duration=2, volume=0.6},
+    Note{pitch=Pitch.a4, time=4, duration=2, volume=0.6},
+    Note{pitch=Pitch.c5, time=4, duration=2, volume=0.6},
+    
+    Note{pitch=Pitch.e4, time=6, duration=2, volume=0.6},
+    Note{pitch=Pitch.g4, time=6, duration=2, volume=0.6},
+    Note{pitch=Pitch.b4, time=6, duration=2, volume=0.6},
+  }
+}
+
+-- local figure2 = Figure{
+--   notes=List{
+--     Note{pitch=Pitch.e4, time=0, duration=1, volume=0.7},
+--     Note{pitch=Pitch.f4, time=1, duration=1, volume=0.7},
+--     Note{pitch=Pitch.e4, time=2, duration=1, volume=0.7},
+--     Note{pitch=Pitch.d4, time=3, duration=2, volume=0.7},
+--     Note{pitch=Pitch.c4, time=5, duration=1, volume=0.7},
+--     Note{pitch=Pitch.b3, time=6, duration=1, volume=0.7},
+--     Note{pitch=Pitch.a3, time=7, duration=1.5, volume=0.7},
+--     Note{pitch=Pitch.g3, time=8.5, duration=1.5, volume=0.7},
+--     Note{pitch=Pitch.f3, time=10, duration=2, volume=0.7},
+--     Note{pitch=Pitch.e3, time=12, duration=3.5, volume=0.7}
+--   }
+-- }
+
+-- local part = song:make_part(midi.instrument.marimba)
+-- part.figure_instances:insert(FigureInstance(0, figure1))
+-- part.figure_instances:insert(FigureInstance(12, figure2))
+
+
+local part = song:make_part(midi.instrument.xylophone)
 part.figure_instances:insert(FigureInstance(0, figure))
 
 part = song:make_part(midi.instrument.xylophone)
-part.figure_instances:insert(FigureInstance(0, figure))
+part.figure_instances:insert(FigureInstance(0, chords))
 
-part = song:make_part(midi.instrument.music_box)
-part.figure_instances:insert(FigureInstance(0, figure))
+-- part = song:make_part(midi.instrument.music_box)
+-- part.figure_instances:insert(FigureInstance(0, figure))
 
 local midi_file = tomidifile(song)
 local file <close> = io.open('test.mid', 'wb')
