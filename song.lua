@@ -18,6 +18,13 @@ Part = class 'Part' : extends(Figure) {
 --   * Coda https://en.wikipedia.org/wiki/Coda_(music)
 --   * Bridge https://en.wikipedia.org/wiki/Bridge_(music)
 
+Part = class 'Part' {
+  __init = function(self, instrument)
+    self.instrument = instrument
+    self.figure_instances = List{}
+  end,
+}
+
 FigureInstance = class 'FigureInstance' {
   __init = function(self, time, figure)
     check_arguments{self=FigureInstance, time=Number, figure=Figure}
@@ -41,25 +48,24 @@ FigureInstance = class 'FigureInstance' {
 
 Song = class 'Song' {
   __init = function(self)
-    self.tracks = List{}
+    self.parts = List{}
   end,
 
   make_part = function(self, instrument)
-    local track = List{}
-    track.instrument = instrument
-    self.tracks:insert(track)
-    return track
+    local part = Part(instrument)
+    self.parts:insert(part)
+    return part
   end
 }
 
 function tomidifile(song)
   local midi_file = midi.MidiFile()
-  for i, song_track in ipairs(song.tracks) do
+  for i, song_track in ipairs(song.parts) do
     local events = List{}
 
     -- Gather events
     local channel = i - 1 -- not sure if this is correct?
-    for j, figure_instance in ipairs(song_track) do
+    for j, figure_instance in ipairs(song_track.figure_instances) do
       for k, adjusted_note in figure_instance:time_adjusted_notes() do
         local note_number = tointeger(adjusted_note.pitch)
         local volume_int = tointeger(adjusted_note.volume * 255)
@@ -91,25 +97,27 @@ end
 local song = Song{}
 
 local figure = Figure{
-  duration=4,
-  melody=List{
-    Note{pitch=Pitch.c4, duration=1.5, volume=1.0},
-    Note{pitch=Pitch.e4, duration=.5, volume=1.0},
-    Note{pitch=Pitch.g4, duration=1, volume=1.0},
-    Note{pitch=Pitch.e4, duration=1, volume=1.0},
-
-    Note{pitch=Pitch.c5, duration=1.5, volume=1.0},
-    Note{pitch=Pitch.e5, duration=.5, volume=1.0},
-    Note{pitch=Pitch.g5, duration=1, volume=1.0},
-    Note{pitch=Pitch.e5, duration=1, volume=1.0},
+  duration=8,
+  notes=List{
+    Note{pitch=Pitch.c4, time=0, duration=1.5, volume=1.0},
+    Note{pitch=Pitch.e4, time=1.5, duration=.5, volume=1.0},
+    Note{pitch=Pitch.g4, time=2, duration=1, volume=1.0},
+    Note{pitch=Pitch.e4, time=3, duration=1, volume=1.0},
+    Note{pitch=Pitch.c3, time=4, duration=4, volume=1.0},
+    Note{pitch=Pitch.c4, time=4.125, duration=1, volume=1.0},
+    Note{pitch=Pitch.c5, time=4.25, duration=1, volume=1.0},
+    Note{pitch=Pitch.c6, time=4.375, duration=1, volume=1.0},
   },
 }
 local part
+part = song:make_part(midi.instrument.marimba)
+part.figure_instances:insert(FigureInstance(0, figure))
+
 part = song:make_part(midi.instrument.xylophone)
-part:insert(FigureInstance(0, figure))
+part.figure_instances:insert(FigureInstance(0, figure))
 
 part = song:make_part(midi.instrument.music_box)
-part:insert(FigureInstance(0, figure))
+part.figure_instances:insert(FigureInstance(0, figure))
 
 local midi_file = tomidifile(song)
 local file <close> = io.open('test.mid', 'wb')
