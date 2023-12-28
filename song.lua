@@ -6,9 +6,6 @@ require 'musictheory/meter'
 require 'musictheory/note'
 require 'musictheory/channel'
 
-channel = class 'channel' : extends(Figure) {
-}
-
 -- Should we annotate which section you're in?
 --   * Introduction https://en.wikipedia.org/wiki/Introduction_(music)
 --   * Exposition https://en.wikipedia.org/wiki/Exposition_(music)
@@ -21,8 +18,8 @@ channel = class 'channel' : extends(Figure) {
 --   * Bridge https://en.wikipedia.org/wiki/Bridge_(music)
 
 Song = class 'Song' {
-  __init = function(self)
-    self.channels = List{}
+  __init = function(self, args)
+    self.channels = args and args.channels or List{}
   end,
 
   make_channel = function(self, instrument)
