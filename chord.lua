@@ -73,7 +73,7 @@ Chord = class 'Chord' {
   to_extended_pitch = function(self, chord_index, extension_interval)
     check_arguments{self=Chord,
                     chord_index=Integer,
-                    extension_interval=Optional{Integer}}
+                    extension_interval=Optional{PitchInterval}}
     local extension_interval = extension_interval or PitchInterval.octave
     return self.root + extended_index(chord_index,
                                       self.quality.pitch_intervals,
@@ -82,8 +82,8 @@ Chord = class 'Chord' {
 
   to_extended_pitches = function(self, chord_indices, extension_interval)
     check_arguments{self=Chord,
-                    chord_index=Integer,
-                    extension_interval=Optional{Integer}}
+                    chord_indices=Schema{type=List, items={type=Integer}},
+                    extension_interval=Optional{PitchInterval}}
     extension_interval = extension_interval or PitchInterval.octave
     local result = List{}
     for i, chord_index in ipairs(chord_indices) do
