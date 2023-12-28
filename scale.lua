@@ -89,7 +89,7 @@ Scale = class 'Scale' {
         scale_index = scale_index - #self
       end
     elseif scale_index ~= nil then
-      mode = self.mode:rotate(scale_index)
+      mode = self.mode << scale_index
     end
 
     local tonic_scale_index = self:to_scale_index(tointeger(self.tonic)) + scale_index
