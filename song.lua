@@ -63,4 +63,8 @@ Song = class 'Song' {
     end
     return midi_file
   end,
+
+  __tostring = function(self)
+    return String.format('Song{channels=%s}', self.channels)
+  end,
 }
