@@ -150,32 +150,40 @@ Scale = class 'Scale' {
   end,
 }
 
--- -- function find_chord(scale, quality, nth=0, *, direction=up, scale_indices=[0,2,4])
--- function find_chord(args)
---   number_found = 0
---   -- Search one octave at a time.
---   local start = 0
---   local finish = direction * #scale
---   while true do
---     for root_scale_index in range(start, finish, direction) do
---       -- test_quality = Quality{pitches=scale[(i + root_scale_index for i in scale_indices)]}
+function find_chord(args)
+  local scale = args.scale
+  local quality = args.quality
+  local nth = args.nth or 0
+  local direction = args.direction or up
+  local scale_indices = args.scale_indices or List{0, 2, 4}
+  local number_found = 0
+  -- Search one octave at a time.
+  local start = 0
+  local finish = direction * #scale
+  while true do
+    for root_scale_index in range(start, finish, direction) do
+      local x = List{}
+      for i, scale_index in ipairs(scale_indices) do
+        x[i] = scale_index + root_scale_index
+      end
+      local test_quality = Quality{pitches=scale[x]}
 
---       if test_quality == quality then
---         if number_found == nth then
---           return Chord{root=scale:to_pitch(root_scale_index),
---                        quality=quality}
---         end
---         number_found = number_found + 1
---       end
---     end
---     start = start + direction * #scale
---     finish = finish + direction * #scale
---     -- If after one full octave there have not been any matches,
---     -- there won't be any matches going forward either. We should
---     -- return nil. If there was at least one match though, we should
---     -- keep searching until we find the nth match
---     if number_found == 0 then
---       return nil
---     end
---   end
--- end
+      if test_quality == quality then
+        if number_found == nth then
+          return Chord{root=scale:to_pitch(root_scale_index),
+                       quality=quality}
+        end
+        number_found = number_found + 1
+      end
+    end
+    start = start + direction * #scale
+    finish = finish + direction * #scale
+    -- If after one full octave there have not been any matches,
+    -- there won't be any matches going forward either. We should
+    -- return nil. If there was at least one match though, we should
+    -- keep searching until we find the nth match
+    if number_found == 0 then
+      return nil
+    end
+  end
+end
