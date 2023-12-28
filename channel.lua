@@ -19,11 +19,20 @@ FigureInstance = class 'FigureInstance' {
       }
     end, self, 0
   end,
+
+  __tostring = function(self)
+    return String.format('FigureInstance(%s, %s)', self.time, self.figure)
+  end,
 }
 
 Channel = class 'Channel' {
   __init = function(self, instrument)
     self.instrument = instrument
     self.figure_instances = List{}
+  end,
+
+  __tostring = function(self)
+    return String.format('Channel{instrument=%s, figure_instances=%s}',
+        self.instrument, self.figure_instances)
   end,
 }
