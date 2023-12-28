@@ -153,52 +153,58 @@ Chord = class 'Chord' {
   end,
 }
 
-function arpeggiate()
-  check_arguments{args=Schema{
-    chord={type=Chord},
-    duration={type=Number},
-    index_pattern_fn={type=Function},
-    index_pattern={type=Table},
-    time_step={type=Number},
-    volume={type=Number},
-    count={type=Integer},
-    figure_duration={type=Number},
-    extension_interval={type=PitchInterval},
-  }}
+function arpeggiate(args)
+  check_arguments{
+    args=Schema{
+      type=Table,
+      properties={
+        chord={type=Chord},
+        duration={type=Number},
+        index_pattern_fn={type=Function},
+        index_pattern={type=Table},
+        time_step={type=Number},
+        volume={type=Number},
+        count={type=Integer},
+        figure_duration={type=Number},
+        extension_interval={type=PitchInterval},
+      }
+    }
+  }
   local chord = args.chord
   local duration = args.duration or 1.0
-  local index_pattern_fn = args.index_pattern_fn
   local index_pattern = args.index_pattern
   local time_step = args.time_step or duration
   local volume = args.volume
-  local count = args.count
   local figure_duration = args.figure_duration
   local extension_interval = args.extension_interval or PitchInterval.octave
 
   local chord_indices
+  local count
   if index_pattern then
     chord_indices = index_pattern
-    if count == nil then
-      count = #chord_indices
-    end
+    count = args.count or #chord_indices
   else
-    if index_pattern_fn == nil then
-      index_pattern_fn = range
-    end
-    if count == nil then
-      count = #chord
-    end
+    local index_pattern_fn = args.index_pattern_fn or range
+    count = args.count or #chord
     chord_indices = List(index_pattern_fn(count))
   end
 
-  pitches = chord.to_extended_pitches(chord_indices)
-  -- notes = [Note(pitch, i * time_step, duration, volume)
-  --          for i, pitch in enumerate(pitches)]
+  local pitches = chord:to_extended_pitches(chord_indices)
+  local notes = List{}
+  for i, pitch in ipairs(pitches) do
+    notes[i] = Note{pitch=pitch, time=(i - 1) * time_step, duration=duration, volume=volume}
+  end
 
-  -- if figure_duration == nil:
-  --   figure_duration = max(note.time + note.duration for note in notes)
-
-  return Figure(figure_duration, notes)
+  if figure_duration == nil then
+    figure_duration = 0
+    for i, note in ipairs(notes) do
+      local note_end = note.time + note.duration
+      if note_end > figure_duration then
+        figure_duration = note_end
+      end
+    end
+  end
+  return Figure{duration=figure_duration, notes=notes}
 end
 
 -- nearest_inversionchord = function, tonic):
