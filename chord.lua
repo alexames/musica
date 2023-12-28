@@ -103,12 +103,11 @@ Chord = class 'Chord' {
     end
 
     local inverted_intervals = List{}
-    local i = 1
-    for index=n, n + #self do
+    for i=1, #self do
+      local index = n + i - 1
       local octave_index = index // #self
       local octave_offset = octave_interval * octave_index
       inverted_intervals[i] = self.quality[index % #self + 1] + octave_offset
-      i = i + 1
     end
     return Chord{root=self.root + inverted_intervals[1],
                  quality=Quality{pitch_intervals=inverted_intervals}}
