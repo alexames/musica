@@ -22,7 +22,6 @@ local function arpeggio_figure(key, quality, nth_chord, direction, scale_indices
   return concatenate(result)
 end
 
-
 local function prelude_arpeggio()
   local c_major_scale = Scale{tonic=Pitch.c4, mode=Mode.major}
   local a_flat_major_scale = Scale{tonic=Pitch.aflat4, mode=Mode.major}
@@ -51,36 +50,13 @@ local function scale_index_contour_melody(contour, key, scale_offset)
   return result
 end
 
-local function min(first, ...)
-  local smallest = first
-  for i, v in ipairs{...} do
-    if v < smallest then smallest = v end
-  end
-  return smallest
-end
-
-local function max(first, ...)
-  local largest = first
-  for i, v in ipairs{...} do
-    if v > largest then largest = v end
-  end
-  return largest
-end
-
+--[[
 local function combine_melody(pitches, rhythm)
   local result = List{}
   local i = 0
-  for i=1, min(#pitches, #rhythm) do
+  for i=1, min{#pitches, #rhythm} do
     local pitch, duration, volume = pitches[i], rhythm[i], 1.0
     result[i] = Note{pitch=pitch, duration=duration, volume=volume}
-  end
-  return result
-end
-
-local function sum(list)
-  local result = 0
-  for i, value in ipairs(list) do
-    result = result + value
   end
   return result
 end
@@ -134,7 +110,10 @@ end
 
 local song = Song()
 
-arpeggio_channel = song:make_channel(midi.instrument.harpsichord)
+arpeggio_channel = song:make_channel(midi.instrument.honky_tonk)
+arpeggio_channel.figure_instances:insert(
+  FigureInstance(0, prelude_arpeggio()))
+
 arpeggio_channel.figure_instances:insert(
   FigureInstance(0, prelude_arpeggio()))
 
@@ -149,3 +128,5 @@ local midi_file = tomidifile(song)
 local file <close> = io.open('prelude.mid', 'wb')
 midi_file:write(file)
 -- print(song)
+
+]]
