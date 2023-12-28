@@ -43,6 +43,29 @@ function range(a, b, c)
   return result
 end
 
+function range(a, b, c)
+  local start = b and a or 1
+  local finish = b or a
+  local step = c or 1
+  local up = step > 0
+  return function(unused, i)
+    i = i + step
+    if up and i < finish or i > finish then
+      return i
+    else
+      return nil
+    end
+  end, nil, start - step
+end
+
+function rangelist(a, b, c)
+  local result = List{}
+  for i in range(a, b, c) do
+    result:insert(i)
+  end
+  return result
+end
+
 function ipairs0(t)
   local f, t, i = ipairs(t)
   return f, t, -1
