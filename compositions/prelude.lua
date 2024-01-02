@@ -22,16 +22,15 @@ local function arpeggio_figure(key, quality, nth_chord, direction, scale_indices
 end
 
 local function mario_cadence(tonic)
-  local whole_step = PitchInterval{number=1, semitones=2}
+  local whole_tone_interval = PitchInterval{number=1, semitones=2}
   return List{
-    Scale{tonic=tonic, mode=Mode.major},
-    Scale{tonic=tonic - (1 * whole_step), mode=Mode.major},
-    Scale{tonic=tonic - (2 * whole_step), mode=Mode.major},
+    Scale{tonic=tonic,                           mode=Mode.major},
+    Scale{tonic=tonic - whole_tone_interval,     mode=Mode.major},
+    Scale{tonic=tonic - 2 * whole_tone_interval, mode=Mode.major},
   }
 end
 
-local function prelude_arpeggio()
-  local cadence = mario_cadence(Pitch.c4)
+local function prelude_arpeggio(tonic, cadence)
   local tetrad = List{0, 1, 2, 4}
   local tetrad7 = List{0, 2, 4, 6}
   return concatenate{
@@ -62,7 +61,7 @@ local function combine_melody(pitches, rhythm)
   return result
 end
 
-local function melody_line()
+local function melody_line(tonic)
   local contourA = {0}
 
   local contourB = {0, 2}
@@ -85,7 +84,7 @@ local function melody_line()
     return Figure{duration=sum(rhythm), melody=melody}
   end
 
-  local major = Scale{tonic=Pitch.c4, mode=Mode.major}
+  local major = Scale{tonic=tonic, mode=Mode.major}
   local minor = major:parallel(Mode.minor)
 
   local A = helper(contourA, rhythmA, major, 0)
@@ -111,23 +110,19 @@ end
 
 local song = Song()
 
+local tonic = Pitch.c4
+local cadence = mario_cadence(tonic)
+
 arpeggio_channel = song:make_channel(midi.instrument.harpsichord)
 arpeggio_channel.figure_instances:insert(
-  FigureInstance(0, prelude_arpeggio()))
-
-arpeggio_channel.figure_instances:insert(
-  FigureInstance(0, prelude_arpeggio()))
+  FigureInstance(0, prelude_arpeggio(tonic, cadence)))
 
 melody_channel = song:make_channel(midi.instrument.choir_aahs)
--- melody_channel.figure_instances.insert(
---   FigureInstance{time=0, figure=prelude_arpeggio()})
-
 melody_channel.figure_instances:insert(
-  FigureInstance(0, melody_line()))
+  FigureInstance(0, melody_line(tonic)))
 
 local midi_file = tomidifile(song)
 local file <close> = io.open('prelude.mid', 'wb')
 midi_file:write(file)
--- print(song)
 
 --]]
