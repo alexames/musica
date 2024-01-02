@@ -22,23 +22,28 @@ local function arpeggio_figure(key, quality, nth_chord, direction, scale_indices
   return concatenate(result)
 end
 
-local function prelude_arpeggio()
-  local c_major_scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-  local a_flat_major_scale = Scale{tonic=Pitch.aflat4, mode=Mode.major}
-  local b_flat_major_scale = Scale{tonic=Pitch.bflat4, mode=Mode.major}
+local function mario_cadence(tonic)
+  local whole_step = PitchInterval{number=1, semitones=2}
+  return List{
+    Scale{tonic=tonic, mode=Mode.major},
+    Scale{tonic=tonic - (1 * whole_step), mode=Mode.major},
+    Scale{tonic=tonic - (2 * whole_step), mode=Mode.major},
+  }
+end
 
+local function prelude_arpeggio()
+  local cadence = mario_cadence(Pitch.c4)
   local tetrad = List{0, 1, 2, 4}
   local tetrad7 = List{0, 2, 4, 6}
-
   return concatenate{
-    arpeggio_figure(     c_major_scale, Quality.major, 0, Direction.up,   tetrad,  0),
-    arpeggio_figure(     c_major_scale, Quality.minor, 0, Direction.down, tetrad,  0),
-    arpeggio_figure(     c_major_scale, Quality.major, 0, Direction.up,   tetrad,  0),
-    arpeggio_figure(     c_major_scale, Quality.minor, 0, Direction.down, tetrad,  0),
-    arpeggio_figure(     c_major_scale, Quality.major, 1, Direction.up,   tetrad, -2),
-    arpeggio_figure(     c_major_scale, Quality.major, 2, Direction.up,   tetrad, -2),
-    arpeggio_figure(a_flat_major_scale, Quality.major, 0, Direction.up,   tetrad7, 0),
-    arpeggio_figure(b_flat_major_scale, Quality.major, 0, Direction.up,   tetrad7, 0),
+    arpeggio_figure(cadence[1], Quality.major, 0, Direction.up,   tetrad,  0),
+    arpeggio_figure(cadence[1], Quality.minor, 0, Direction.down, tetrad,  0),
+    arpeggio_figure(cadence[1], Quality.major, 0, Direction.up,   tetrad,  0),
+    arpeggio_figure(cadence[1], Quality.minor, 0, Direction.down, tetrad,  0),
+    arpeggio_figure(cadence[1], Quality.major, 1, Direction.up,   tetrad, -2),
+    arpeggio_figure(cadence[1], Quality.major, 2, Direction.up,   tetrad, -2),
+    arpeggio_figure(cadence[2], Quality.major, 0, Direction.up,   tetrad7, 0),
+    arpeggio_figure(cadence[3], Quality.major, 0, Direction.up,   tetrad7, 0),
   }
 end
 
@@ -50,7 +55,6 @@ local function scale_index_contour_melody(contour, key, scale_offset)
   return result
 end
 
---[[
 local function combine_melody(pitches, rhythm)
   local result = List{}
   local i = 0
@@ -110,7 +114,7 @@ end
 
 local song = Song()
 
-arpeggio_channel = song:make_channel(midi.instrument.honky_tonk)
+arpeggio_channel = song:make_channel(midi.instrument.harpsichord)
 arpeggio_channel.figure_instances:insert(
   FigureInstance(0, prelude_arpeggio()))
 
@@ -129,4 +133,4 @@ local file <close> = io.open('prelude.mid', 'wb')
 midi_file:write(file)
 -- print(song)
 
-]]
+--]]
