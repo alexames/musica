@@ -38,7 +38,7 @@ Scale = class 'Scale' {
 
   to_pitches = function(self, scale_indices)
     check_arguments{self=Scale, scale_indices=Table}
-    return transform(scale_indices, function(i, scale_index)
+    return transform(scale_indices, function(scale_index)
       return self:to_pitch(scale_index)
     end)
   end,
@@ -49,7 +49,7 @@ Scale = class 'Scale' {
     local pitch_index_offset = pitch_index - tointeger(self.tonic)
     local offset_modulus = pitch_index_offset % tointeger(self.mode:octave_interval())
     local offset_octave = pitch_index_offset // tointeger(self.mode:octave_interval())
-    local normalized_indices = transform(self:get_pitches(), function(i, pitch)
+    local normalized_indices = transform(self:get_pitches(), function(pitch)
       return tointeger(pitch - self.tonic)
     end)
     local scale_index_index = normalized_indices:ifind(offset_modulus)
@@ -111,7 +111,7 @@ Scale = class 'Scale' {
     end
 
     function canonicalize(pitch_indices, octave_interval)
-      return transform(pitch_indices, function(i, pitch_index)
+      return transform(pitch_indices, function(pitch_index)
         return tointeger(pitch_index) % tointeger(octave_interval)
       end)
     end
@@ -158,7 +158,7 @@ function find_chord(args)
   while true do
     for root_scale_index in range(start, finish, direction) do
       local absolute_scale_indices = 
-        transform(relative_scale_indices, function(i, scale_index)
+        transform(relative_scale_indices, function(scale_index)
           return scale_index + root_scale_index
         end)
       local test_quality = Quality{pitches=scale[absolute_scale_indices]}

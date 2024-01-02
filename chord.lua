@@ -63,7 +63,7 @@ Chord = class 'Chord' {
     check_arguments{self=Chord,
                     scale_indices=Schema{type=List,
                                          items={type=Integer}}}
-    return transform(scale_indices, function(i, scale_index)
+    return transform(scale_indices, function(scale_index)
       return self:to_pitch(scale_index)
     end)
   end,
@@ -83,7 +83,7 @@ Chord = class 'Chord' {
                     chord_indices=Schema{type=List, items={type=Integer}},
                     extension_interval=Optional{PitchInterval}}
     extension_interval = extension_interval or PitchInterval.octave
-    return transform(chord_indices, function(i, chord_index)
+    return transform(chord_indices, function(chord_index)
       return self:to_extended_pitch(chord_index, extension_interval)
     end)
   end,
