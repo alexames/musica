@@ -73,6 +73,7 @@ Pitch = class 'Pitch' {
 
   __sub = function(self, other)
     self, other = metamethod_args(Pitch, self, other)
+    check_arguments{self=Pitch, other=Union{Pitch,PitchInterval}}
     if isinstance(other, Pitch) then
       local self_pitch_class_octave = (self.pitch_class.index - 1) + self.octave * 7
       local other_pitch_class_octave = (other.pitch_class.index - 1) + other.octave * 7
