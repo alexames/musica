@@ -38,11 +38,9 @@ Scale = class 'Scale' {
 
   to_pitches = function(self, scale_indices)
     check_arguments{self=Scale, scale_indices=Table}
-    local result = List{}
-    for i, scale_index in ipairs(scale_indices) do
-      result[i] = self:to_pitch(scale_index)
-    end
-    return result
+    return transform(scale_indices, function(i, scale_index)
+      return self:to_pitch(scale_index)
+    end)
   end,
 
   to_scale_index = function(self, pitch)
@@ -51,10 +49,9 @@ Scale = class 'Scale' {
     local pitch_index_offset = pitch_index - tointeger(self.tonic)
     local offset_modulus = pitch_index_offset % tointeger(self.mode:octave_interval())
     local offset_octave = pitch_index_offset // tointeger(self.mode:octave_interval())
-    local normalized_indices = List{}
-    for i, pitch in ipairs(self:get_pitches()) do
-      normalized_indices[i] = tointeger(pitch - self.tonic)
-    end
+    local normalized_indices = transform(self:get_pitches(), function(i, pitch)
+      return tointeger(pitch - self.tonic)
+    end)
     local scale_index_index = normalized_indices:ifind(offset_modulus)
     if scale_index_index then
       local scale_index_modulus = scale_index_index - 1
@@ -114,11 +111,9 @@ Scale = class 'Scale' {
     end
 
     function canonicalize(pitch_indices, octave_interval)
-      local result = List{}
-      for i=1, #pitch_indices do
-        result[i] = tointeger(pitch_indices[i]) % tointeger(octave_interval)
-      end
-      return result
+      return transform(pitch_indices, function(i, pitch_index)
+        return tointeger(pitch_index) % tointeger(octave_interval)
+      end)
     end
 
     local octave_interval = self.mode:octave_interval()
@@ -155,18 +150,18 @@ function find_chord(args)
   local quality = args.quality
   local nth = args.nth or 0
   local direction = args.direction or up
-  local scale_indices = args.scale_indices or List{0, 2, 4}
+  local relative_scale_indices = args.scale_indices or List{0, 2, 4}
   local number_found = 0
   -- Search one octave at a time.
   local start = 0
   local finish = direction * #scale
   while true do
     for root_scale_index in range(start, finish, direction) do
-      local x = List{}
-      for i, scale_index in ipairs(scale_indices) do
-        x[i] = scale_index + root_scale_index
-      end
-      local test_quality = Quality{pitches=scale[x]}
+      local absolute_scale_indices = 
+        transform(relative_scale_indices, function(i, scale_index)
+          return scale_index + root_scale_index
+        end)
+      local test_quality = Quality{pitches=scale[absolute_scale_indices]}
 
       if test_quality == quality then
         if number_found == nth then

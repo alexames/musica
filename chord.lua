@@ -63,11 +63,9 @@ Chord = class 'Chord' {
     check_arguments{self=Chord,
                     scale_indices=Schema{type=List,
                                          items={type=Integer}}}
-    local result = List{}
-    for i, scale_index in ipairs(scale_indices) do
-      result[i] = self:to_pitch(scale_index)
-    end
-    return result
+    return transform(scale_indices, function(i, scale_index)
+      return self:to_pitch(scale_index)
+    end)
   end,
 
   to_extended_pitch = function(self, chord_index, extension_interval)
@@ -85,11 +83,9 @@ Chord = class 'Chord' {
                     chord_indices=Schema{type=List, items={type=Integer}},
                     extension_interval=Optional{PitchInterval}}
     extension_interval = extension_interval or PitchInterval.octave
-    local result = List{}
-    for i, chord_index in ipairs(chord_indices) do
-      result[i] = self:to_extended_pitch(chord_index, extension_interval)
-    end
-    return result
+    return transform(chord_indices, function(i, chord_index)
+      return self:to_extended_pitch(chord_index, extension_interval)
+    end)
   end,
 
   inversion = function(self, n, octave_interval)
