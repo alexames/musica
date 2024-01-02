@@ -124,5 +124,3 @@ melody_channel.figure_instances:insert(
 local midi_file = tomidifile(song)
 local file <close> = io.open('prelude.mid', 'wb')
 midi_file:write(file)
-
---]]
