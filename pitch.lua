@@ -132,11 +132,17 @@ local accidental_args = {
   {suffix='sharp', accidental=Accidental.sharp},
 }
 
+local pitch_classes = List{
+  PitchClass.A,
+  PitchClass.B,
+  PitchClass.C,
+  PitchClass.D,
+  PitchClass.E,
+  PitchClass.F,
+  PitchClass.G,
+}
 while current_pitch < 128 do
-  for pitch_class, interval
-      in zip({ivalues(PitchClass)}, {ivalues(minor_pitch_intervals)}) do
-    pitch_class = pitch_class[1]
-    interval = interval[1]
+  for i, pitch_class, interval in zip(pitch_classes, minor_pitch_intervals) do
     for unused, args in ipairs(accidental_args) do
       local pitch_name = pitch_class.name:lower() .. args.suffix .. current_octave
       Pitch[pitch_name] = Pitch{pitch_class=pitch_class,

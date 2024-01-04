@@ -53,30 +53,28 @@ end
 
 local function combine_melody(pitches, rhythm)
   local result = List{}
-  local i = 0
-  for i=1, min{#pitches, #rhythm} do
-    local pitch, duration, volume = pitches[i], rhythm[i], 1.0
-    result[i] = Note{pitch=pitch, duration=duration, volume=volume}
+  for i, pitch, duration in zip(pitches, rhythm) do
+    result[i] = Note{pitch=pitch, duration=duration, volume=1.0}
   end
   return result
 end
 
 local function melody_line(tonic)
-  local contourA = {0}
+  local contourA = List{0}
 
-  local contourB = {0, 2}
-  local contourC = {0, 1}
-  local contourD = {0, -2}
+  local contourB = List{0, 2}
+  local contourC = List{0, 1}
+  local contourD = List{0, -2}
 
-  local contourE = {0, -1, -2, 0}
-  local contourF = {0, -1, -2, -3}
+  local contourE = List{0, -1, -2, 0}
+  local contourF = List{0, -1, -2, -3}
 
-  local rhythmA = {4}
+  local rhythmA = List{4}
 
-  local rhythmB = {2, 2}
-  local rhythmC = {3, 1}
+  local rhythmB = List{2, 2}
+  local rhythmC = List{3, 1}
 
-  local rhythmD = {1, 1, 1, 1}
+  local rhythmD = List{1, 1, 1, 1}
 
   local function helper(contour, rhythm, scale, scale_offset)
     local pitches = scale_index_contour_melody(contour, scale, scale_offset)
