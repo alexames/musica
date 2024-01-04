@@ -2,6 +2,8 @@ require 'llx'
 require 'musictheory'
 local midi = require 'midi'
 
+local unpack = Table.unpack
+
 local function arpeggio_figure(key, quality, nth_chord, direction, scale_indices, inversion)
   local root = find_chord{
       scale=key, quality=quality, nth=nth_chord, direction=direction}.root
@@ -52,11 +54,10 @@ local function scale_index_contour_melody(contour, key, scale_offset)
 end
 
 local function combine_melody(pitches, rhythm)
-  local result = List{}
-  for i, pitch, duration in zip(pitches, rhythm) do
-    result[i] = Note{pitch=pitch, duration=duration, volume=1.0}
-  end
-  return result
+  return transform(zip_together(pitches, rhythm), function(args)
+    local pitch, duration = unpack(args)
+    return Note{pitch=pitch, duration=duration, volume=1.0}
+  end)
 end
 
 local function melody_line(tonic)
