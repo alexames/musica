@@ -15,7 +15,7 @@ local function arpeggio_figure(key, quality, nth_chord, direction, scale_indices
     rangelist( arp_range, -arp_range, Direction.down),
   }
   local chord = Chord{pitches=relative_key[scale_indices]}:inversion(inversion)
-  local result = transform(chord_indices_list, function(chord_indices)
+  local result = map(chord_indices_list, function(chord_indices)
     return arpeggiate{chord=chord,
                       duration=1/4,
                       index_pattern=chord_indices}
@@ -48,13 +48,13 @@ local function prelude_arpeggio(tonic, cadence)
 end
 
 local function scale_index_contour_melody(contour, key, scale_offset)
-  return transform(contour, function(scale_index)
+  return map(contour, function(scale_index)
     return key[scale_index + scale_offset]
   end)
 end
 
 local function combine_melody(pitches, rhythm)
-  return transform(zip_together(pitches, rhythm), function(args)
+  return map(zip(pitches, rhythm), function(args)
     local pitch, duration = unpack(args)
     return Note{pitch=pitch, duration=duration, volume=1.0}
   end)
