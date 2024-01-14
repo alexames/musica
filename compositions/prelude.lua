@@ -11,15 +11,15 @@ local function arpeggio_figure(key, quality, nth_chord, direction, scale_indices
 
   local arp_range = 2 * #scale_indices
   local chord_indices_list = List{
-    rangelist(-arp_range,  arp_range, Direction.up  ),
-    rangelist( arp_range, -arp_range, Direction.down),
+    range(-arp_range,  arp_range, Direction.up  ),
+    range( arp_range, -arp_range, Direction.down),
   }
   local chord = Chord{pitches=relative_key[scale_indices]}:inversion(inversion)
-  local result = map(chord_indices_list, function(chord_indices)
+  local result = map(function(chord_indices)
     return arpeggiate{chord=chord,
                       duration=1/4,
                       index_pattern=chord_indices}
-  end)
+  end, chord_indices_list)
   return concatenate(result)
 end
 
@@ -48,16 +48,15 @@ local function prelude_arpeggio(tonic, cadence)
 end
 
 local function scale_index_contour_melody(contour, key, scale_offset)
-  return map(contour, function(scale_index)
+  return map(function(scale_index)
     return key[scale_index + scale_offset]
-  end)
+  end, contour)
 end
 
 local function combine_melody(pitches, rhythm)
-  return map(zip(pitches, rhythm), function(args)
-    local pitch, duration = unpack(args)
+  return map(function(pitch, duration)
     return Note{pitch=pitch, duration=duration, volume=1.0}
-  end)
+  end, pitches, rhythm)
 end
 
 local function melody_line(tonic)
@@ -123,3 +122,4 @@ melody_channel.figure_instances:insert(
 local midi_file = tomidifile(song)
 local file <close> = io.open('prelude.mid', 'wb')
 midi_file:write(file)
+-- print(song)

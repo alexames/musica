@@ -63,9 +63,9 @@ Chord = class 'Chord' {
     check_arguments{self=Chord,
                     scale_indices=Schema{type=List,
                                          items={type=Integer}}}
-    return map(scale_indices, function(scale_index)
+    return map(function(scale_index)
       return self:to_pitch(scale_index)
-    end)
+    end, scale_indices)
   end,
 
   to_extended_pitch = function(self, chord_index, extension_interval)
@@ -80,12 +80,12 @@ Chord = class 'Chord' {
 
   to_extended_pitches = function(self, chord_indices, extension_interval)
     check_arguments{self=Chord,
-                    chord_indices=Schema{type=List, items={type=Integer}},
+                    chord_indices=Schema{type=Any, items={type=Integer}},
                     extension_interval=Optional{PitchInterval}}
     extension_interval = extension_interval or PitchInterval.octave
-    return map(chord_indices, function(chord_index)
+    return map(function(chord_index)
       return self:to_extended_pitch(chord_index, extension_interval)
-    end)
+    end, chord_indices)
   end,
 
   inversion = function(self, n, octave_interval)
@@ -157,7 +157,7 @@ function arpeggiate(args)
         chord={type=Chord},
         duration={type=Number},
         index_pattern_fn={type=Function},
-        index_pattern={type=Table},
+        index_pattern={type=Union{Table,Function}},
         time_step={type=Number},
         volume={type=Number},
         count={type=Integer},
@@ -178,7 +178,7 @@ function arpeggiate(args)
   local count
   if index_pattern then
     chord_indices = index_pattern
-    count = args.count or #chord_indices
+    -- count = args.count or #chord_indices
   else
     local index_pattern_fn = args.index_pattern_fn or range
     count = args.count or #chord

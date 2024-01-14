@@ -142,7 +142,7 @@ local pitch_classes = List{
   PitchClass.G,
 }
 while current_pitch < 128 do
-  for i, pitch_class, interval in zip_unpacked(pitch_classes, minor_pitch_intervals) do
+  for i, pitch_class, interval in zip(pitch_classes, minor_pitch_intervals) do
     for unused, args in ipairs(accidental_args) do
       local pitch_name = pitch_class.name:lower() .. args.suffix .. current_octave
       Pitch[pitch_name] = Pitch{pitch_class=pitch_class,

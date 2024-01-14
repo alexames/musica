@@ -36,7 +36,7 @@ Figure = class 'Figure' {
 
   apply = function(self, transformation)
     check_arguments{self=Figure, transformation=Function}
-    return Figure{self.duration, notes=map(transformation, self.notes)}
+    return Figure{self.duration, notes=map(self.notes, transformation)}
   end,
 
   __add = function(self, other)
