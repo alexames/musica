@@ -15,19 +15,23 @@ local yield = coroutine.yield
 local wrap = coroutine.wrap
 
 rhythm = List{
-  {beat=1, duration=1, volume=0.1},
-  {beat=2, duration=2, volume=0.2},
-  {beat=3, duration=3, volume=0.3},
+  {duration=.25, volume=0.1},
+  {duration=.25, volume=0.2},
+  {duration=.25, volume=0.3},
+  {duration=.25, volume=0.3},
 }
 
-rules = {
-  -- get_pitches = function(rhythm, rhythm_index, rules)
-  --   return wrap(function()
-  --     for i, v in List{Pitch.c4, Pitch.d4, Pitch.e4} do
-  --       yield(i, v)
-  --     end
-  --   end)
-  -- end
+MonotonicMovementRule = class 'MonotonicMovementRule' {
+  __init = function(self, args)
+    self.scale = args.scale
+    self.source_pitch = args.source_pitch
+    self.target_pitch = args.target_pitch
+    self.step = args.target_pitch > args.source_pitch
+                  and Direction.up
+                  or Direction.down
+    self.strict = args.strict == nil or args.strict
+  end,
+
   get_pitches = function(self, rhythm, rhythm_index, melody)
     return wrap(function()
       local counter = count()
@@ -40,16 +44,19 @@ rules = {
       local last_pitch = last_note and last_note.pitch or self.source_pitch
       local last_scale_index = self.scale:to_scale_index(last_pitch)
       local target_scale_index = self.scale:to_scale_index(self.target_pitch)
-      for i, scale_index in 
-          range(last_scale_index, target_scale_index + self.step, self.step) do
+      local start, finish
+      if self.strict then
+        start = last_scale_index + (last_note and self.step or 0)
+        finish = target_scale_index
+      else
+        start = last_scale_index
+        finish = target_scale_index + self.step
+      end
+      for i, scale_index in range(start, finish, self.step) do
         yield(counter(), self.scale[scale_index])
       end
     end)
   end,
-  scale = Scale{tonic=Pitch.c4, mode=Mode.major},
-  source_pitch = Pitch.c4,
-  target_pitch = Pitch.e4,
-  step = Direction.up,
 }
 
 local generators = {}
@@ -67,6 +74,7 @@ function generators.melodies_from_rhythm(rhythm, rules)
           generator = generators.melodies_from_rhythm,
           rhythm = rhythm,
           index = rhythm_index,
+          rules = rules,
           -- other stuff, scale and chord maybe?
         }
       }
@@ -93,26 +101,14 @@ function generate_melodies(generators)
 end
 
 local gen_list = List{
-  generators.melodies_from_rhythm(rhythm, rules),
+  generators.melodies_from_rhythm(
+    rhythm,
+    MonotonicMovementRule{
+      scale = Scale{tonic=Pitch.c4, mode=Mode.major},
+      source_pitch = Pitch.c4,
+      target_pitch = Pitch.g4
+    }),
 }
-for i, melody in generate_melodies(gen_list) do
-  print(melody)
-end
-
--- function recurse(search_space, path)
---   local moves = search_space:get_moves(path)
---   for i, moves in moves do
---     local new_space = search_space:make_move(move)
---     if reached_target(move, target) then
---       results:insert(path)
---     end
---     path:insert(move)
---     dfs(search_space, path, target)
---     path:remove()
---   end
--- end
-
--- return results
 
 local melodic_movement = {
   -- Upwards melodic movement
