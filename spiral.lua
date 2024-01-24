@@ -1,7 +1,9 @@
 require 'llx'
-require 'musictheory/util'
+local util = require 'musictheory/util'
 
-Spiral = class 'Spiral' {
+local multi_index = util.multi_index
+
+local Spiral = class 'Spiral' {
   __init = function(self, args)
     self._values = args
   end,
@@ -20,4 +22,8 @@ Spiral = class 'Spiral' {
   __tostring = function(self)
     return "Spiral{".. table.concat(self._values, ', ') .. '}'
   end,
+}
+
+return {
+  Spiral = Spiral
 }

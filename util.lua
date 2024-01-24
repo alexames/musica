@@ -3,7 +3,7 @@ require 'llx'
 
 -- For when I want a symbol that is unique, but whose value has no meaning.
 -- Only used for testing equality.
-UniqueSymbol = class 'UniqueSymbol' {
+local UniqueSymbol = class 'UniqueSymbol' {
   __init = function(self, repr_str)
     self.repr_str = repr_str
   end,
@@ -13,7 +13,7 @@ UniqueSymbol = class 'UniqueSymbol' {
   end,
 }
 
-function multi_index(callback)
+local function multi_index(callback)
   return function(self, index)
     if isinstance(index, Number) then
       return callback(self, index)
@@ -30,7 +30,7 @@ function multi_index(callback)
   end
 end
 
-function ipairs0(t)
+local function ipairs0(t)
   local f, t, i = ipairs(t)
   return f, t, -1
 end
@@ -49,7 +49,7 @@ end
 -- Music utilities
 
 
-function intervals_to_indices(intervals)
+local function intervals_to_indices(intervals)
   local index = 0
   local indices = List{}
   for i, interval in ipairs(intervals) do
@@ -64,7 +64,7 @@ end
 --   return [int(i2) - int(i1) for i1, i2 in by_pairs(indices)]
 
 
-function extended_index(index, indices, interval)
+local function extended_index(index, indices, interval)
   local extension_index = index // #indices
   local extension_offset = interval * extension_index
   return indices[index % #indices + 1] + extension_offset
@@ -73,3 +73,11 @@ end
 -- function extended_indices(indices, interval)
 --   return [extended_index(index, indices, interval)
 --           for index in indices]
+
+return {
+  UniqueSymbol = UniqueSymbol,
+  multi_index = multi_index,
+  ipairs0 = ipairs0,
+  intervals_to_indices = intervals_to_indices,
+  extended_index = extended_index,
+}

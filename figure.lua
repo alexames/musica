@@ -1,5 +1,7 @@
 require 'llx'
-require 'musictheory/note'
+local note = require 'musictheory/note'
+
+local Note = note.Note
 
 local FigureArgs = Schema{
   __name='FigureArgs',
@@ -11,6 +13,7 @@ local FigureArgs = Schema{
   },
 }
 
+local Figure
 Figure = class 'Figure' {
   __init = function(self, args)
     check_arguments{self=Figure, args=FigureArgs}
@@ -109,3 +112,11 @@ function repeat_volta(figure, endings)
   end
   return concatenate(figures)
 end
+
+return {
+  Figure = Figure,
+  merge = merge,
+  concatenate = concatenate,
+  repeat_figure = repeat_figure,
+  repeat_volta = repeat_volta,
+}

@@ -9,3 +9,7 @@ ScaleDegree = List{
   submediant = 5,
   leading_tone = 6,
 }
+
+return {
+  ScaleDegree = ScaleDegree,
+}

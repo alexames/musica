@@ -1,6 +1,9 @@
 require 'llx'
-require 'musictheory/mode'
-require 'musictheory/pitch_interval'
+local mode = require 'musictheory/mode'
+local pitch_interval = require 'musictheory/pitch_interval'
+
+local PitchInterval = pitch_interval.PitchInterval
+local Mode = mode.Mode
 
 local diatonic_intervals = List{
   PitchInterval.whole,
@@ -52,3 +55,5 @@ Mode.chromatic = Mode(List{
   PitchInterval.half,
   PitchInterval.half,
 })
+
+return {}

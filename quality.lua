@@ -1,7 +1,11 @@
 require 'llx'
-require 'musictheory/pitch'
-require 'musictheory/pitch_interval'
-require 'musictheory/util'
+local pitch = require 'musictheory/pitch'
+local pitch_interval = require 'musictheory/pitch_interval'
+local util = require 'musictheory/util'
+
+local Pitch = pitch.Pitch
+local PitchInterval = pitch_interval.PitchInterval
+local multi_index = util.multi_index
 
 local QualityByPitches = Schema{
   __name='QualityByPitches',
@@ -34,6 +38,7 @@ local QualityArgumentsSchema = Schema{
   type=Union{QualityByPitches, QualityByPitchIntervals},
 }
 
+local Quality
 Quality = class 'Quality' {
   __init = function(self, args)
     check_arguments{self=Quality, args=QualityArgumentsSchema}
@@ -86,3 +91,7 @@ Quality.major = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval
 Quality.minor = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.perfect_fifth}}
 Quality.augmented = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.augmented_fifth}}
 Quality.diminished = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.diminished_fifth}}
+
+return {
+  Quality = Quality,
+}

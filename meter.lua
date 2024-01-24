@@ -1,25 +1,25 @@
 require 'llx'
 
-Pulse = class 'Pulse' {
+local Pulse = class 'Pulse' {
   __init = function(self, duration)
     self.duration = duration or 1
   end
 }
 
-StressedPulse = class 'StressedPulse' :extends(Pulse) {
+local StressedPulse = class 'StressedPulse' :extends(Pulse) {
   isStressed = function(self)
     return true
   end
 }
 
-UnstressedPulse = class UnstressedPulse : extends(Pulse) {
+local UnstressedPulse = class UnstressedPulse : extends(Pulse) {
   isStressed = function(self)
     return false
   end
 }
 
 -- The sequence of stressed and unstressed beats in a phrase.
-Meter = class 'Meter' {
+local Meter = class 'Meter' {
   __init = function(self, pulses)
     self.pulseSequence = pulses
   end;
@@ -41,8 +41,7 @@ Meter = class 'Meter' {
   end;
 }
 
-
-class 'MeterProgression' {
+local MeterProgression = class 'MeterProgression' {
   __init = function(self, periods)
     self.periods = periods
   end;
@@ -55,13 +54,24 @@ class 'MeterProgression' {
 
 
 -- A sequence of durations and intensities.
-class 'Rhythm' {
+local Rhythm = class 'Rhythm' {
 
 }
 
-fourFour = Meter(List{StressedPulse(),
-                  UnstressedPulse(),
-                  StressedPulse(),
-                  UnstressedPulse()})
+local four_four = Meter(List{StressedPulse(),
+                             UnstressedPulse(),
+                             StressedPulse(),
+                             UnstressedPulse()})
 
-commonMeter = fourFour
+local common_meter = four_four
+
+return {
+  Pulse = Pulse,
+  StressedPulse = StressedPulse,
+  UnstressedPulse = UnstressedPulse,
+  Meter = Meter,
+  MeterProgression = MeterProgression,
+  Rhythm = Rhythm,
+  four_four = four_four,
+  common_meter = common_meter
+}

@@ -1,12 +1,20 @@
 require 'llx'
-require 'musictheory/chord'
-require 'musictheory/direction'
-require 'musictheory/mode'
-require 'musictheory/modes'
-require 'musictheory/pitch'
-require 'musictheory/util'
+local chord = require 'musictheory/chord'
+local direction = require 'musictheory/direction'
+local mode = require 'musictheory/mode'
+local modes = require 'musictheory/modes'
+local pitch = require 'musictheory/pitch'
+local quality = require 'musictheory/quality'
+local util = require 'musictheory/util'
 
-ScaleArgs = Schema{
+local Chord = chord.Chord
+local Direction = direction.Direction
+local Mode = mode.Mode
+local Pitch = pitch.Pitch
+local Quality = quality.Quality
+local multi_index = util.multi_index
+
+local ScaleArgs = Schema{
   type=Table,
   properties={
     tonic={type=Pitch},
@@ -15,6 +23,7 @@ ScaleArgs = Schema{
   required={'tonic', 'mode'},
 }
 
+local Scale
 Scale = class 'Scale' {
   __init = function(self, arg)
     check_arguments{self=Scale, arg=ScaleArgs}
@@ -182,3 +191,8 @@ function find_chord(args)
     end
   end
 end
+
+return {
+  Scale = Scale,
+  find_chord = find_chord,
+}

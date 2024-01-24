@@ -1,6 +1,8 @@
 require 'llx'
 
-require 'musictheory/pitch'
+local pitch = require 'musictheory/pitch'
+
+local Pitch = pitch.Pitch
 
 local NoteArgs = Schema{
   __name='NoteArgs',
@@ -14,6 +16,7 @@ local NoteArgs = Schema{
 }
 
 --- A note, with a pitch, time, duration and volume
+local Note
 Note = class 'Note' {
   --- Initializes a Note.
   __init = function(self, arg)
@@ -50,4 +53,8 @@ Note = class 'Note' {
     return string.format("Note{pitch=%s, time=%s, duration=%s, volume=%s}",
                          self.pitch, self.time, self.duration, self.volume)
   end,
+}
+
+return {
+  Note = Note,
 }

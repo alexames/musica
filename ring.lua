@@ -1,5 +1,7 @@
 require 'llx'
-require 'musictheory/util'
+local util = require 'musictheory/util'
+
+local multi_index = util.multi_index
 
 Ring = class 'Ring' {
   __init = function(self, args)
@@ -15,3 +17,6 @@ Ring = class 'Ring' {
   end),
 }
 
+return {
+  Ring = Ring
+}

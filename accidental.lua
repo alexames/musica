@@ -3,3 +3,7 @@ Accidental = {
   natural = 0,
   flat = -1,
 }
+
+return {
+  Accidental = Accidental,
+}

@@ -1,9 +1,17 @@
 require 'llx'
-require 'musictheory/figure'
-require 'musictheory/note'
-require 'musictheory/pitch'
-require 'musictheory/quality'
-require 'musictheory/util'
+local figure = require 'musictheory/figure'
+local note = require 'musictheory/note'
+local pitch = require 'musictheory/pitch'
+local pitch_interval = require 'musictheory/pitch_interval'
+local quality = require 'musictheory/quality'
+local util = require 'musictheory/util'
+
+local Figure = figure.Figure
+local Note = note.Note
+local Pitch = pitch.Pitch
+local PitchInterval = pitch_interval.PitchInterval
+local Quality = quality.Quality
+local multi_index = util.multi_index
 
 local ChordByPitches = Schema{
   __name='ChordByPitches',
@@ -32,6 +40,7 @@ local ChordArgs = Schema{
   type=Union{ChordByPitches, ChordByRootQuality},
 }
 
+local Chord
 Chord = class 'Chord' {
   __init = function(self, args)
     check_arguments{self=Chord, args=ChordArgs}
@@ -73,9 +82,9 @@ Chord = class 'Chord' {
                     chord_index=Integer,
                     extension_interval=Optional{PitchInterval}}
     local extension_interval = extension_interval or PitchInterval.octave
-    return self.root + extended_index(chord_index,
-                                      self.quality.pitch_intervals,
-                                      extension_interval)
+    return self.root + util.extended_index(chord_index,
+                                           self.quality.pitch_intervals,
+                                           extension_interval)
   end,
 
   to_extended_pitches = function(self, chord_indices, extension_interval)
@@ -221,3 +230,7 @@ end
 --                          for index in chord.scale_indices)
 --   return Chord(chord.scale, scale_indices[0], indices_to_intervals(scale_indices))
 
+return {
+  Chord = Chord,
+  arpeggiate = arpeggiate,
+}

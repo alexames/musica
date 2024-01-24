@@ -10,3 +10,7 @@ ScaleIndex = List{
   seventh = 6,
   octave = 7,
 }
+
+return {
+  ScaleIndex = ScaleIndex,
+}

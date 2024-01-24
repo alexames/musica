@@ -1,6 +1,6 @@
 require 'llx'
 
-PitchClass = class 'PitchClass' {
+local PitchClass = class 'PitchClass' {
   __init = function(self, args)
     self.name = args.name
     self.index = args.index
@@ -26,3 +26,7 @@ PitchClass[4] = PitchClass.D
 PitchClass[5] = PitchClass.E
 PitchClass[6] = PitchClass.F
 PitchClass[7] = PitchClass.G
+
+return {
+  PitchClass = PitchClass,
+}

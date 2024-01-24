@@ -1,8 +1,13 @@
 require 'llx'
-require 'musictheory/accidental'
-require 'musictheory/interval_quality'
-require 'musictheory/pitch_class'
-require 'musictheory/util'
+local accidental = require 'musictheory/accidental'
+local interval_quality = require 'musictheory/interval_quality'
+local pitch_class = require 'musictheory/pitch_class'
+local pitch_util = require 'musictheory/pitch_util'
+
+local Accidental = accidental.Accidental
+local IntervalQuality = interval_quality.IntervalQuality
+local PitchClass = pitch_class.PitchClass
+local major_pitch_indices = pitch_util.major_pitch_indices
 
 local PitchIntervalArgs = Schema{
   __name='PitchIntervalArgs',
@@ -15,6 +20,7 @@ local PitchIntervalArgs = Schema{
   }
 }
 
+local PitchInterval -- Fix the need to pre-declare this.
 PitchInterval = class 'PitchInterval' {
   __init = function(self, args)
     check_arguments{self=PitchInterval, args=PitchIntervalArgs}
@@ -71,7 +77,7 @@ PitchInterval = class 'PitchInterval' {
   end,
 
   __add = function(self, other)
-    check_arguments{self=PitchInterval, other=Union{Pitch,PitchInterval}}
+    check_arguments{self=PitchInterval, other=Any --[[Union{Pitch,PitchInterval]] }
     self, other = metamethod_args(PitchInterval, self, other)
     if isinstance(other, PitchInterval) then
       -- If we are adding to another PitchInterval, the result is a PitchInterval.
@@ -184,3 +190,7 @@ PitchInterval.augmented_seventh = PitchInterval{number=6, quality=IntervalQualit
 
 PitchInterval.dimished_octave   = PitchInterval{number=7, quality=IntervalQuality.diminished}
 PitchInterval.octave            = PitchInterval{number=7, quality=IntervalQuality.perfect}
+
+return {
+  PitchInterval = PitchInterval,
+}

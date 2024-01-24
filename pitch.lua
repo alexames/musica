@@ -1,14 +1,13 @@
 require 'llx'
-require 'musictheory/accidental'
-require 'musictheory/pitch_class'
-require 'musictheory/pitch_interval'
-require 'musictheory/spiral'
-require 'musictheory/util'
+local accidental = require 'musictheory/accidental'
+local pitch_class = require 'musictheory/pitch_class'
+local pitch_interval = require 'musictheory/pitch_interval'
+local pitch_util = require 'musictheory/pitch_util'
 
-major_pitch_intervals = List{2, 2, 1, 2, 2, 2, 1}
-major_pitch_indices = Spiral(intervals_to_indices(major_pitch_intervals))
-minor_pitch_intervals = List{2, 1, 2, 2, 1, 2, 2}
-minor_pitch_indices = intervals_to_indices(minor_pitch_intervals)
+local Accidental = accidental.Accidental
+local PitchClass = pitch_class.PitchClass
+local PitchInterval = pitch_interval.PitchInterval
+local minor_pitch_intervals = pitch_util.minor_pitch_intervals
 
 local middle_octave = 4
 
@@ -22,6 +21,7 @@ local lowest_pitch_indices = {
   [PitchClass.G] = 31
 }
 
+local Pitch
 Pitch = class 'Pitch' {
   __init = function(self, args)
     local pitch_class = args.pitch_class
@@ -153,3 +153,7 @@ while current_pitch < 128 do
   end
   current_octave = current_octave + 1
 end
+
+return {
+  Pitch = Pitch,
+}

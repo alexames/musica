@@ -4,3 +4,7 @@ Direction = {
   same = 0,
   up = 1,
 }
+
+return {
+  Direction = Direction,
+}

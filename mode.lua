@@ -1,7 +1,16 @@
 require 'llx'
-require 'musictheory/pitch'
-require 'musictheory/util'
+local pitch = require 'musictheory/pitch'
+local pitch_interval= require 'musictheory/pitch_interval'
+local spiral = require 'musictheory/spiral'
+local util = require 'musictheory/util'
 
+local Pitch = pitch.Pitch
+local PitchInterval = pitch_interval.PitchInterval
+local Spiral = spiral.Spiral
+local multi_index = util.multi_index
+local intervals_to_indices = util.intervals_to_indices
+
+local Mode
 Mode = class 'Mode' {
   __init = function(self, semitone_intervals)
     check_arguments{self=Mode, semitone_intervals=List}
@@ -59,4 +68,8 @@ Mode = class 'Mode' {
     return string.format('Mode(%s)',
                          self.semitone_intervals)
   end,
+}
+
+return {
+  Mode = Mode,
 }

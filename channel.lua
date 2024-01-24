@@ -1,5 +1,11 @@
 require 'llx'
+local figure = require 'musictheory/figure'
+local note = require 'musictheory/note'
 
+local Figure = figure.Figure
+local Note = note.Note
+
+local FigureInstance
 FigureInstance = class 'FigureInstance' {
   __init = function(self, time, figure)
     check_arguments{self=FigureInstance, time=Number, figure=Figure}
@@ -25,6 +31,7 @@ FigureInstance = class 'FigureInstance' {
   end,
 }
 
+local Channel
 Channel = class 'Channel' {
   __init = function(self, instrument)
     self.instrument = instrument
@@ -35,4 +42,9 @@ Channel = class 'Channel' {
     return String.format('Channel{instrument=%s, figure_instances=%s}',
         self.instrument, self.figure_instances)
   end,
+}
+
+return {
+  FigureInstance = FigureInstance,
+  Channel = Channel,
 }

@@ -1,6 +1,6 @@
 require 'llx'
 
-class 'Dynamic' {
+local Dynamic = class 'Dynamic' {
   __init = function(self, long_name, short_name, volume)
     self.long_name = long_name
     self.short_name = short_name
@@ -40,7 +40,8 @@ for i, dynamic in dynamics_list do
 end
 
 return {
-  dynamics = dynamics
+  Dynamic = Dynamic,
+  dynamics = dynamics,
 }
 
 -- -- Literally "forced", denotes an abrupt, fierce accent on a single sound or chord. When written out in full, it applies to the sequence of sounds or chords under or over which it is placed. Sforzando is not to be confused with rinforzando.

@@ -1,10 +1,16 @@
 require 'llx'
 local midi = require 'midi'
-require 'musictheory/chord'
-require 'musictheory/figure'
-require 'musictheory/meter'
-require 'musictheory/note'
-require 'musictheory/channel'
+local chord = require 'musictheory/chord'
+local figure = require 'musictheory/figure'
+local meter = require 'musictheory/meter'
+local note = require 'musictheory/note'
+local channel = require 'musictheory/channel'
+
+local Chord = chord.Chord
+local Figure = figure.Figure
+local Meter = meter.Meter
+local Note = note.Note
+local Channel = channel.Channel
 
 -- Should we annotate which section you're in?
 --   * Introduction https://en.wikipedia.org/wiki/Introduction_(music)
@@ -17,7 +23,7 @@ require 'musictheory/channel'
 --   * Coda https://en.wikipedia.org/wiki/Coda_(music)
 --   * Bridge https://en.wikipedia.org/wiki/Bridge_(music)
 
-Song = class 'Song' {
+local Song = class 'Song' {
   __init = function(self, args)
     self.channels = args and args.channels or List{}
   end,
@@ -67,4 +73,8 @@ Song = class 'Song' {
   __tostring = function(self)
     return String.format('Song{channels=%s}', self.channels)
   end,
+}
+
+return {
+  Song = Song,
 }
