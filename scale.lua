@@ -6,8 +6,8 @@ local modes = require 'musictheory/modes'
 local pitch = require 'musictheory/pitch'
 local quality = require 'musictheory/quality'
 local util = require 'musictheory/util'
-local List = require 'llx/src/types/list' . List
-local map = require 'llx/src/functional' . map
+local List = require 'llx/types/list' . List
+local map = require 'llx/functional' . map
 
 local range = llx.functional.range
 local tointeger = llx.tointeger

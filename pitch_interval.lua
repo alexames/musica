@@ -1,15 +1,15 @@
 local llx = require 'llx'
-local List = require 'llx/src/types/list' . List
-local check_arguments = require 'llx/src/check_arguments' . check_arguments
+local List = require 'llx/types/list' . List
+local check_arguments = require 'llx/check_arguments' . check_arguments
 local accidental = require 'musictheory/accidental'
 local interval_quality = require 'musictheory/interval_quality'
 local pitch_class = require 'musictheory/pitch_class'
 local pitch_util = require 'musictheory/pitch_util'
 
-local Number = require 'llx/src/types/number' . Number
-local List = require 'llx/src/types/list' . List
-local tointeger = require 'llx/src/tointeger' . tointeger
-local isinstance = require 'llx/src/isinstance' . isinstance
+local Number = require 'llx/types/number' . Number
+local List = require 'llx/types/list' . List
+local tointeger = require 'llx/tointeger' . tointeger
+local isinstance = require 'llx/isinstance' . isinstance
 
 local _ENV, _M = llx.environment.create_module_environment()
 

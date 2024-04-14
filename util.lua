@@ -1,7 +1,7 @@
 -- Non-music utilities
 local llx = require 'llx'
-local List = require 'llx/src/types/list' . List
-local tointeger = require 'llx/src/tointeger' . tointeger
+local List = require 'llx/types/list' . List
+local tointeger = require 'llx/tointeger' . tointeger
 
 local class = llx.class
 local isinstance = llx.isinstance

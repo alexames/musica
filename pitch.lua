@@ -1,7 +1,7 @@
 local llx = require 'llx'
-local List = require 'llx/src/types/list' . List
-local isinstance = require 'llx/src/isinstance' . isinstance
-local zip = require 'llx/src/functional' . zip
+local List = require 'llx/types/list' . List
+local isinstance = require 'llx/isinstance' . isinstance
+local zip = require 'llx/functional' . zip
 local accidental = require 'musictheory/accidental'
 local pitch_class = require 'musictheory/pitch_class'
 local pitch_interval = require 'musictheory/pitch_interval'
