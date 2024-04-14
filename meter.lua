@@ -1,25 +1,25 @@
-require 'llx'
+local llx = require 'llx'
 
-local Pulse = class 'Pulse' {
+local Pulse = llx.class 'Pulse' {
   __init = function(self, duration)
     self.duration = duration or 1
   end
 }
 
-local StressedPulse = class 'StressedPulse' :extends(Pulse) {
+local StressedPulse = llx.class 'StressedPulse' :extends(Pulse) {
   isStressed = function(self)
     return true
   end
 }
 
-local UnstressedPulse = class UnstressedPulse : extends(Pulse) {
+local UnstressedPulse = llx.class UnstressedPulse : extends(Pulse) {
   isStressed = function(self)
     return false
   end
 }
 
 -- The sequence of stressed and unstressed beats in a phrase.
-local Meter = class 'Meter' {
+local Meter = llx.class 'Meter' {
   __init = function(self, pulses)
     self.pulseSequence = pulses
   end;
@@ -41,7 +41,7 @@ local Meter = class 'Meter' {
   end;
 }
 
-local MeterProgression = class 'MeterProgression' {
+local MeterProgression = llx.class 'MeterProgression' {
   __init = function(self, periods)
     self.periods = periods
   end;
@@ -54,14 +54,14 @@ local MeterProgression = class 'MeterProgression' {
 
 
 -- A sequence of durations and intensities.
-local Rhythm = class 'Rhythm' {
+local Rhythm = llx.class 'Rhythm' {
 
 }
 
-local four_four = Meter(List{StressedPulse(),
-                             UnstressedPulse(),
-                             StressedPulse(),
-                             UnstressedPulse()})
+local four_four = Meter(llx.List{StressedPulse(),
+                                       UnstressedPulse(),
+                                       StressedPulse(),
+                                       UnstressedPulse()})
 
 local common_meter = four_four
 

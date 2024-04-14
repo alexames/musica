@@ -1,3 +1,4 @@
+local List = require 'llx/src/types/list' . List
 local spiral = require 'musictheory/spiral'
 local util = require 'musictheory/util'
 

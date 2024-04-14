@@ -1,9 +1,9 @@
-require 'llx'
+local llx = require 'llx'
 local util = require 'musictheory/util'
 
 local multi_index = util.multi_index
 
-Ring = class 'Ring' {
+Ring = llx.class 'Ring' {
   __init = function(self, args)
     self._values = args
   end,

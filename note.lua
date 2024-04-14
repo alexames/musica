@@ -1,26 +1,25 @@
-require 'llx'
+local llx = require 'llx'
 
 local pitch = require 'musictheory/pitch'
 
 local Pitch = pitch.Pitch
 
-local NoteArgs = Schema{
+local NoteArgs = llx.Schema{
   __name='NoteArgs',
   type=Table,
   properties={
-    pitch={type=Union{Pitch,Integer}},
-    time={type=Number},
-    duration={type=Number},
-    volume={type=Number},
+    -- pitch={type=llx.Union{Pitch,llx.Integer}},
+    time={type=llx.Number},
+    duration={type=llx.Number},
+    volume={type=llx.Number},
   },
 }
 
 --- A note, with a pitch, time, duration and volume
-local Note
-Note = class 'Note' {
+Note = llx.class 'Note' {
   --- Initializes a Note.
   __init = function(self, arg)
-    check_arguments{self=Note, arg=NoteArgs}
+    -- llx.check_arguments{self=Note, arg=NoteArgs}
     self.pitch = arg.pitch
     self.time = arg.time
     self.duration = arg.duration
@@ -29,19 +28,19 @@ Note = class 'Note' {
 
   --- Adjust the duration so that the note finishes at the given time.
   set_finish = function(self, finish)
-    check_arguments{self=Note, finish=Number}
+    -- llx.check_arguments{self=Note, finish=Number}
     self.duration = finish - self.time
   end,
 
   --- Returns the time at which the note terminates.
   finish = function(self)
-    check_arguments{self=Note}
+    -- llx.check_arguments{self=Note}
     return self.time + self.duration
   end,
 
   --- Check equality of two notes.
   __eq = function(self, other)
-    check_arguments{self=Note, other=Note}
+    llx.check_arguments{self=Note, other=Note}
     return self.pitch == other.pitch
            and self.time == other.time
            and self.duration == other.duration

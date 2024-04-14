@@ -1,6 +1,8 @@
-require 'llx'
+local class, environment = require 'llx' { 'class', 'environment' }
 
-local PitchClass = class 'PitchClass' {
+local _ENV, _M = environment.create_module_environment()
+
+PitchClass = class 'PitchClass' {
   __init = function(self, args)
     self.name = args.name
     self.index = args.index
@@ -27,6 +29,4 @@ PitchClass[5] = PitchClass.E
 PitchClass[6] = PitchClass.F
 PitchClass[7] = PitchClass.G
 
-return {
-  PitchClass = PitchClass,
-}
+return _M

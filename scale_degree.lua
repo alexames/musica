@@ -1,6 +1,6 @@
-require 'llx'
+local llx = require 'llx'
 
-ScaleDegree = List{
+ScaleDegree = llx.List{
   tonic = 0,
   supertonic = 1,
   mediant = 2,

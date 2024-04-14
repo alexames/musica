@@ -1,47 +1,48 @@
-require 'llx'
+local llx = require 'llx'
 local pitch = require 'musictheory/pitch'
 local pitch_interval = require 'musictheory/pitch_interval'
 local util = require 'musictheory/util'
+
+local _ENV, _M = llx.environment.create_module_environment()
 
 local Pitch = pitch.Pitch
 local PitchInterval = pitch_interval.PitchInterval
 local multi_index = util.multi_index
 
-local QualityByPitches = Schema{
+local QualityByPitches = llx.Schema{
   __name='QualityByPitches',
-  type=Table,
+  type=llx.Table,
   properties={
     pitches={
-      type=List,
+      type=llx.List,
       items={type=Pitch},
     },
-    name={type=String},
+    name={type=llx.String},
   },
   required={'pitches'},
 }
 
-local QualityByPitchIntervals = Schema{
+local QualityByPitchIntervals = llx.Schema{
   __name='QualityByPitchIntervals',
-  type=Table,
+  type=llx.Table,
   properties={
     pitch_intervals={
-      type=List,
+      type=llx.List,
       items={type=PitchInterval},
     },
-    name={type=String},
+    name={type=llx.String},
   },
   required={'pitch_intervals'},
 }
 
-local QualityArgumentsSchema = Schema{
-  __name='QualityArgumentsSchema',
-  type=Union{QualityByPitches, QualityByPitchIntervals},
-}
+-- local QualityArgumentsSchema = llx.Schema{
+--   __name='QualityArgumentsSchema',
+--   type=llx.Union{QualityByPitches, QualityByPitchIntervals},
+-- }
 
-local Quality
-Quality = class 'Quality' {
+Quality = llx.class 'Quality' {
   __init = function(self, args)
-    check_arguments{self=Quality, args=QualityArgumentsSchema}
+    -- llx.check_arguments{self=Quality, args=QualityArgumentsSchema}
     self.name = args.name
     local pitch_intervals = args.pitch_intervals
     local pitches = args.pitches
@@ -51,7 +52,7 @@ Quality = class 'Quality' {
         pitch_intervals[i] = interval - first_interval
       end
     elseif pitches then
-      pitch_intervals = List{}
+      pitch_intervals = llx.List{}
       pitches:sort()
       local first_pitch = pitches[1]
       for i, pitch in ipairs(pitches) do
@@ -87,11 +88,9 @@ Quality = class 'Quality' {
   end;
 }
 
-Quality.major = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.perfect_fifth}}
-Quality.minor = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.perfect_fifth}}
-Quality.augmented = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.augmented_fifth}}
-Quality.diminished = Quality{pitch_intervals=List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.diminished_fifth}}
+Quality.major = Quality{pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.perfect_fifth}}
+Quality.minor = Quality{pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.perfect_fifth}}
+Quality.augmented = Quality{pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.augmented_fifth}}
+Quality.diminished = Quality{pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.diminished_fifth}}
 
-return {
-  Quality = Quality,
-}
+return _M

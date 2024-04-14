@@ -1,9 +1,14 @@
-require 'llx'
+local llx = require 'llx'
+local List = require 'llx/src/types/list' . List
+local isinstance = require 'llx/src/isinstance' . isinstance
+local zip = require 'llx/src/functional' . zip
 local accidental = require 'musictheory/accidental'
 local pitch_class = require 'musictheory/pitch_class'
 local pitch_interval = require 'musictheory/pitch_interval'
 local pitch_util = require 'musictheory/pitch_util'
 
+local class = llx.class
+local tointeger = llx.tointeger
 local Accidental = accidental.Accidental
 local PitchClass = pitch_class.PitchClass
 local PitchInterval = pitch_interval.PitchInterval
@@ -21,7 +26,6 @@ local lowest_pitch_indices = {
   [PitchClass.G] = 31
 }
 
-local Pitch
 Pitch = class 'Pitch' {
   __init = function(self, args)
     local pitch_class = args.pitch_class
@@ -62,7 +66,7 @@ Pitch = class 'Pitch' {
   end,
 
   __add = function(self, pitch_interval)
-    check_arguments{self=Pitch, pitch_interval=PitchInterval}
+    -- check_arguments{self=Pitch, pitch_interval=PitchInterval}
     local pitch_class = PitchClass[(self.pitch_class.index + pitch_interval.number - 1) % 7 + 1]
     local octave = math.floor(self.octave + (self.pitch_class.index + pitch_interval.number - 1) / 7)
     local pitch_index = tointeger(self) + tointeger(pitch_interval)
@@ -72,8 +76,8 @@ Pitch = class 'Pitch' {
   end,
 
   __sub = function(self, other)
-    self, other = metamethod_args(Pitch, self, other)
-    check_arguments{self=Pitch, other=Union{Pitch,PitchInterval}}
+    self, other = llx.metamethod_args(Pitch, self, other)
+    -- check_arguments{self=Pitch, other=Union{Pitch,PitchInterval}}
     if isinstance(other, Pitch) then
       local self_pitch_class_octave = (self.pitch_class.index - 1) + self.octave * 7
       local other_pitch_class_octave = (other.pitch_class.index - 1) + other.octave * 7

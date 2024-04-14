@@ -1,14 +1,13 @@
-require 'llx'
+local llx = require 'llx'
 local figure = require 'musictheory/figure'
 local note = require 'musictheory/note'
 
 local Figure = figure.Figure
 local Note = note.Note
 
-local FigureInstance
-FigureInstance = class 'FigureInstance' {
+FigureInstance = llx.class 'FigureInstance' {
   __init = function(self, time, figure)
-    check_arguments{self=FigureInstance, time=Number, figure=Figure}
+    -- check_arguments{self=FigureInstance, time=Number, figure=Figure}
     self.time = time
     self.figure = figure
   end,
@@ -31,11 +30,10 @@ FigureInstance = class 'FigureInstance' {
   end,
 }
 
-local Channel
-Channel = class 'Channel' {
+Channel = llx.class 'Channel' {
   __init = function(self, instrument)
     self.instrument = instrument
-    self.figure_instances = List{}
+    self.figure_instances = llx.List{}
   end,
 
   __tostring = function(self)

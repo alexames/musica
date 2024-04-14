@@ -1,9 +1,14 @@
 -- Non-music utilities
-require 'llx'
+local llx = require 'llx'
+local List = require 'llx/src/types/list' . List
+local tointeger = require 'llx/src/tointeger' . tointeger
+
+local class = llx.class
+local isinstance = llx.isinstance
 
 -- For when I want a symbol that is unique, but whose value has no meaning.
 -- Only used for testing equality.
-local UniqueSymbol = class 'UniqueSymbol' {
+UniqueSymbol = class 'UniqueSymbol' {
   __init = function(self, repr_str)
     self.repr_str = repr_str
   end,
@@ -15,16 +20,16 @@ local UniqueSymbol = class 'UniqueSymbol' {
 
 local function multi_index(callback)
   return function(self, index)
-    if isinstance(index, Number) then
+    if isinstance(index, llx.Number) then
       return callback(self, index)
-    elseif isinstance(index, Table) then
+    elseif isinstance(index, llx.Table) then
       local results = List{}
       for i, v in ipairs(index) do
         results[i] = self[v]
       end
       return results
     else
-      local __defaultindex = getmetafield(self, '__defaultindex')
+      local __defaultindex = llx.getmetafield(self, '__defaultindex')
       return __defaultindex(self, index)
     end
   end

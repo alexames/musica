@@ -1,4 +1,4 @@
-require 'llx'
+local llx = require 'llx'
 local midi = require 'midi'
 local chord = require 'musictheory/chord'
 local figure = require 'musictheory/figure'
@@ -6,11 +6,13 @@ local meter = require 'musictheory/meter'
 local note = require 'musictheory/note'
 local channel = require 'musictheory/channel'
 
+local class = llx.class
 local Chord = chord.Chord
 local Figure = figure.Figure
 local Meter = meter.Meter
 local Note = note.Note
 local Channel = channel.Channel
+local tointeger = llx.tointeger
 
 -- Should we annotate which section you're in?
 --   * Introduction https://en.wikipedia.org/wiki/Introduction_(music)
@@ -25,7 +27,7 @@ local Channel = channel.Channel
 
 local Song = class 'Song' {
   __init = function(self, args)
-    self.channels = args and args.channels or List{}
+    self.channels = args and args.channels or llx.List{}
   end,
 
   make_channel = function(self, instrument)
@@ -37,7 +39,7 @@ local Song = class 'Song' {
   __tomidifile = function(self)
     local midi_file = midi.MidiFile()
     for i, song_track in ipairs(self.channels) do
-      local events = List{}
+      local events = llx.List{}
 
       -- Gather events
       local channel = i - 1 -- not sure if this is correct?

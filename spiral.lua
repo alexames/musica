@@ -1,4 +1,4 @@
-require 'llx'
+local class = require 'llx' {'class'}
 local util = require 'musictheory/util'
 
 local multi_index = util.multi_index

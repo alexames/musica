@@ -1,6 +1,6 @@
-require 'llx'
+local llx = require 'llx'
 
-local Dynamic = class 'Dynamic' {
+Dynamic = llx.class 'Dynamic' {
   __init = function(self, long_name, short_name, volume)
     self.long_name = long_name
     self.short_name = short_name
@@ -8,7 +8,7 @@ local Dynamic = class 'Dynamic' {
   end,
 }
 
-local dynamics_list = List{
+local dynamics_list = llx.List{
   -- Meaning "nothing". May be used at the start of a crescendo to indicate "start from nothing" or at the end of a diminuendo to indicate "fade out to nothing".
   Dynamic('niente', 'n', 0.0),
   -- Extremely soft. Softer dynamics occur very infrequently and would be specified with additional ps.

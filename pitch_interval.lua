@@ -1,29 +1,37 @@
-require 'llx'
+local llx = require 'llx'
+local List = require 'llx/src/types/list' . List
+local check_arguments = require 'llx/src/check_arguments' . check_arguments
 local accidental = require 'musictheory/accidental'
 local interval_quality = require 'musictheory/interval_quality'
 local pitch_class = require 'musictheory/pitch_class'
 local pitch_util = require 'musictheory/pitch_util'
+
+local Number = require 'llx/src/types/number' . Number
+local List = require 'llx/src/types/list' . List
+local tointeger = require 'llx/src/tointeger' . tointeger
+local isinstance = require 'llx/src/isinstance' . isinstance
+
+local _ENV, _M = llx.environment.create_module_environment()
 
 local Accidental = accidental.Accidental
 local IntervalQuality = interval_quality.IntervalQuality
 local PitchClass = pitch_class.PitchClass
 local major_pitch_indices = pitch_util.major_pitch_indices
 
-local PitchIntervalArgs = Schema{
+local PitchIntervalArgs = llx.Schema{
   __name='PitchIntervalArgs',
-  type=Table,
+  type=llx.Table,
   properties={
-    number={type=Integer},
-    quality={type=Any}, -- need to handle circular dependencies better.
-    semitone_interval={type=Integer},
-    accidentals={type=Integer},
+    number={type=llx.Integer},
+    quality={type=llx.Any}, -- need to handle circular dependencies better.
+    semitone_interval={type=llx.Integer},
+    accidentals={type=llx.Integer},
   }
 }
 
-local PitchInterval -- Fix the need to pre-declare this.
-PitchInterval = class 'PitchInterval' {
+PitchInterval = llx.class 'PitchInterval' {
   __init = function(self, args)
-    check_arguments{self=PitchInterval, args=PitchIntervalArgs}
+    -- check_arguments{self=PitchInterval, args=PitchIntervalArgs}
     local number = args.number
     local quality = args.quality
     local semitone_interval = args.semitone_interval
@@ -77,8 +85,8 @@ PitchInterval = class 'PitchInterval' {
   end,
 
   __add = function(self, other)
-    check_arguments{self=PitchInterval, other=Any --[[Union{Pitch,PitchInterval]] }
-    self, other = metamethod_args(PitchInterval, self, other)
+    check_arguments{self=PitchInterval, other=llx.Any --[[Union{Pitch,PitchInterval]] }
+    self, other = llx.metamethod_args(PitchInterval, self, other)
     if isinstance(other, PitchInterval) then
       -- If we are adding to another PitchInterval, the result is a PitchInterval.
       return PitchInterval{
@@ -97,8 +105,8 @@ PitchInterval = class 'PitchInterval' {
   end,
 
   __mul = function(self, coeffecient)
-    self, coeffecient = metamethod_args(PitchInterval, self, coeffecient)
-    check_arguments{self=PitchInterval, coeffecient=Integer}
+    self, coeffecient = llx.metamethod_args(PitchInterval, self, coeffecient)
+    check_arguments{self=PitchInterval, coeffecient=llx.Integer}
     return PitchInterval{number=coeffecient * self.number,
                          semitone_interval=coeffecient * tointeger(self)}
   end,

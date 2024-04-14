@@ -1,26 +1,25 @@
-require 'llx'
+local llx = require 'llx'
 local note = require 'musictheory/note'
 
 local Note = note.Note
 
-local FigureArgs = Schema{
+local FigureArgs = llx.Schema{
   __name='FigureArgs',
-  type=Table,
+  type=llx.Table,
   properties={
-    duration={type=Number},
-    notes={type=List, items={type=Table}},
-    melody={type=List, items={type=Table}},
+    duration={type=llx.Number},
+    notes={type=llx.List, items={type=llx.Table}},
+    melody={type=llx.List, items={type=llx.Table}},
   },
 }
 
-local Figure
-Figure = class 'Figure' {
+Figure = llx.class 'Figure' {
   __init = function(self, args)
-    check_arguments{self=Figure, args=FigureArgs}
+    -- check_arguments{self=Figure, args=FigureArgs}
     self.duration = args.duration
     local notes = args.notes
     local melody = args.melody
-    local new_notes = List{}
+    local new_notes = llx.List{}
     if notes then
       for i, note in ipairs(notes) do
         new_notes[i] = Note(note)
@@ -38,32 +37,32 @@ Figure = class 'Figure' {
   end,
 
   apply = function(self, transformation)
-    check_arguments{self=Figure, transformation=Function}
+    -- check_arguments{self=Figure, transformation=Function}
     return Figure{self.duration, notes=map(self.notes, transformation)}
   end,
 
   __add = function(self, other)
-    check_arguments{self=Figure, other=Figure}
+    -- check_arguments{self=Figure, other=Figure}
     return merge({self, other})
   end,
 
   __mul = function(self, repetitions)
-    check_arguments{self=Figure, repetitions=Integer}
+    -- check_arguments{self=Figure, repetitions=Integer}
     return repeat_figure(self, repetitions)
   end,
 
   __concat = function(self, other)
-    check_arguments{self=Figure, other=Figure}
+    -- check_arguments{self=Figure, other=Figure}
     return concatenate({self, other})
   end,
 
   __eq = function(self, other)
-    check_arguments{self=Figure, other=Figure}
+    -- check_arguments{self=Figure, other=Figure}
     return self.duration == other.duration and self.notes == other.notes
   end,
 
   __tostring = function(self)
-    check_arguments{self=Figure}
+    -- check_arguments{self=Figure}
     return string.format("Figure{duration=%s, notes=%s}",
                           self.duration, tostring(self.notes))
   end,
@@ -71,7 +70,7 @@ Figure = class 'Figure' {
 
 function merge(figures)
   local duration = nil
-  local result = List{}
+  local result = llx.List{}
   for _, figure in ipairs(figures) do
     if duration == nil then
       duration = figure.duration
@@ -88,7 +87,7 @@ end
 
 function concatenate(figures)
   local offset = 0
-  local result = List{}
+  local result = llx.List{}
   for i, figure in ipairs(figures) do
     for j, note in ipairs(figure.notes) do
       new_note = Note(note)
@@ -102,11 +101,11 @@ end
 
 function repeat_figure(figure, repeat_count)
   repeat_count = repeat_count or 2
-  return concatenate(List{figure} * repeat_count)
+  return concatenate(llx.List{figure} * repeat_count)
 end
 
 function repeat_volta(figure, endings)
-  local figures = List{}
+  local figures = llx.List{}
   for i, ending in ipairs(endings) do
     figures:extend({figure, ending})
   end

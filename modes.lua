@@ -1,11 +1,11 @@
-require 'llx'
+local llx = require 'llx'
 local mode = require 'musictheory/mode'
 local pitch_interval = require 'musictheory/pitch_interval'
 
 local PitchInterval = pitch_interval.PitchInterval
 local Mode = mode.Mode
 
-local diatonic_intervals = List{
+local diatonic_intervals = llx.List{
   PitchInterval.whole,
   PitchInterval.whole,
   PitchInterval.half,
@@ -15,7 +15,7 @@ local diatonic_intervals = List{
   PitchInterval.half,
 }
 
-local diatonic_modes_names = List{
+local diatonic_modes_names = llx.List{
   'ionian',
   'dorian',
   'phrygian',
@@ -33,7 +33,7 @@ end
 Mode.major = Mode.ionian
 Mode.minor = Mode.aeolian
 
-Mode.whole_tone = Mode(List{
+Mode.whole_tone = Mode(llx.List{
   PitchInterval.whole,
   PitchInterval.whole,
   PitchInterval.whole,
@@ -42,7 +42,7 @@ Mode.whole_tone = Mode(List{
   PitchInterval.whole,
 })
 
-Mode.chromatic = Mode(List{
+Mode.chromatic = Mode(llx.List{
   PitchInterval.half,
   PitchInterval.half,
   PitchInterval.half,

@@ -1,6 +1,6 @@
-require 'llx'
+local llx = require 'llx'
 
-ScaleIndex = List{
+ScaleIndex = llx.List{
   first = 0,
   second = 1,
   third = 2,
