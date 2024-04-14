@@ -1,25 +1,32 @@
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local llx = require 'llx'
 
-local Pulse = llx.class 'Pulse' {
+local _ENV, _M = llx.environment.create_module_environment()
+
+local class = llx.class
+local List = llx.List
+
+Pulse = class 'Pulse' {
   __init = function(self, duration)
     self.duration = duration or 1
   end
 }
 
-local StressedPulse = llx.class 'StressedPulse' :extends(Pulse) {
+StressedPulse = class 'StressedPulse' :extends(Pulse) {
   isStressed = function(self)
     return true
   end
 }
 
-local UnstressedPulse = llx.class UnstressedPulse : extends(Pulse) {
+UnstressedPulse = class UnstressedPulse : extends(Pulse) {
   isStressed = function(self)
     return false
   end
 }
 
 -- The sequence of stressed and unstressed beats in a phrase.
-local Meter = llx.class 'Meter' {
+Meter = class 'Meter' {
   __init = function(self, pulses)
     self.pulseSequence = pulses
   end;
@@ -41,7 +48,7 @@ local Meter = llx.class 'Meter' {
   end;
 }
 
-local MeterProgression = llx.class 'MeterProgression' {
+MeterProgression = class 'MeterProgression' {
   __init = function(self, periods)
     self.periods = periods
   end;
@@ -54,24 +61,15 @@ local MeterProgression = llx.class 'MeterProgression' {
 
 
 -- A sequence of durations and intensities.
-local Rhythm = llx.class 'Rhythm' {
+Rhythm = class 'Rhythm' {
 
 }
 
-local four_four = Meter(llx.List{StressedPulse(),
-                                       UnstressedPulse(),
-                                       StressedPulse(),
-                                       UnstressedPulse()})
+four_four = Meter(List{StressedPulse(),
+                       UnstressedPulse(),
+                       StressedPulse(),
+                       UnstressedPulse()})
 
-local common_meter = four_four
+common_meter = four_four
 
-return {
-  Pulse = Pulse,
-  StressedPulse = StressedPulse,
-  UnstressedPulse = UnstressedPulse,
-  Meter = Meter,
-  MeterProgression = MeterProgression,
-  Rhythm = Rhythm,
-  four_four = four_four,
-  common_meter = common_meter
-}
+return _M

@@ -1,16 +1,21 @@
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local llx = require 'llx'
 local pitch = require 'musictheory/pitch'
 local pitch_interval= require 'musictheory/pitch_interval'
 local spiral = require 'musictheory/spiral'
 local util = require 'musictheory/util'
 
+local _ENV, _M = llx.environment.create_module_environment()
+
+local class = llx.class
 local Pitch = pitch.Pitch
 local PitchInterval = pitch_interval.PitchInterval
 local Spiral = spiral.Spiral
 local multi_index = util.multi_index
 local intervals_to_indices = util.intervals_to_indices
 
-Mode = llx.class 'Mode' {
+Mode = class 'Mode' {
   __init = function(self, semitone_intervals)
     -- check_arguments{self=Mode, semitone_intervals=List}
     self.semitone_intervals = semitone_intervals
@@ -69,6 +74,4 @@ Mode = llx.class 'Mode' {
   end,
 }
 
-return {
-  Mode = Mode,
-}
+return _M

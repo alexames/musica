@@ -1,6 +1,11 @@
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local llx = require 'llx'
 local note = require 'musictheory/note'
 
+local _ENV, _M = llx.environment.create_module_environment()
+
+local class = llx.class
 local Note = note.Note
 
 local FigureArgs = llx.Schema{
@@ -13,7 +18,7 @@ local FigureArgs = llx.Schema{
   },
 }
 
-Figure = llx.class 'Figure' {
+Figure = class 'Figure' {
   __init = function(self, args)
     -- check_arguments{self=Figure, args=FigureArgs}
     self.duration = args.duration
@@ -112,10 +117,4 @@ function repeat_volta(figure, endings)
   return concatenate(figures)
 end
 
-return {
-  Figure = Figure,
-  merge = merge,
-  concatenate = concatenate,
-  repeat_figure = repeat_figure,
-  repeat_volta = repeat_volta,
-}
+return _M

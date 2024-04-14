@@ -1,11 +1,16 @@
-local llx = require 'llx'
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local figure = require 'musictheory/figure'
+local llx = require 'llx'
 local note = require 'musictheory/note'
 
+local _ENV, _M = llx.environment.create_module_environment()
+
+local class = llx.class
 local Figure = figure.Figure
 local Note = note.Note
 
-FigureInstance = llx.class 'FigureInstance' {
+FigureInstance = class 'FigureInstance' {
   __init = function(self, time, figure)
     -- check_arguments{self=FigureInstance, time=Number, figure=Figure}
     self.time = time
@@ -30,7 +35,7 @@ FigureInstance = llx.class 'FigureInstance' {
   end,
 }
 
-Channel = llx.class 'Channel' {
+Channel = class 'Channel' {
   __init = function(self, instrument)
     self.instrument = instrument
     self.figure_instances = llx.List{}
@@ -42,7 +47,4 @@ Channel = llx.class 'Channel' {
   end,
 }
 
-return {
-  FigureInstance = FigureInstance,
-  Channel = Channel,
-}
+return _M

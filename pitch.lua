@@ -1,18 +1,22 @@
-local llx = require 'llx'
-local List = require 'llx/types/list' . List
-local isinstance = require 'llx/isinstance' . isinstance
-local zip = require 'llx/functional' . zip
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local accidental = require 'musictheory/accidental'
+local llx = require 'llx'
 local pitch_class = require 'musictheory/pitch_class'
 local pitch_interval = require 'musictheory/pitch_interval'
 local pitch_util = require 'musictheory/pitch_util'
 
-local class = llx.class
-local tointeger = llx.tointeger
+local _ENV, _M = llx.environment.create_module_environment()
+
 local Accidental = accidental.Accidental
+local class = llx.class
+local isinstance = llx.isinstance
+local List = llx.List
+local minor_pitch_intervals = pitch_util.minor_pitch_intervals
 local PitchClass = pitch_class.PitchClass
 local PitchInterval = pitch_interval.PitchInterval
-local minor_pitch_intervals = pitch_util.minor_pitch_intervals
+local tointeger = llx.tointeger
+local zip = llx.functional.zip
 
 local middle_octave = 4
 
@@ -158,6 +162,4 @@ while current_pitch < 128 do
   current_octave = current_octave + 1
 end
 
-return {
-  Pitch = Pitch,
-}
+return _M

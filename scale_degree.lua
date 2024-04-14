@@ -1,4 +1,8 @@
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local llx = require 'llx'
+
+local _ENV, _M = llx.environment.create_module_environment()
 
 ScaleDegree = llx.List{
   tonic = 0,
@@ -10,6 +14,4 @@ ScaleDegree = llx.List{
   leading_tone = 6,
 }
 
-return {
-  ScaleDegree = ScaleDegree,
-}
+return _M

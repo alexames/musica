@@ -1,4 +1,8 @@
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local llx = require 'llx'
+
+local _ENV, _M = llx.environment.create_module_environment()
 
 Dynamic = llx.class 'Dynamic' {
   __init = function(self, long_name, short_name, volume)
@@ -33,16 +37,13 @@ local dynamics_list = llx.List{
   Dynamic('fortissississimo', 'ffff', 1.0),
 }
 
-local dynamics = {}
+dynamics = {}
 for i, dynamic in dynamics_list do
   dynamics[dynamic.long_name] = dynamic
   dynamics[dynamic.short_name] = dynamic
 end
 
-return {
-  Dynamic = Dynamic,
-  dynamics = dynamics,
-}
+return _M
 
 -- -- Literally "forced", denotes an abrupt, fierce accent on a single sound or chord. When written out in full, it applies to the sequence of sounds or chords under or over which it is placed. Sforzando is not to be confused with rinforzando.
 -- local sforzando = Dynamic('sforzando', 'sfz', )

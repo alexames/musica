@@ -1,3 +1,5 @@
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local llx = require 'llx'
 local pitch = require 'musictheory/pitch'
 local pitch_interval = require 'musictheory/pitch_interval'
@@ -5,9 +7,9 @@ local util = require 'musictheory/util'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
+local multi_index = util.multi_index
 local Pitch = pitch.Pitch
 local PitchInterval = pitch_interval.PitchInterval
-local multi_index = util.multi_index
 
 local QualityByPitches = llx.Schema{
   __name='QualityByPitches',

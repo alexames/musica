@@ -1,4 +1,8 @@
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local llx = require 'llx'
+
+local _ENV, _M = llx.environment.create_module_environment()
 
 ScaleIndex = llx.List{
   first = 0,
@@ -11,6 +15,4 @@ ScaleIndex = llx.List{
   octave = 7,
 }
 
-return {
-  ScaleIndex = ScaleIndex,
-}
+return _M

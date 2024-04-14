@@ -1,42 +1,39 @@
---                                                              Tested | Docs
------------------------------------------------------------------------+-----
-local submodules = {
-  accidental =       require 'musictheory/accidental',       -- No     | No
-  articulation =     require 'musictheory/articulation',     -- No     | No
-  beat =             require 'musictheory/beat',             -- No     | No
-  channel =          require 'musictheory/channel',          -- No     | No
-  chord =            require 'musictheory/chord',            -- Yes    | No
-  contour =          require 'musictheory/contour',          -- No     | No
-  direction =        require 'musictheory/direction',        -- No     | No
-  dynamics =         require 'musictheory/dynamics',         -- No     | No
-  figure =           require 'musictheory/figure',           -- Yes    | No
-  instrument =       require 'musictheory/instrument',       -- No     | No
-  interval_quality = require 'musictheory/interval_quality', -- No     | No
-  meter =            require 'musictheory/meter',            -- No     | No
-  mode =             require 'musictheory/mode',             -- Yes    | No
-  modes =            require 'musictheory/modes',            -- No     | No
-  note =             require 'musictheory/note',             -- Yes    | No
-  pattern =          require 'musictheory/pattern',          -- No     | No
-  pitch =            require 'musictheory/pitch',            -- Yes    | No
-  pitch_class =      require 'musictheory/pitch_class',      -- No     | No
-  pitch_interval =   require 'musictheory/pitch_interval',   -- Yes    | No
-  quality =          require 'musictheory/quality',          -- Yes    | No
-  rhythm =           require 'musictheory/rhythm',           -- No     | No
-  ring =             require 'musictheory/ring',             -- No     | No
-  scale =            require 'musictheory/scale',            -- Yes    | No
-  scale_degree =     require 'musictheory/scale_degree',     -- No     | No
-  scale_index =      require 'musictheory/scale_index',      -- No     | No
-  song =             require 'musictheory/song',             -- No     | No
-  spiral =           require 'musictheory/spiral',           -- No     | No
-  tempo =            require 'musictheory/tempo',            -- No     | No
-  util =             require 'musictheory/util',             -- No     | No
-}
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
-local module = {}
-for submodule_name, submodule in pairs(submodules) do
-  for key, value in pairs(submodule) do
-    assert(module[k] == nil)
-    module[key] = value
-  end
-end
-return module
+local llx = require 'llx'
+
+local lock <close> = llx.lock_global_table()
+
+--                                           Tested | Docs
+----------------------------------------------------+-----
+return require 'llx/flatten_submodules' { --        |
+  require 'musictheory/accidental',       -- No     | No
+  require 'musictheory/articulation',     -- No     | No
+  require 'musictheory/beat',             -- No     | No
+  require 'musictheory/channel',          -- No     | No
+  require 'musictheory/chord',            -- Yes    | No
+  require 'musictheory/contour',          -- No     | No
+  require 'musictheory/direction',        -- No     | No
+  require 'musictheory/dynamics',         -- No     | No
+  require 'musictheory/figure',           -- Yes    | No
+  require 'musictheory/instrument',       -- No     | No
+  require 'musictheory/interval_quality', -- No     | No
+  require 'musictheory/meter',            -- No     | No
+  require 'musictheory/mode',             -- Yes    | No
+  require 'musictheory/modes',            -- No     | No
+  require 'musictheory/note',             -- Yes    | No
+  require 'musictheory/pattern',          -- No     | No
+  require 'musictheory/pitch',            -- Yes    | No
+  require 'musictheory/pitch_class',      -- No     | No
+  require 'musictheory/pitch_interval',   -- Yes    | No
+  require 'musictheory/quality',          -- Yes    | No
+  require 'musictheory/rhythm',           -- No     | No
+  require 'musictheory/ring',             -- No     | No
+  require 'musictheory/scale',            -- Yes    | No
+  require 'musictheory/scale_degree',     -- No     | No
+  require 'musictheory/scale_index',      -- No     | No
+  require 'musictheory/song',             -- No     | No
+  require 'musictheory/spiral',           -- No     | No
+  require 'musictheory/tempo',            -- No     | No
+  require 'musictheory/util',             -- No     | No
+}

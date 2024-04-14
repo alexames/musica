@@ -1,9 +1,14 @@
-local class = require 'llx' {'class'}
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
+local llx = require 'llx'
 local util = require 'musictheory/util'
 
+local _ENV, _M = llx.environment.create_module_environment()
+
+local class = llx.class
 local multi_index = util.multi_index
 
-local Spiral = class 'Spiral' {
+Spiral = class 'Spiral' {
   __init = function(self, args)
     self._values = args
   end,
@@ -24,6 +29,4 @@ local Spiral = class 'Spiral' {
   end,
 }
 
-return {
-  Spiral = Spiral
-}
+return _M

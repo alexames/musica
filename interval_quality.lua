@@ -1,4 +1,9 @@
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
+local llx = require 'llx'
 local util = require 'musictheory/util'
+
+local _ENV, _M = llx.environment.create_module_environment()
 
 local UniqueSymbol = util.UniqueSymbol
 
@@ -10,6 +15,4 @@ IntervalQuality = {
   perfect = UniqueSymbol('IntervalQuality.perfect'),
 }
 
-return {
-  IntervalQuality = IntervalQuality,
-}
+return _M

@@ -1,9 +1,13 @@
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local llx = require 'llx'
 local mode = require 'musictheory/mode'
 local pitch_interval = require 'musictheory/pitch_interval'
 
-local PitchInterval = pitch_interval.PitchInterval
+local _ENV, _M = llx.environment.create_module_environment()
+
 local Mode = mode.Mode
+local PitchInterval = pitch_interval.PitchInterval
 
 local diatonic_intervals = llx.List{
   PitchInterval.whole,
@@ -56,4 +60,4 @@ Mode.chromatic = Mode(llx.List{
   PitchInterval.half,
 })
 
-return {}
+return _M

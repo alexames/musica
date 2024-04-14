@@ -1,11 +1,15 @@
-require 'llx'
-require 'musictheory/direction'
-require 'musictheory/note'
-require 'musictheory/scale'
-require 'musictheory/util'
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
+local direction = require 'musictheory/direction'
+local llx = require 'llx'
+local note = require 'musictheory/note'
+local scale = require 'musictheory/scale'
+local util = require 'musictheory/util'
+
+local _ENV, _M = llx.environment.create_module_environment()
 
 -- Only lists whether notes are higher, lower, or the same as previous notes
-local function directional_contour(melody)
+function directional_contour(melody)
   local contour = List{same}
   for i=2, #melody do
     local previous_note = melody[i-1]
@@ -16,7 +20,7 @@ local function directional_contour(melody)
 end
 
 -- Gives series of abitrary indices that represent the relative pitches of the notes
-local function relative_contour(melody)
+function relative_contour(melody)
   local pitch_set = Set{}
   for i, note in ipairs(melody) do
     pitch_set:insert(tointeger(note.pitch))
@@ -35,7 +39,7 @@ local function relative_contour(melody)
 end
 
 -- Gives the contour of a melody in pitch indices
-local function pitch_index_contour(melody)
+function pitch_index_contour(melody)
   local contour = List{}
   for i, v in ipairs(melody) do
     contour[i] = tointeger(note.pitch)
@@ -44,7 +48,7 @@ local function pitch_index_contour(melody)
 end
 
 -- Gives the contour of a melody in pitch indices
-local function scale_index_contour(melody, scale)
+function scale_index_contour(melody, scale)
   local contour = List{}
   for i, v in ipairs(melody) do
     contour[i] = scale.to_scale_index(note.pitch)
@@ -53,7 +57,7 @@ local function scale_index_contour(melody, scale)
 end
 
 -- Gives the contour of a melody in pitch indices
-local function pitch_class_contour(melody)
+function pitch_class_contour(melody)
   local contour = List{}
   for i, v in ipairs(melody) do
     contour[i] = note.pitch.pitch_class
@@ -61,12 +65,4 @@ local function pitch_class_contour(melody)
   return contour
 end
 
-return {
-  contours = {
-    directional_contour=directional_contour,
-    relative_contour=relative_contour,
-    pitch_index_contour=pitch_index_contour,
-    scale_index_contour=scale_index_contour,
-    pitch_class_contour=pitch_class_contour,
-  },
-}
+return _M

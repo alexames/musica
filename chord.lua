@@ -1,3 +1,5 @@
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local llx = require 'llx'
 local figure = require 'musictheory/figure'
 local note = require 'musictheory/note'
@@ -6,50 +8,57 @@ local pitch_interval = require 'musictheory/pitch_interval'
 local quality = require 'musictheory/quality'
 local util = require 'musictheory/util'
 
+local _ENV, _M = llx.environment.create_module_environment()
+
+local Any = llx.Any
+local check_arguments = llx.check_arguments
+local class = llx.class
 local Figure = figure.Figure
 local Function = llx.Function
+local Integer = llx.Integer
 local List = llx.List
+local map = llx.functional.map
 local multi_index = util.multi_index
 local Note = note.Note
 local Number = llx.Number
+local Optional = llx.Optional
 local Pitch = pitch.Pitch
 local PitchInterval = pitch_interval.PitchInterval
 local Quality = quality.Quality
 local Schema = llx.Schema
 local Table = llx.Table
 local Union = llx.Union
-local map = llx.functional.map
 
--- local ChordByPitches = Schema{
---   __name='ChordByPitches',
---   type=Table,
---   properties={
---     pitches={
---       type=List,
---       items={type=Pitch},
---     },
---   },
---   required={'pitches'},
--- }
+local ChordByPitches = Schema{
+  __name='ChordByPitches',
+  type=Table,
+  properties={
+    pitches={
+      type=List,
+      items={type=Pitch},
+    },
+  },
+  required={'pitches'},
+}
 
--- local ChordByRootQuality = Schema{
---   __name='ChordByRootQuality',
---   type=Table,
---   properties={
---     root={type=Pitch},
---     quality={type=Quality},
---   },
---   required={'root', 'quality'},
--- }
+local ChordByRootQuality = Schema{
+  __name='ChordByRootQuality',
+  type=Table,
+  properties={
+    root={type=Pitch},
+    quality={type=Quality},
+  },
+  required={'root', 'quality'},
+}
 
--- local ChordArgs = Schema{
---   __name='ChordArgs',
---   type=Union{ChordByPitches, ChordByRootQuality},
--- }
+local ChordArgs = Schema{
+  __name='ChordArgs',
+  type=Union{ChordByPitches, ChordByRootQuality},
+}
 
-Chord = llx.class 'Chord' {
+Chord = class 'Chord' {
   __init = function(self, args)
-    -- check_arguments{self=Chord, args=ChordArgs}
+    check_arguments{self=Chord, args=ChordArgs}
     if args.pitches then
       self.root = args.pitches[1]
       self.quality = Quality{pitches=args.pitches}
@@ -60,33 +69,33 @@ Chord = llx.class 'Chord' {
   end,
 
   get_pitches = function(self)
-    -- check_arguments{self=Chord}
+    check_arguments{self=Chord}
     return self:to_pitches(range(0, #self-1))
   end,
 
   get_quality = function(self)
-    -- check_arguments{self=Chord}
+    check_arguments{self=Chord}
     return self.quality
   end,
 
   to_pitch = function(self, chord_index)
-    -- check_arguments{self=Chord, chord_index=Integer}
+    check_arguments{self=Chord, chord_index=Integer}
     return self.root + self.quality[chord_index + 1]
   end,
 
   to_pitches = function(self, scale_indices)
-    -- check_arguments{self=Chord,
-    --                 scale_indices=Schema{type=List,
-    --                                      items={type=Integer}}}
+    check_arguments{self=Chord,
+                    scale_indices=Schema{type=List,
+                                         items={type=Integer}}}
     return map(function(scale_index)
       return self:to_pitch(scale_index)
     end, scale_indices)
   end,
 
   to_extended_pitch = function(self, chord_index, extension_interval)
-    -- check_arguments{self=Chord,
-    --                 chord_index=Integer,
-    --                 extension_interval=Optional{PitchInterval}}
+    check_arguments{self=Chord,
+                    chord_index=Integer,
+                    extension_interval=Optional{PitchInterval}}
     local extension_interval = extension_interval or PitchInterval.octave
     return self.root + util.extended_index(chord_index,
                                            self.quality.pitch_intervals,
@@ -94,9 +103,9 @@ Chord = llx.class 'Chord' {
   end,
 
   to_extended_pitches = function(self, chord_indices, extension_interval)
-    -- check_arguments{self=Chord,
-    --                 chord_indices=Schema{type=Any, items={type=Integer}},
-    --                 extension_interval=Optional{PitchInterval}}
+    check_arguments{self=Chord,
+                    chord_indices=Schema{type=Any, items={type=Integer}},
+                    extension_interval=Optional{PitchInterval}}
     extension_interval = extension_interval or PitchInterval.octave
     return map(function(chord_index)
       return self:to_extended_pitch(chord_index, extension_interval)
@@ -104,9 +113,9 @@ Chord = llx.class 'Chord' {
   end,
 
   inversion = function(self, n, octave_interval)
-    -- check_arguments{self=Chord,
-    --                 n=Integer,
-    --                 octave_interval=Optional{Integer}}
+    check_arguments{self=Chord,
+                    n=Integer,
+                    octave_interval=Optional{Integer}}
     octave_interval = octave_interval or PitchInterval.octave
     -- Short circuit if there is nothing to be done.
     if n == 0 then
@@ -125,17 +134,17 @@ Chord = llx.class 'Chord' {
   end,
 
   contains = function(self, pitch)
-    -- check_arguments{self=Chord, pitch=Pitch}
+    check_arguments{self=Chord, pitch=Pitch}
     return self:get_pitches():find(pitch) ~= nil
   end,
 
   __eq = function(self, other)
-    -- check_arguments{self=Chord, other=Chord}
+    check_arguments{self=Chord, other=Chord}
     return self.root == other.root and self.quality == other.quality
   end,
 
   __div = function(self, other)
-    -- check_arguments{self=Chord, other=Union{Pitch,Chord}}
+    check_arguments{self=Chord, other=Union{Pitch,Chord}}
     local other_pitches
     if isinstance(other, Pitch) then
       other_pitches = List{other}
@@ -150,7 +159,7 @@ Chord = llx.class 'Chord' {
   end,
 
   __len = function(self)
-    -- check_arguments{self=Chord}
+    check_arguments{self=Chord}
     return #self.quality
   end,
 
@@ -159,28 +168,28 @@ Chord = llx.class 'Chord' {
   end),
 
   __tostring = function(self)
-    -- check_arguments{self=Chord}
+    check_arguments{self=Chord}
     return string.format('Chord{root=%s, quality=%s}', self.root, self.quality)
   end,
 }
 
 function arpeggiate(args)
-  -- check_arguments{
-  --   args=Schema{
-  --     type=Table,
-  --     properties={
-  --       chord={type=Chord},
-  --       duration={type=Number},
-  --       index_pattern_fn={type=Function},
-  --       index_pattern={type=Union{Table,Function}},
-  --       time_step={type=Number},
-  --       volume={type=Number},
-  --       count={type=Integer},
-  --       figure_duration={type=Number},
-  --       extension_interval={type=PitchInterval},
-  --     }
-  --   }
-  -- }
+  check_arguments{
+    args=Schema{
+      type=Table,
+      properties={
+        chord={type=Chord},
+        duration={type=Number},
+        index_pattern_fn={type=Function},
+        index_pattern={type=Union{Table,Function}},
+        time_step={type=Number},
+        volume={type=Number},
+        count={type=Integer},
+        figure_duration={type=Number},
+        extension_interval={type=PitchInterval},
+      }
+    }
+  }
   local chord = args.chord
   local duration = args.duration or 1.0
   local index_pattern = args.index_pattern
@@ -236,7 +245,4 @@ end
 --                          for index in chord.scale_indices)
 --   return Chord(chord.scale, scale_indices[0], indices_to_intervals(scale_indices))
 
-return {
-  Chord = Chord,
-  arpeggiate = arpeggiate,
-}
+return _M

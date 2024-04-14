@@ -1,12 +1,16 @@
-local llx = require 'llx'
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
+local llx = require 'llx'
 local pitch = require 'musictheory/pitch'
 
+local _ENV, _M = llx.environment.create_module_environment()
+
+local class = llx.class
 local Pitch = pitch.Pitch
 
 local NoteArgs = llx.Schema{
   __name='NoteArgs',
-  type=Table,
+  type=llx.Table,
   properties={
     -- pitch={type=llx.Union{Pitch,llx.Integer}},
     time={type=llx.Number},
@@ -16,7 +20,7 @@ local NoteArgs = llx.Schema{
 }
 
 --- A note, with a pitch, time, duration and volume
-Note = llx.class 'Note' {
+Note = class 'Note' {
   --- Initializes a Note.
   __init = function(self, arg)
     -- llx.check_arguments{self=Note, arg=NoteArgs}
@@ -54,6 +58,4 @@ Note = llx.class 'Note' {
   end,
 }
 
-return {
-  Note = Note,
-}
+return _M

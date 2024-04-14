@@ -1,17 +1,21 @@
-local llx = require 'llx'
-local midi = require 'midi'
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
+local channel = require 'musictheory/channel'
 local chord = require 'musictheory/chord'
 local figure = require 'musictheory/figure'
+local llx = require 'llx'
 local meter = require 'musictheory/meter'
+local midi = require 'midi'
 local note = require 'musictheory/note'
-local channel = require 'musictheory/channel'
 
-local class = llx.class
+local _ENV, _M = llx.environment.create_module_environment()
+
+local Channel = channel.Channel
 local Chord = chord.Chord
+local class = llx.class
 local Figure = figure.Figure
 local Meter = meter.Meter
 local Note = note.Note
-local Channel = channel.Channel
 local tointeger = llx.tointeger
 
 -- Should we annotate which section you're in?
@@ -25,7 +29,7 @@ local tointeger = llx.tointeger
 --   * Coda https://en.wikipedia.org/wiki/Coda_(music)
 --   * Bridge https://en.wikipedia.org/wiki/Bridge_(music)
 
-local Song = class 'Song' {
+Song = class 'Song' {
   __init = function(self, args)
     self.channels = args and args.channels or llx.List{}
   end,
@@ -77,6 +81,4 @@ local Song = class 'Song' {
   end,
 }
 
-return {
-  Song = Song,
-}
+return _M

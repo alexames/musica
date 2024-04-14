@@ -1,22 +1,23 @@
-local llx = require 'llx'
-local List = require 'llx/types/list' . List
-local check_arguments = require 'llx/check_arguments' . check_arguments
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local accidental = require 'musictheory/accidental'
 local interval_quality = require 'musictheory/interval_quality'
+local llx = require 'llx'
 local pitch_class = require 'musictheory/pitch_class'
 local pitch_util = require 'musictheory/pitch_util'
-
-local Number = require 'llx/types/number' . Number
-local List = require 'llx/types/list' . List
-local tointeger = require 'llx/tointeger' . tointeger
-local isinstance = require 'llx/isinstance' . isinstance
 
 local _ENV, _M = llx.environment.create_module_environment()
 
 local Accidental = accidental.Accidental
+local check_arguments = llx.check_arguments
 local IntervalQuality = interval_quality.IntervalQuality
-local PitchClass = pitch_class.PitchClass
+local isinstance = llx.isinstance
+local List = llx.List
+local List = llx.List
 local major_pitch_indices = pitch_util.major_pitch_indices
+local Number = llx.Number
+local PitchClass = pitch_class.PitchClass
+local tointeger = llx.tointeger
 
 local PitchIntervalArgs = llx.Schema{
   __name='PitchIntervalArgs',
@@ -199,6 +200,4 @@ PitchInterval.augmented_seventh = PitchInterval{number=6, quality=IntervalQualit
 PitchInterval.dimished_octave   = PitchInterval{number=7, quality=IntervalQuality.diminished}
 PitchInterval.octave            = PitchInterval{number=7, quality=IntervalQuality.perfect}
 
-return {
-  PitchInterval = PitchInterval,
-}
+return _M

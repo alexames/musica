@@ -1,6 +1,10 @@
-local class, environment = require 'llx' { 'class', 'environment' }
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
-local _ENV, _M = environment.create_module_environment()
+local llx = require 'llx'
+
+local class, environment = llx { 'class', 'environment' }
+
+local _ENV, _M = llx.environment.create_module_environment()
 
 PitchClass = class 'PitchClass' {
   __init = function(self, args)

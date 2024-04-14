@@ -1,25 +1,34 @@
-local llx = require 'llx'
+-- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
+
 local chord = require 'musictheory/chord'
 local direction = require 'musictheory/direction'
+local llx = require 'llx'
 local mode = require 'musictheory/mode'
 local modes = require 'musictheory/modes'
 local pitch = require 'musictheory/pitch'
 local quality = require 'musictheory/quality'
 local util = require 'musictheory/util'
-local List = require 'llx/types/list' . List
-local map = require 'llx/functional' . map
 
-local range = llx.functional.range
-local tointeger = llx.tointeger
+local _ENV, _M = llx.environment.create_module_environment()
+
+local check_arguments = llx.check_arguments
 local Chord = chord.Chord
+local class = llx.class
 local Direction = direction.Direction
+local Integer = llx.Integer
+local List = llx.List
+local map = llx.functional.map
 local Mode = mode.Mode
+local multi_index = util.multi_index
 local Pitch = pitch.Pitch
 local Quality = quality.Quality
-local multi_index = util.multi_index
+local range = llx.functional.range
+local Schema = llx.Schema
+local Table = llx.Table
+local tointeger = llx.tointeger
 
 local ScaleArgs = llx.Schema{
-  type=Table,
+  type=llx.Table,
   properties={
     tonic={type=Pitch},
     mode={type=Mode},
@@ -29,13 +38,13 @@ local ScaleArgs = llx.Schema{
 
 Scale = llx.class 'Scale' {
   __init = function(self, arg)
-    -- check_arguments{self=Scale, arg=ScaleArgs}
+    check_arguments{self=Scale, arg=ScaleArgs}
     self.tonic = arg.tonic
     self.mode = arg.mode
   end,
 
   get_pitches = function(self)
-    -- check_arguments{self=Scale}
+    check_arguments{self=Scale}
     local result = List{}
     for i=1, #self.mode do
       result[i] = self.tonic + self.mode[i-1]
@@ -44,19 +53,19 @@ Scale = llx.class 'Scale' {
   end,
 
   to_pitch = function(self, scale_index)
-    -- check_arguments{self=Scale, scale_index=Integer}
+    check_arguments{self=Scale, scale_index=Integer}
     return self.tonic + self.mode[scale_index]
   end,
 
   to_pitches = function(self, scale_indices)
-    -- check_arguments{self=Scale, scale_indices=Table}
+    check_arguments{self=Scale, scale_indices=Table}
     return map(function(scale_index)
       return self:to_pitch(scale_index)
     end, scale_indices)
   end,
 
   to_scale_index = function(self, pitch)
-    -- check_arguments{self=Scale, pitch=Union{Pitch,Integer}}
+    check_arguments{self=Scale, pitch=llx.Union{Pitch, Integer}}
     local pitch_index = tointeger(pitch)
     local pitch_index_offset = pitch_index - tointeger(self.tonic)
     local offset_modulus = pitch_index_offset % tointeger(self.mode:octave_interval())
@@ -81,11 +90,11 @@ Scale = llx.class 'Scale' {
   end,
 
   relative = function(self, args)
-    -- check_arguments{self=Scale,
-    --                 args=Schema{type=Table,
-    --                             properties={scale_index={type=Integer},
-    --                                         mode={type=Mode},
-    --                                         direction={type=Integer}}}}
+    check_arguments{self=Scale,
+                    args=Schema{type=Table,
+                                properties={scale_index={type=Integer},
+                                            mode={type=Mode},
+                                            direction={type=Integer}}}}
     local mode = args.mode
     local scale_index = args.scale_index
     local direction = args.direction
@@ -108,7 +117,7 @@ Scale = llx.class 'Scale' {
   end,
 
   parallel = function(self, mode)
-    -- check_arguments{self=Scale, mode=Mode}
+    check_arguments{self=Scale, mode=Mode}
     return Scale{tonic=self.tonic, mode=mode}
   end,
 
@@ -195,7 +204,4 @@ function find_chord(args)
   end
 end
 
-return {
-  Scale = Scale,
-  find_chord = find_chord,
-}
+return _M
