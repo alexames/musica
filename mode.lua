@@ -63,9 +63,9 @@ Mode = class 'Mode' {
     return #self.semitone_intervals
   end,
 
-  __index = multi_index(function(self, index)
+  ['__index' | multi_index] = function(self, index)
       return self.pitch_intervals[index]
-    end),
+  end,
 
   __tostring = function(self)
     -- check_arguments{self=Mode}

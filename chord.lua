@@ -163,9 +163,9 @@ Chord = class 'Chord' {
     return #self.quality
   end,
 
-  __index = multi_index(function(self, index)
+  ['__index' | multi_index] = function(self, index)
     return self:to_pitch(index)
-  end),
+  end,
 
   __tostring = function(self)
     check_arguments{self=Chord}

@@ -15,6 +15,7 @@ local List = llx.List
 local minor_pitch_intervals = pitch_util.minor_pitch_intervals
 local PitchClass = pitch_class.PitchClass
 local PitchInterval = pitch_interval.PitchInterval
+local String = llx.String
 local tointeger = llx.tointeger
 local zip = llx.functional.zip
 

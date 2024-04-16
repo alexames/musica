@@ -13,7 +13,7 @@ Spiral = class 'Spiral' {
     self._values = args
   end,
 
-  __index = multi_index(function(self, key)
+  ['__index' | multi_index] = function(self, key)
     local values = rawget(self, '_values')
     local length = #values
     local multiplicitive_operand = values[length]
@@ -22,7 +22,7 @@ Spiral = class 'Spiral' {
     key = (key % modulus) + #self
     key = (key % modulus) + 1
     return values[key] + coefficient * multiplicitive_operand
-  end),
+  end,
 
   __tostring = function(self)
     return "Spiral{".. table.concat(self._values, ', ') .. '}'

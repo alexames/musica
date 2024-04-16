@@ -6,9 +6,13 @@ local llx = require 'llx'
 local _ENV, _M = llx.environment.create_module_environment()
 
 local class = llx.class
+local Decorator = llx.decorator.Decorator
 local isinstance = llx.isinstance
 local List = llx.List
+local Number = llx.Number
+local Table = llx.Table
 local tointeger = llx.tointeger
+local getmetafield = llx.getmetafield
 
 -- For when I want a symbol that is unique, but whose value has no meaning.
 -- Only used for testing equality.
@@ -22,22 +26,27 @@ UniqueSymbol = class 'UniqueSymbol' {
   end,
 }
 
-function multi_index(callback)
-  return function(self, index)
-    if isinstance(index, llx.Number) then
-      return callback(self, index)
-    elseif isinstance(index, llx.Table) then
-      local results = List{}
-      for i, v in ipairs(index) do
-        results[i] = self[v]
+local MultiIndex = class 'MultiIndex' : extends(Decorator) {
+  decorate = function(self, class_table, name, callback)
+    function wrapped_function(self, index)
+      if isinstance(index, Number) then
+        return callback(self, index)
+      elseif isinstance(index, Table) then
+        local results = List{}
+        for i, v in ipairs(index) do
+          results[i] = self[v]
+        end
+        return results
+      else
+        local __defaultindex = getmetafield(self, '__defaultindex')
+        return __defaultindex(self, index)
       end
-      return results
-    else
-      local __defaultindex = llx.getmetafield(self, '__defaultindex')
-      return __defaultindex(self, index)
     end
-  end
-end
+    return class_table, name, wrapped_function
+  end,
+}
+
+multi_index = MultiIndex()
 
 function ipairs0(t)
   local f, t, i = ipairs(t)

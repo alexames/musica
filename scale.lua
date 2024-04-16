@@ -157,9 +157,9 @@ Scale = llx.class 'Scale' {
     return #self.mode
   end,
 
-  __index = multi_index(function(self, index)
+  ['__index' | multi_index] = function(self, index)
     return self.tonic + self.mode[index]
-  end),
+  end,
 
   __tostring = function(self)
     return string.format("Scale{tonic=%s, mode=%s}", self.tonic, self.mode)
