@@ -26,27 +26,26 @@ UniqueSymbol = class 'UniqueSymbol' {
   end,
 }
 
-local MultiIndex = class 'MultiIndex' : extends(Decorator) {
-  decorate = function(self, class_table, name, callback)
-    function wrapped_function(self, index)
-      if isinstance(index, Number) then
-        return callback(self, index)
-      elseif isinstance(index, Table) then
-        local results = List{}
-        for i, v in ipairs(index) do
-          results[i] = self[v]
-        end
-        return results
-      else
-        local __defaultindex = getmetafield(self, '__defaultindex')
-        return __defaultindex(self, index)
-      end
-    end
-    return class_table, name, wrapped_function
-  end,
-}
+local function simple_decorator(f)
+  return class : extends(Decorator) { decorate = f }()
+end
 
-multi_index = MultiIndex()
+multi_index = simple_decorator(function(self, t, k, v)
+  return t, k, function(self, index)
+    if isinstance(index, Number) then
+      return v(self, index)
+    elseif isinstance(index, Table) then
+      local results = List{}
+      for i, v in ipairs(index) do
+        results[i] = self[v]
+      end
+      return results
+    else
+      local __defaultindex = getmetafield(self, '__defaultindex')
+      return __defaultindex(self, index)
+    end
+  end
+end)
 
 function ipairs0(t)
   local f, t, i = ipairs(t)
