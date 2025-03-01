@@ -1,10 +1,10 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
-local accidental = require 'musictheory/accidental'
-local interval_quality = require 'musictheory/interval_quality'
+local accidental = require 'musictheory.accidental'
+local interval_quality = require 'musictheory.interval_quality'
 local llx = require 'llx'
-local pitch_class = require 'musictheory/pitch_class'
-local pitch_util = require 'musictheory/pitch_util'
+local pitch_class = require 'musictheory.pitch_class'
+local pitch_util = require 'musictheory.pitch_util'
 
 local _ENV, _M = llx.environment.create_module_environment()
 

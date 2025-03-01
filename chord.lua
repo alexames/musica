@@ -1,12 +1,12 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
-local figure = require 'musictheory/figure'
-local note = require 'musictheory/note'
-local pitch = require 'musictheory/pitch'
-local pitch_interval = require 'musictheory/pitch_interval'
-local quality = require 'musictheory/quality'
-local util = require 'musictheory/util'
+local figure = require 'musictheory.figure'
+local note = require 'musictheory.note'
+local pitch = require 'musictheory.pitch'
+local pitch_interval = require 'musictheory.pitch_interval'
+local quality = require 'musictheory.quality'
+local util = require 'musictheory.util'
 
 local _ENV, _M = llx.environment.create_module_environment()
 

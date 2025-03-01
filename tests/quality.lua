@@ -1,6 +1,6 @@
 local unit = require 'unit'
 require 'llx'
-require 'musictheory/quality'
+require 'musictheory.quality'
 
 test_class 'QualityTest' {
   [test('init')] = function(self)

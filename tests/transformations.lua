@@ -1,6 +1,6 @@
 local unit = require 'unit'
 require 'llx'
-require 'musictheory/transformations'
+require 'musictheory.transformations'
 
 test_class 'TransformationsTest' {
 }

@@ -1,6 +1,6 @@
 local unit = require 'unit'
 require 'llx'
-require 'musictheory/note'
+require 'musictheory.note'
 
 test_class 'NoteTest' {
   [test 'init' - 'with volume'] = function(self)

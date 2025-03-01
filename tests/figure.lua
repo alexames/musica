@@ -1,6 +1,6 @@
 local unit = require 'unit'
-require 'musictheory/figure'
-require 'musictheory/note'
+require 'musictheory.figure'
+require 'musictheory.note'
 
 test_class 'FigureTest' {
   [test 'init' - 'notes'] = function(self)

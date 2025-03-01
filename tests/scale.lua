@@ -1,9 +1,9 @@
 local unit = require 'unit'
 require 'llx'
-require 'musictheory/direction'
-require 'musictheory/mode'
-require 'musictheory/pitch'
-require 'musictheory/scale'
+require 'musictheory.direction'
+require 'musictheory.mode'
+require 'musictheory.pitch'
+require 'musictheory.scale'
 
 test_class 'ScaleTest' {
   [test 'get_pitches'] = function(self)

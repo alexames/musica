@@ -1,8 +1,8 @@
 local unit = require 'unit'
 require 'llx'
-require 'musictheory/pitch'
-require 'musictheory/pitch_interval'
-require 'musictheory/quality'
+require 'musictheory.pitch'
+require 'musictheory.pitch_interval'
+require 'musictheory.quality'
 
 test_class 'PitchIntervalTest' {
   [test 'init'] = function(self)

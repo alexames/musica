@@ -1,10 +1,10 @@
 require 'unit'
 require 'llx'
-require 'musictheory/contour'
-require 'musictheory/direction'
-require 'musictheory/note'
-require 'musictheory/mode'
-require 'musictheory/modes'
+require 'musictheory.contour'
+require 'musictheory.direction'
+require 'musictheory.note'
+require 'musictheory.mode'
+require 'musictheory.modes'
 
 -- Mary had a little lamb
 local mary = {
