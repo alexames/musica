@@ -108,7 +108,7 @@ Pitch = class 'Pitch' {
       elseif self.accidentals == Accidental.sharp then
         accidental = 'sharp'
       end
-      return String.format(
+      return string.format(
           'Pitch.%s%s%s', pitch_class_name, accidental, tostring(self.octave))
     end
 
@@ -117,17 +117,17 @@ Pitch = class 'Pitch' {
       local coeffecient = math.abs(self.accidentals)
       local coeffecient_string
       if coeffecient > 1 then
-        coeffecient_string = String.format('%s * ', coeffecient)
+        coeffecient_string = string.format('%s * ', coeffecient)
       else
         coeffecient_string = ''
       end
-      accidental_string = String.format(
+      accidental_string = string.format(
           ', accidentals=%s%s', coeffecient_string,
           self.accidentals > 0 and 'Accidental.sharp' or 'Accidental.flat')
     else
       accidental_string = ''
     end
-    return String.format('Pitch{pitch_class=%s, octave=%s%s}',
+    return string.format('Pitch{pitch_class=%s, octave=%s%s}',
       self.pitch_class, self.octave, accidental_string)
   end,
 }

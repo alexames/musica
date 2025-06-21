@@ -77,7 +77,7 @@ Song = class 'Song' {
   end,
 
   __tostring = function(self)
-    return String.format('Song{channels=%s}', self.channels)
+    return string.format('Song{channels=%s}', self.channels)
   end,
 }
 

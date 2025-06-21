@@ -31,7 +31,7 @@ FigureInstance = class 'FigureInstance' {
   end,
 
   __tostring = function(self)
-    return String.format('FigureInstance(%s, %s)', self.time, self.figure)
+    return string.format('FigureInstance(%s, %s)', self.time, self.figure)
   end,
 }
 
@@ -42,7 +42,7 @@ Channel = class 'Channel' {
   end,
 
   __tostring = function(self)
-    return String.format('Channel{instrument=%s, figure_instances=%s}',
+    return string.format('Channel{instrument=%s, figure_instances=%s}',
         self.instrument, self.figure_instances)
   end,
 }
