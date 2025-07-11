@@ -1,10 +1,10 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
-local pitch = require 'musictheory.pitch'
-local pitch_interval= require 'musictheory.pitch_interval'
-local spiral = require 'musictheory.spiral'
-local util = require 'musictheory.util'
+local pitch = require 'musica.pitch'
+local pitch_interval= require 'musica.pitch_interval'
+local spiral = require 'musica.spiral'
+local util = require 'musica.util'
 
 local _ENV, _M = llx.environment.create_module_environment()
 

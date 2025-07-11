@@ -1,6 +1,6 @@
 local unit = require 'unit'
 require 'llx'
-require 'musictheory.meter'
+require 'musica.meter'
 
 test_class 'MeterTest' {
 }

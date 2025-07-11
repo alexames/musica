@@ -1,8 +1,8 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
-local spiral = require 'musictheory.spiral'
-local util = require 'musictheory.util'
+local spiral = require 'musica.spiral'
+local util = require 'musica.util'
 
 local _ENV, _M = llx.environment.create_module_environment()
 

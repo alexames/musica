@@ -1,10 +1,10 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
-local direction = require 'musictheory.direction'
+local direction = require 'musica.direction'
 local llx = require 'llx'
-local note = require 'musictheory.note'
-local scale = require 'musictheory.scale'
-local util = require 'musictheory.util'
+local note = require 'musica.note'
+local scale = require 'musica.scale'
+local util = require 'musica.util'
 
 local _ENV, _M = llx.environment.create_module_environment()
 

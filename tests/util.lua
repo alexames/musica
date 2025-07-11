@@ -1,6 +1,6 @@
 local unit = require 'unit'
 require 'llx'
-require 'musictheory.util'
+require 'musica.util'
 
 test_class 'UtilTest' {
   [test 'reprArgs'] = function(self)

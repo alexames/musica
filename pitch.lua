@@ -1,10 +1,10 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
-local accidental = require 'musictheory.accidental'
+local accidental = require 'musica.accidental'
 local llx = require 'llx'
-local pitch_class = require 'musictheory.pitch_class'
-local pitch_interval = require 'musictheory.pitch_interval'
-local pitch_util = require 'musictheory.pitch_util'
+local pitch_class = require 'musica.pitch_class'
+local pitch_interval = require 'musica.pitch_interval'
+local pitch_util = require 'musica.pitch_util'
 
 local _ENV, _M = llx.environment.create_module_environment()
 

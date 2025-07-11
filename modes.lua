@@ -1,8 +1,8 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
-local mode = require 'musictheory.mode'
-local pitch_interval = require 'musictheory.pitch_interval'
+local mode = require 'musica.mode'
+local pitch_interval = require 'musica.pitch_interval'
 
 local _ENV, _M = llx.environment.create_module_environment()
 

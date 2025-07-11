@@ -1,5 +1,5 @@
 require 'unit'
-require 'musictheory.generators'
+require 'musica.generators'
 
 test_class 'GeneratorTest' {
 }

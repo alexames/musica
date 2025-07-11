@@ -1,13 +1,13 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
-local chord = require 'musictheory.chord'
-local direction = require 'musictheory.direction'
+local chord = require 'musica.chord'
+local direction = require 'musica.direction'
 local llx = require 'llx'
-local mode = require 'musictheory.mode'
-local modes = require 'musictheory.modes'
-local pitch = require 'musictheory.pitch'
-local quality = require 'musictheory.quality'
-local util = require 'musictheory.util'
+local mode = require 'musica.mode'
+local modes = require 'musica.modes'
+local pitch = require 'musica.pitch'
+local quality = require 'musica.quality'
+local util = require 'musica.util'
 
 local _ENV, _M = llx.environment.create_module_environment()
 

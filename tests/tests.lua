@@ -1,4 +1,4 @@
 unit = require 'unit'
-require 'musictheory.tests'
+require 'musica.tests'
 
 unit.run_unit_tests()

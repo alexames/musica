@@ -1,12 +1,12 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
-local channel = require 'musictheory.channel'
-local chord = require 'musictheory.chord'
-local figure = require 'musictheory.figure'
+local channel = require 'musica.channel'
+local chord = require 'musica.chord'
+local figure = require 'musica.figure'
 local llx = require 'llx'
-local meter = require 'musictheory.meter'
+local meter = require 'musica.meter'
 local midi = require 'midi'
-local note = require 'musictheory.note'
+local note = require 'musica.note'
 
 local _ENV, _M = llx.environment.create_module_environment()
 

@@ -1,6 +1,6 @@
 local unit = require 'unit'
 require 'llx'
-require 'musictheory.pitch'
+require 'musica.pitch'
 
 test_class 'PitchTest' {
   [test 'init'] = function(self)

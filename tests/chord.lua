@@ -1,7 +1,7 @@
 local unit = require 'unit'
-require 'musictheory.chord'
-require 'musictheory.pitch'
-require 'musictheory.quality'
+require 'musica.chord'
+require 'musica.pitch'
+require 'musica.quality'
 
 test_class 'ChordTest' {
   [test 'init'] = function(self)
