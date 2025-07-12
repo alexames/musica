@@ -73,6 +73,8 @@ Song = class 'Song' {
         previous_time = event.time
         midi_track.events:insert(event)
       end
+      midi_track.events:insert(
+          midi.event.EndOfTrackEvent(0))
     end
     return midi_file
   end,
