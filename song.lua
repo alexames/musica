@@ -68,7 +68,8 @@ Song = class 'Song' {
       midi_track.events:insert(
           midi.event.ProgramChangeEvent(0, channel, song_track.instrument))
       for j, event in ipairs(events) do
-        event.time_delta = event.time - previous_time
+        local beats = event.time - previous_time
+        event.time_delta = math.floor(beats,  midi_file.ticks)
         previous_time = event.time
         midi_track.events:insert(event)
       end
