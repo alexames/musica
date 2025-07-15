@@ -7,6 +7,7 @@ local llx = require 'llx'
 local meter = require 'musica.meter'
 local midi = require 'midi'
 local note = require 'musica.note'
+local pitch = require 'musica.pitch'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -14,9 +15,14 @@ local Channel = channel.Channel
 local Chord = chord.Chord
 local class = llx.class
 local Figure = figure.Figure
+local FigureInstance = channel.FigureInstance
 local Meter = meter.Meter
 local Note = note.Note
+local Pitch = pitch.Pitch
+local isinstance = llx.isinstance
 local tointeger = llx.tointeger
+
+local MIDI_VOLUME_MAX <const> = 127.0
 
 -- Should we annotate which section you're in?
 --   * Introduction https://en.wikipedia.org/wiki/Introduction_(music)
@@ -32,6 +38,57 @@ local tointeger = llx.tointeger
 Song = class 'Song' {
   __init = function(self, args)
     self.channels = args and args.channels or llx.List{}
+    if args.midi_file then
+      self:_song_from_midi_file(args.midi_file)
+    end
+  end,
+
+  _song_from_midi_file = function(self, midi_file)
+    local instrument_channel_map = {}
+    local current_instrument = midi.instrument.acoustic_grand
+    for i, track in ipairs(midi_file.tracks) do
+      local unfinished_notes = {}
+      local time_in_ticks = 0
+      for j, event in ipairs(track.events) do
+        time_in_ticks = time_in_ticks + event.time_delta
+        if isinstance(event, midi.event.NoteEndEvent) then
+          local note = assert(
+            unfinished_notes[event.note_number],
+            'encountered NoteEndEvent without corresponding NoteBeginEvent')
+          -- Maybe we should have an option to quantize this.
+          note.duration = (time_in_ticks / midi_file.ticks) - note.time
+        elseif isinstance(event, midi.event.NoteBeginEvent) then
+          local note = Note{
+            pitch=Pitch{midi_index=event.note_number},
+            time=time_in_ticks / midi_file.ticks,
+            duration=nil, -- Unknown until NoteEndEvent
+            volume=event.velocity / MIDI_VOLUME_MAX,
+          }
+          unfinished_notes[event.note_number] = note
+          local channel = instrument_channel_map[current_instrument]
+          if not channel then
+            channel = self:make_channel(current_instrument)
+            channel.figure_instances:insert(FigureInstance(0, Figure{}))
+            instrument_channel_map[current_instrument] = channel
+          end
+          local figure = assert(channel.figure_instances[1].figure)
+          figure.notes:insert(note)
+        elseif isinstance(event, midi.event.VelocityChangeEvent) then
+          -- Currently not supported
+        elseif isinstance(event, midi.event.ControllerChangeEvent) then
+          -- Currently not supported
+        elseif isinstance(event, midi.event.ProgramChangeEvent) then
+          current_instrument = event.new_program_number
+        elseif isinstance(event, midi.event.ChannelPressureChangeEvent) then
+          -- Currently not supported
+        elseif isinstance(event, midi.event.PitchWheelChangeEvent) then
+          -- Currently not supported
+        elseif isinstance(event, midi.event.MetaEvent) then
+          -- Currently not supported
+        else
+        end
+      end
+    end
   end,
 
   make_channel = function(self, instrument)
@@ -41,7 +98,6 @@ Song = class 'Song' {
   end,
 
   __tomidifile = function(self)
-    local MIDI_VOLUME_MAX <const> = 127
     local midi_file = midi.MidiFile()
     for i, song_track in ipairs(self.channels) do
       local events = llx.List{}

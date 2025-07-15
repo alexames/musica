@@ -27,7 +27,7 @@ local lowest_pitch_indices = {
   [PitchClass.D] = 26,
   [PitchClass.E] = 28,
   [PitchClass.F] = 29,
-  [PitchClass.G] = 31
+  [PitchClass.G] = 31,
 }
 
 Pitch = class 'Pitch' {
@@ -36,10 +36,26 @@ Pitch = class 'Pitch' {
     local octave = args.octave or middle_octave
     local accidentals = args.accidentals or 0
     local pitch_index = args.pitch_index
-
+    local midi_index = args.midi_index
+    if midi_index then
+      -- Handle midi time signatures to guess whether to use sharps or flats.
+      -- Write unit tests for this.
+      local pitch_classes = {
+        [0] = PitchClass.C, PitchClass.C,
+        PitchClass.D, PitchClass.D,
+        PitchClass.E,
+        PitchClass.F, PitchClass.F,
+        PitchClass.G, PitchClass.G,
+        PitchClass.A, PitchClass.A,
+        PitchClass.B,
+      }
+      pitch_index = midi_index
+      pitch_class = pitch_classes[midi_index % 12]
+      octave = (midi_index - 24) // 12
+    end
     self.pitch_class = pitch_class
     self.octave = octave
-    if pitch_index ~= nil then
+    if pitch_index then
       local natural_pitch = lowest_pitch_indices[pitch_class] + (self.octave * 12)
       self.accidentals = pitch_index - natural_pitch
     else
