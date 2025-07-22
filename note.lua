@@ -2,11 +2,14 @@
 
 local llx = require 'llx'
 local pitch = require 'musica.pitch'
+local tostringf_module = require 'llx.tostringf'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
 local class = llx.class
 local Pitch = pitch.Pitch
+local tostringf = tostringf_module.tostringf
+local styles = tostringf_module.styles
 
 local NoteArgs = llx.Schema{
   __name='NoteArgs',
@@ -50,11 +53,19 @@ Note = class 'Note' {
            and self.duration == other.duration
            and self.volume == other.volume
   end,
+  
+  __tostringf = function(self, formatter)
+    formatter:table_cons 'Note' {
+      {'pitch', self.pitch},
+      {'time', self.time},
+      {'duration', self.duration},
+      {'volume', self.volume},
+    }
+  end,
 
   --- Returns a string representation of the note.
   __tostring = function(self)
-    return string.format("Note{pitch=%s, time=%s, duration=%s, volume=%s}",
-                         self.pitch, self.time, self.duration, self.volume)
+    return tostringf(self, styles.abbrev)
   end,
 }
 

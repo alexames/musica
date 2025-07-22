@@ -8,6 +8,7 @@ local meter = require 'musica.meter'
 local midi = require 'midi'
 local note = require 'musica.note'
 local pitch = require 'musica.pitch'
+local tostringf_module = require 'llx.tostringf'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -21,6 +22,8 @@ local Note = note.Note
 local Pitch = pitch.Pitch
 local isinstance = llx.isinstance
 local tointeger = llx.tointeger
+local tostringf = tostringf_module.tostringf
+local styles = tostringf_module.styles
 
 local MIDI_VOLUME_MAX <const> = 127.0
 
@@ -38,7 +41,7 @@ local MIDI_VOLUME_MAX <const> = 127.0
 Song = class 'Song' {
   __init = function(self, args)
     self.channels = args and args.channels or llx.List{}
-    if args.midi_file then
+    if args and args.midi_file then
       self:_song_from_midi_file(args.midi_file)
     end
   end,
@@ -78,7 +81,7 @@ Song = class 'Song' {
         elseif isinstance(event, midi.event.ControllerChangeEvent) then
           -- Currently not supported
         elseif isinstance(event, midi.event.ProgramChangeEvent) then
-          current_instrument = event.new_program_number
+          current_instrument = midi.instrument[event.new_program_number]
         elseif isinstance(event, midi.event.ChannelPressureChangeEvent) then
           -- Currently not supported
         elseif isinstance(event, midi.event.PitchWheelChangeEvent) then
@@ -122,8 +125,8 @@ Song = class 'Song' {
       local midi_track = midi.Track()
       midi_file.tracks:insert(midi_track)
       local previous_time = 0
-      midi_track.events:insert(
-          midi.event.ProgramChangeEvent(0, channel, song_track.instrument))
+      midi_track.events:insert(midi.event.ProgramChangeEvent(
+        0, channel, song_track.instrument.value))
       for j, event in ipairs(events) do
         local beats = event.time - previous_time
         event.time_delta = math.floor(beats * midi_file.ticks)
@@ -136,8 +139,14 @@ Song = class 'Song' {
     return midi_file
   end,
 
+  __tostringf = function(self, formatter)
+    formatter:table_cons 'Song' {
+      {'channels', self.channels},
+    }
+  end,
+
   __tostring = function(self)
-    return string.format('Song{channels=%s}', self.channels)
+    return tostringf(self, styles.abbrev)
   end,
 }
 

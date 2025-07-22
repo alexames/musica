@@ -3,12 +3,15 @@
 local figure = require 'musica.figure'
 local llx = require 'llx'
 local note = require 'musica.note'
+local tostringf_module = require 'llx.tostringf'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
 local class = llx.class
 local Figure = figure.Figure
 local Note = note.Note
+local tostringf = tostringf_module.tostringf
+local styles = tostringf_module.styles
 
 FigureInstance = class 'FigureInstance' {
   __init = function(self, time, figure)
@@ -30,6 +33,13 @@ FigureInstance = class 'FigureInstance' {
     end, self, 0
   end,
 
+  __tostringf = function(self, formatter)
+    formatter:table_cons 'FigureInstance' {
+      {'time', self.time},
+      {'figure', self.figure},
+    }
+  end,
+
   __tostring = function(self)
     return string.format('FigureInstance(%s, %s)', self.time, self.figure)
   end,
@@ -41,9 +51,15 @@ Channel = class 'Channel' {
     self.figure_instances = llx.List{}
   end,
 
+  __tostringf = function(self, formatter)
+    formatter:table_cons 'Channel' {
+      {'instrument', self.instrument},
+      {'figure_instances', self.figure_instances},
+    }
+  end,
+
   __tostring = function(self)
-    return string.format('Channel{instrument=%s, figure_instances=%s}',
-        self.instrument, self.figure_instances)
+    return tostringf(self, styles.abbrev)
   end,
 }
 

@@ -112,6 +112,10 @@ Pitch = class 'Pitch' {
     end
   end,
 
+  __tostringf = function(self, formatter)
+    formatter:insert(tostring(self))
+  end,
+
   __tostring = function(self)
     if lowest_pitch_indices[PitchClass.A] <= tointeger(self)
         and tointeger(self) < 128

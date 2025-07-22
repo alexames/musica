@@ -2,6 +2,9 @@
 
 local llx = require 'llx'
 local note = require 'musica.note'
+local tostringf_module = require 'llx.tostringf'
+local tostringf = tostringf_module.tostringf
+local styles = tostringf_module.styles
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -66,10 +69,16 @@ Figure = class 'Figure' {
     return self.duration == other.duration and self.notes == other.notes
   end,
 
+  __tostringf = function(self, formatter)
+    formatter:table_cons 'Figure' {
+      {'duration', self.duration},
+      {'notes', self.notes, element_style=styles.abbrev},
+    }
+  end,
+
   __tostring = function(self)
     -- check_arguments{self=Figure}
-    return string.format("Figure{duration=%s, notes=%s}",
-                          self.duration, tostring(self.notes))
+    return tostringf(self, styles.abbrev)
   end,
 }
 
