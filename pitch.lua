@@ -51,7 +51,7 @@ Pitch = class 'Pitch' {
       }
       pitch_index = midi_index
       pitch_class = pitch_classes[midi_index % 12]
-      octave = (midi_index - 24) // 12
+      octave = (midi_index - lowest_pitch_indices[PitchClass.A]) // 12
     end
     self.pitch_class = pitch_class
     self.octave = octave
