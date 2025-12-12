@@ -5,6 +5,7 @@ local llx = require 'llx'
 local pitch_class = require 'musica.pitch_class'
 local pitch_interval = require 'musica.pitch_interval'
 local pitch_util = require 'musica.pitch_util'
+local tostringf_module = require 'llx.tostringf'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -17,6 +18,8 @@ local PitchClass = pitch_class.PitchClass
 local PitchInterval = pitch_interval.PitchInterval
 local tointeger = llx.tointeger
 local zip = llx.functional.zip
+local tostringf = tostringf_module.tostringf
+local styles = tostringf_module.styles
 
 local middle_octave = 4
 
@@ -113,10 +116,6 @@ Pitch = class 'Pitch' {
   end,
 
   __tostringf = function(self, formatter)
-    formatter:insert(tostring(self))
-  end,
-
-  __tostring = function(self)
     if lowest_pitch_indices[PitchClass.A] <= tointeger(self)
         and tointeger(self) < 128
         and Accidental.flat <= self.accidentals
@@ -128,8 +127,10 @@ Pitch = class 'Pitch' {
       elseif self.accidentals == Accidental.sharp then
         accidental = 'sharp'
       end
-      return string.format(
-          'Pitch.%s%s%s', pitch_class_name, accidental, tostring(self.octave))
+      -- formatter:insert(tostring(self))
+      formatter:module_class_field(
+        'midi', 'Pitch',
+        pitch_class_name .. accidental .. tostring(self.octave))
     end
 
     local accidental_string
@@ -147,8 +148,14 @@ Pitch = class 'Pitch' {
     else
       accidental_string = ''
     end
-    return string.format('Pitch{pitch_class=%s, octave=%s%s}',
-      self.pitch_class, self.octave, accidental_string)
+    formatter:table_cons{'musica', 'Pitch'} {
+      {pitch_class=self.pitch_class},
+      {octave=self.octave .. accidental_string},
+    }
+  end,
+
+  __tostring = function(self)
+    return tostringf(self, styles.abbrev)
   end,
 }
 

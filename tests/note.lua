@@ -2,53 +2,89 @@ local unit = require 'unit'
 require 'llx'
 require 'musica.note'
 
-test_class 'NoteTest' {
-  [test 'init' - 'with volume'] = function(self)
+_ENV = unit.create_test_env(_ENV)
+
+describe('NoteTest', function()
+  it('should set pitch when initialized with volume', function()
     local note = Note{pitch=72, time=0, duration=2, volume=1}
-    EXPECT_EQ(note.pitch, 72)
-    EXPECT_EQ(note.time, 0)
-    EXPECT_EQ(note.duration, 2)
-    EXPECT_EQ(note.volume, 1)
-  end,
+    expect(note.pitch).to.be_equal_to(72)
+  end)
 
-  [test 'init' - 'without volume'] = function(self)
+  it('should set time when initialized with volume', function()
+    local note = Note{pitch=72, time=0, duration=2, volume=1}
+    expect(note.time).to.be_equal_to(0)
+  end)
+
+  it('should set duration when initialized with volume', function()
+    local note = Note{pitch=72, time=0, duration=2, volume=1}
+    expect(note.duration).to.be_equal_to(2)
+  end)
+
+  it('should set volume when initialized with volume', function()
+    local note = Note{pitch=72, time=0, duration=2, volume=1}
+    expect(note.volume).to.be_equal_to(1)
+  end)
+
+  it('should set pitch when initialized without volume', function()
     local note = Note{pitch=72, time=0, duration=2}
-    EXPECT_EQ(note.pitch, 72)
-    EXPECT_EQ(note.time, 0)
-    EXPECT_EQ(note.duration, 2)
-    EXPECT_EQ(note.volume, 1)
-  end,
+    expect(note.pitch).to.be_equal_to(72)
+  end)
 
-  [test 'init' - 'error' - 'missing pitch'] = function(self)
-    EXPECT_ERROR(Note, {time=0, duration=2})
-  end,
+  it('should set time when initialized without volume', function()
+    local note = Note{pitch=72, time=0, duration=2}
+    expect(note.time).to.be_equal_to(0)
+  end)
 
-  [test 'init' - 'error' - 'missing time'] = function(self)
-    EXPECT_ERROR(Note, {pitch=72, duration=2})
-  end,
+  it('should set duration when initialized without volume', function()
+    local note = Note{pitch=72, time=0, duration=2}
+    expect(note.duration).to.be_equal_to(2)
+  end)
 
-  [test 'init' - 'error' - 'missing duration'] = function(self)
-    EXPECT_ERROR(Note, {pitch=72, time=0})
-  end,
+  it('should default volume to 1 when initialized without volume', function()
+    local note = Note{pitch=72, time=0, duration=2}
+    expect(note.volume).to.be_equal_to(1)
+  end)
 
-  [test 'set_finish'] = function(self)
+  it('should throw error when pitch is missing', function()
+    expect(function() Note{time=0, duration=2} end).to.throw()
+  end)
+
+  it('should throw error when time is missing', function()
+    expect(function() Note{pitch=72, duration=2} end).to.throw()
+  end)
+
+  it('should throw error when duration is missing', function()
+    expect(function() Note{pitch=72, time=0} end).to.throw()
+  end)
+
+  it('should update finish time when set_finish is called', function()
     local note = Note{pitch=72, time=10, duration=15}
     note:set_finish(12)
-    EXPECT_EQ(note:finish(), 12)
-    EXPECT_EQ(note.time, 10)
-    EXPECT_EQ(note.duration, 2)
-  end,
+    expect(note:finish()).to.be_equal_to(12)
+  end)
 
-  [test 'finish'] = function(self)
+  it('should preserve time when set_finish is called', function()
+    local note = Note{pitch=72, time=10, duration=15}
+    note:set_finish(12)
+    expect(note.time).to.be_equal_to(10)
+  end)
+
+  it('should update duration when set_finish is called', function()
+    local note = Note{pitch=72, time=10, duration=15}
+    note:set_finish(12)
+    expect(note.duration).to.be_equal_to(2)
+  end)
+
+  it('should calculate finish time correctly', function()
     local note = Note{pitch=72, time=10, duration=2}
-    EXPECT_EQ(note:finish(), 12)
-  end,
+    expect(note:finish()).to.be_equal_to(12)
+  end)
 
-  [test 'tostring'] = function(self)
+  it('should convert note to string and back to same note', function()
     local note = Note{pitch=72, time=0, duration=2}
-    EXPECT_EQ(tovalue(tostring(note)), note)
-  end,
-}
+    expect(tovalue(tostring(note))).to.be_equal_to(note)
+  end)
+end)
 
 if main_file() then
   unit.run_unit_tests()

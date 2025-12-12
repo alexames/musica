@@ -2,8 +2,11 @@ local unit = require 'unit'
 require 'llx'
 require 'musica.song'
 
-test_class 'SongTest' {
-}
+_ENV = unit.create_test_env(_ENV)
+
+describe('SongTest', function()
+  -- No tests yet
+end)
 
 if main_file() then
   unit.run_unit_tests()

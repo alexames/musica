@@ -4,136 +4,315 @@ require 'musica.pitch'
 require 'musica.pitch_interval'
 require 'musica.quality'
 
-test_class 'PitchIntervalTest' {
-  [test 'init'] = function(self)
-    EXPECT_EQ(PitchInterval{number=2, quality=Quality.major},
-              PitchInterval.major_third)
+_ENV = unit.create_test_env(_ENV)
 
-    EXPECT_EQ(PitchInterval{number=2, semitone_interval=4},
-              PitchInterval.major_third)
+describe('PitchIntervalTest', function()
+  it('should create major third when constructed with number and quality', function()
+    expect(PitchInterval{number=2, quality=Quality.major}).to.be_equal_to(
+      PitchInterval.major_third)
+  end)
 
-    EXPECT_EQ(PitchInterval{number=2, accidentals=0},
-              PitchInterval.major_third)
-    EXPECT_EQ(PitchInterval{number=2, accidentals=Accidental.natural},
-              PitchInterval.major_third)
-  end,
+  it('should create major third when constructed with number and semitone interval', function()
+    expect(PitchInterval{number=2, semitone_interval=4}).to.be_equal_to(
+      PitchInterval.major_third)
+  end)
 
-  [test 'is_perfect'] = function(self)
-    EXPECT_TRUE(PitchInterval.unison:is_perfect())
-    EXPECT_FALSE(PitchInterval.major_second:is_perfect())
-    EXPECT_FALSE(PitchInterval.major_third:is_perfect())
-    EXPECT_TRUE(PitchInterval.perfect_fourth:is_perfect())
-    EXPECT_TRUE(PitchInterval.perfect_fifth:is_perfect())
-    EXPECT_FALSE(PitchInterval.major_sixth:is_perfect())
-    EXPECT_FALSE(PitchInterval.major_seventh:is_perfect())
-    EXPECT_TRUE(PitchInterval.octave:is_perfect())
+  it('should create major third when constructed with number and accidentals 0', function()
+    expect(PitchInterval{number=2, accidentals=0}).to.be_equal_to(
+      PitchInterval.major_third)
+  end)
 
-    EXPECT_FALSE(PitchInterval{number=8}:is_perfect())
-    EXPECT_FALSE(PitchInterval{number=9}:is_perfect())
-    EXPECT_TRUE(PitchInterval{number=10}:is_perfect())
-    EXPECT_TRUE(PitchInterval{number=11}:is_perfect())
-    EXPECT_FALSE(PitchInterval{number=12}:is_perfect())
-    EXPECT_FALSE(PitchInterval{number=13}:is_perfect())
-  end,
+  it('should create major third when constructed with number and natural accidental', function()
+    expect(PitchInterval{number=2, accidentals=Accidental.natural}).to.be_equal_to(
+      PitchInterval.major_third)
+  end)
 
-  [test 'is_enharmonic'] = function(self)
-    EXPECT_TRUE(PitchInterval.augmented_second:is_enharmonic(
-                PitchInterval.augmented_second))
-    EXPECT_TRUE(PitchInterval.augmented_second:is_enharmonic(
-                PitchInterval.minor_third))
+  it('should return true when unison is perfect', function()
+    expect(PitchInterval.unison:is_perfect()).to.be_truthy()
+  end)
 
-    EXPECT_FALSE(PitchInterval.minor_third:is_enharmonic(
-                 PitchInterval.major_third))
-  end,
+  it('should return false when major second is not perfect', function()
+    expect(PitchInterval.major_second:is_perfect()).to.be_falsy()
+  end)
 
-  [test 'add' - 'PitchInterval'] = function(self)
-    EXPECT_EQ(PitchInterval.major_third + PitchInterval.minor_third,
-              PitchInterval.perfect_fifth)
-    EXPECT_EQ(PitchInterval.minor_third + PitchInterval.major_third,
-              PitchInterval.perfect_fifth)
-    EXPECT_EQ(PitchInterval.major_third + PitchInterval.major_third,
-              PitchInterval.augmented_fifth)
-    EXPECT_EQ(PitchInterval.major_second + PitchInterval.octave,
-              PitchInterval{number=8})
-  end,
+  it('should return false when major third is not perfect', function()
+    expect(PitchInterval.major_third:is_perfect()).to.be_falsy()
+  end)
 
-  [test 'add' - 'Pitch'] = function(self)
-    EXPECT_EQ(Pitch.c4 + PitchInterval.major_third, Pitch.e4)
-    EXPECT_EQ(PitchInterval.major_third + Pitch.c4, Pitch.e4)
+  it('should return true when perfect fourth is perfect', function()
+    expect(PitchInterval.perfect_fourth:is_perfect()).to.be_truthy()
+  end)
 
-    EXPECT_EQ(Pitch.c4 + PitchInterval.minor_third, Pitch.eflat4)
-    EXPECT_EQ(PitchInterval.minor_third + Pitch.c4, Pitch.eflat4)
+  it('should return true when perfect fifth is perfect', function()
+    expect(PitchInterval.perfect_fifth:is_perfect()).to.be_truthy()
+  end)
 
+  it('should return false when major sixth is not perfect', function()
+    expect(PitchInterval.major_sixth:is_perfect()).to.be_falsy()
+  end)
+
+  it('should return false when major seventh is not perfect', function()
+    expect(PitchInterval.major_seventh:is_perfect()).to.be_falsy()
+  end)
+
+  it('should return true when octave is perfect', function()
+    expect(PitchInterval.octave:is_perfect()).to.be_truthy()
+  end)
+
+  it('should return false when interval with number 8 is not perfect', function()
+    expect(PitchInterval{number=8}:is_perfect()).to.be_falsy()
+  end)
+
+  it('should return false when interval with number 9 is not perfect', function()
+    expect(PitchInterval{number=9}:is_perfect()).to.be_falsy()
+  end)
+
+  it('should return true when interval with number 10 is perfect', function()
+    expect(PitchInterval{number=10}:is_perfect()).to.be_truthy()
+  end)
+
+  it('should return true when interval with number 11 is perfect', function()
+    expect(PitchInterval{number=11}:is_perfect()).to.be_truthy()
+  end)
+
+  it('should return false when interval with number 12 is not perfect', function()
+    expect(PitchInterval{number=12}:is_perfect()).to.be_falsy()
+  end)
+
+  it('should return false when interval with number 13 is not perfect', function()
+    expect(PitchInterval{number=13}:is_perfect()).to.be_falsy()
+  end)
+
+  it('should return true when augmented second is enharmonic to itself', function()
+    expect(PitchInterval.augmented_second:is_enharmonic(
+      PitchInterval.augmented_second)).to.be_truthy()
+  end)
+
+  it('should return true when augmented second is enharmonic to minor third', function()
+    expect(PitchInterval.augmented_second:is_enharmonic(
+      PitchInterval.minor_third)).to.be_truthy()
+  end)
+
+  it('should return false when minor third is not enharmonic to major third', function()
+    expect(PitchInterval.minor_third:is_enharmonic(
+      PitchInterval.major_third)).to.be_falsy()
+  end)
+
+  it('should add major third and minor third to get perfect fifth', function()
+    expect(PitchInterval.major_third + PitchInterval.minor_third).to.be_equal_to(
+      PitchInterval.perfect_fifth)
+  end)
+
+  it('should add minor third and major third to get perfect fifth', function()
+    expect(PitchInterval.minor_third + PitchInterval.major_third).to.be_equal_to(
+      PitchInterval.perfect_fifth)
+  end)
+
+  it('should add major third and major third to get augmented fifth', function()
+    expect(PitchInterval.major_third + PitchInterval.major_third).to.be_equal_to(
+      PitchInterval.augmented_fifth)
+  end)
+
+  it('should add major second and octave to get compound interval', function()
+    expect(PitchInterval.major_second + PitchInterval.octave).to.be_equal_to(
+      PitchInterval{number=8})
+  end)
+
+  it('should add pitch and major third interval correctly', function()
+    expect(Pitch.c4 + PitchInterval.major_third).to.be_equal_to(Pitch.e4)
+  end)
+
+  it('should add major third interval and pitch correctly', function()
+    expect(PitchInterval.major_third + Pitch.c4).to.be_equal_to(Pitch.e4)
+  end)
+
+  it('should add pitch and minor third interval correctly', function()
+    expect(Pitch.c4 + PitchInterval.minor_third).to.be_equal_to(Pitch.eflat4)
+  end)
+
+  it('should add minor third interval and pitch correctly', function()
+    expect(PitchInterval.minor_third + Pitch.c4).to.be_equal_to(Pitch.eflat4)
+  end)
+
+  it('should set pitch class correctly when adding minor third to pitch', function()
     eflat4 = PitchInterval.minor_third + Pitch.c4
-    EXPECT_EQ(eflat4.pitch_class, PitchClass.E)
-    EXPECT_EQ(eflat4.octave, 4)
-    EXPECT_EQ(eflat4.accidentals, -1)
+    expect(eflat4.pitch_class).to.be_equal_to(PitchClass.E)
+  end)
 
-    EXPECT_EQ(Pitch.c4 + PitchInterval.octave, Pitch.c5)
-    EXPECT_EQ(PitchInterval.octave + Pitch.c4, Pitch.c5)
-  end,
+  it('should set octave correctly when adding minor third to pitch', function()
+    eflat4 = PitchInterval.minor_third + Pitch.c4
+    expect(eflat4.octave).to.be_equal_to(4)
+  end)
 
-  [test 'sub' - 'PitchInterval'] = function(self)
-    EXPECT_EQ(PitchInterval.major_third - PitchInterval.minor_third,
-              PitchInterval.augmented_unison)
-    EXPECT_EQ(PitchInterval.octave - PitchInterval.perfect_fifth,
-              PitchInterval.perfect_fourth)
-  end,
+  it('should set accidentals correctly when adding minor third to pitch', function()
+    eflat4 = PitchInterval.minor_third + Pitch.c4
+    expect(eflat4.accidentals).to.be_equal_to(-1)
+  end)
 
-  [test 'mul'] = function(self)
-    EXPECT_EQ(PitchInterval.major_second * 2, PitchInterval.major_third)
-    EXPECT_EQ(2 * PitchInterval.major_second, PitchInterval.major_third)
-  end,
+  it('should add pitch and octave interval correctly', function()
+    expect(Pitch.c4 + PitchInterval.octave).to.be_equal_to(Pitch.c5)
+  end)
 
-  [test 'eq'] = function(self)
-    EXPECT_TRUE(PitchInterval.perfect_fourth
-                == PitchInterval{number=3, accidentals=0})
-    EXPECT_TRUE(PitchInterval.augmented_fifth
-                == PitchInterval{number=4, accidentals=1})
-  end,
+  it('should add octave interval and pitch correctly', function()
+    expect(PitchInterval.octave + Pitch.c4).to.be_equal_to(Pitch.c5)
+  end)
 
-  [test 'tointeger'] = function(self)
-    EXPECT_EQ(tointeger(PitchInterval.unison), 0)
-    EXPECT_EQ(tointeger(PitchInterval.augmented_unison), 1)
-    EXPECT_EQ(tointeger(PitchInterval.diminished_second), 0)
-    EXPECT_EQ(tointeger(PitchInterval.minor_second), 1)
-    EXPECT_EQ(tointeger(PitchInterval.major_second), 2)
-    EXPECT_EQ(tointeger(PitchInterval.augmented_second), 3)
-    EXPECT_EQ(tointeger(PitchInterval.diminished_third), 2)
-    EXPECT_EQ(tointeger(PitchInterval.minor_third), 3)
-    EXPECT_EQ(tointeger(PitchInterval.major_third), 4)
-    EXPECT_EQ(tointeger(PitchInterval.augmented_third), 5)
-    EXPECT_EQ(tointeger(PitchInterval.diminished_fourth), 4)
-    EXPECT_EQ(tointeger(PitchInterval.perfect_fourth), 5)
-    EXPECT_EQ(tointeger(PitchInterval.augmented_fourth), 6)
-    EXPECT_EQ(tointeger(PitchInterval.diminished_fifth), 6)
-    EXPECT_EQ(tointeger(PitchInterval.perfect_fifth), 7)
-    EXPECT_EQ(tointeger(PitchInterval.augmented_fifth), 8)
-    EXPECT_EQ(tointeger(PitchInterval.diminished_sixth), 7)
-    EXPECT_EQ(tointeger(PitchInterval.minor_sixth), 8)
-    EXPECT_EQ(tointeger(PitchInterval.major_sixth), 9)
-    EXPECT_EQ(tointeger(PitchInterval.augemented_sixth), 10)
-    EXPECT_EQ(tointeger(PitchInterval.dimished_seventh), 9)
-    EXPECT_EQ(tointeger(PitchInterval.minor_seventh), 10)
-    EXPECT_EQ(tointeger(PitchInterval.major_seventh), 11)
-    EXPECT_EQ(tointeger(PitchInterval.augmented_seventh), 12)
-    EXPECT_EQ(tointeger(PitchInterval.dimished_octave), 11)
-    EXPECT_EQ(tointeger(PitchInterval.octave), 12)
-  end,
+  it('should subtract minor third from major third to get augmented unison', function()
+    expect(PitchInterval.major_third - PitchInterval.minor_third).to.be_equal_to(
+      PitchInterval.augmented_unison)
+  end)
 
-  [test 'tostring'] = function(self)
-    EXPECT_EQ(tovalue(tostring(PitchInterval.major_third)),
-              PitchInterval.major_third)
-    EXPECT_EQ(tovalue(tostring(PitchInterval.perfect_fifth)),
-              PitchInterval.perfect_fifth)
-    EXPECT_EQ(tovalue(tostring(PitchInterval.unison)), PitchInterval.unison)
-    EXPECT_EQ(tovalue(tostring(PitchInterval.octave)), PitchInterval.octave)
+  it('should subtract perfect fifth from octave to get perfect fourth', function()
+    expect(PitchInterval.octave - PitchInterval.perfect_fifth).to.be_equal_to(
+      PitchInterval.perfect_fourth)
+  end)
 
+  it('should multiply major second by 2 to get major third', function()
+    expect(PitchInterval.major_second * 2).to.be_equal_to(PitchInterval.major_third)
+  end)
+
+  it('should multiply 2 by major second to get major third', function()
+    expect(2 * PitchInterval.major_second).to.be_equal_to(PitchInterval.major_third)
+  end)
+
+  it('should return true when perfect fourth equals interval with same values', function()
+    expect(PitchInterval.perfect_fourth
+      == PitchInterval{number=3, accidentals=0}).to.be_truthy()
+  end)
+
+  it('should return true when augmented fifth equals interval with same values', function()
+    expect(PitchInterval.augmented_fifth
+      == PitchInterval{number=4, accidentals=1}).to.be_truthy()
+  end)
+
+  it('should convert unison to integer 0', function()
+    expect(tointeger(PitchInterval.unison)).to.be_equal_to(0)
+  end)
+
+  it('should convert augmented unison to integer 1', function()
+    expect(tointeger(PitchInterval.augmented_unison)).to.be_equal_to(1)
+  end)
+
+  it('should convert diminished second to integer 0', function()
+    expect(tointeger(PitchInterval.diminished_second)).to.be_equal_to(0)
+  end)
+
+  it('should convert minor second to integer 1', function()
+    expect(tointeger(PitchInterval.minor_second)).to.be_equal_to(1)
+  end)
+
+  it('should convert major second to integer 2', function()
+    expect(tointeger(PitchInterval.major_second)).to.be_equal_to(2)
+  end)
+
+  it('should convert augmented second to integer 3', function()
+    expect(tointeger(PitchInterval.augmented_second)).to.be_equal_to(3)
+  end)
+
+  it('should convert diminished third to integer 2', function()
+    expect(tointeger(PitchInterval.diminished_third)).to.be_equal_to(2)
+  end)
+
+  it('should convert minor third to integer 3', function()
+    expect(tointeger(PitchInterval.minor_third)).to.be_equal_to(3)
+  end)
+
+  it('should convert major third to integer 4', function()
+    expect(tointeger(PitchInterval.major_third)).to.be_equal_to(4)
+  end)
+
+  it('should convert augmented third to integer 5', function()
+    expect(tointeger(PitchInterval.augmented_third)).to.be_equal_to(5)
+  end)
+
+  it('should convert diminished fourth to integer 4', function()
+    expect(tointeger(PitchInterval.diminished_fourth)).to.be_equal_to(4)
+  end)
+
+  it('should convert perfect fourth to integer 5', function()
+    expect(tointeger(PitchInterval.perfect_fourth)).to.be_equal_to(5)
+  end)
+
+  it('should convert augmented fourth to integer 6', function()
+    expect(tointeger(PitchInterval.augmented_fourth)).to.be_equal_to(6)
+  end)
+
+  it('should convert diminished fifth to integer 6', function()
+    expect(tointeger(PitchInterval.diminished_fifth)).to.be_equal_to(6)
+  end)
+
+  it('should convert perfect fifth to integer 7', function()
+    expect(tointeger(PitchInterval.perfect_fifth)).to.be_equal_to(7)
+  end)
+
+  it('should convert augmented fifth to integer 8', function()
+    expect(tointeger(PitchInterval.augmented_fifth)).to.be_equal_to(8)
+  end)
+
+  it('should convert diminished sixth to integer 7', function()
+    expect(tointeger(PitchInterval.diminished_sixth)).to.be_equal_to(7)
+  end)
+
+  it('should convert minor sixth to integer 8', function()
+    expect(tointeger(PitchInterval.minor_sixth)).to.be_equal_to(8)
+  end)
+
+  it('should convert major sixth to integer 9', function()
+    expect(tointeger(PitchInterval.major_sixth)).to.be_equal_to(9)
+  end)
+
+  it('should convert augmented sixth to integer 10', function()
+    expect(tointeger(PitchInterval.augemented_sixth)).to.be_equal_to(10)
+  end)
+
+  it('should convert diminished seventh to integer 9', function()
+    expect(tointeger(PitchInterval.dimished_seventh)).to.be_equal_to(9)
+  end)
+
+  it('should convert minor seventh to integer 10', function()
+    expect(tointeger(PitchInterval.minor_seventh)).to.be_equal_to(10)
+  end)
+
+  it('should convert major seventh to integer 11', function()
+    expect(tointeger(PitchInterval.major_seventh)).to.be_equal_to(11)
+  end)
+
+  it('should convert augmented seventh to integer 12', function()
+    expect(tointeger(PitchInterval.augmented_seventh)).to.be_equal_to(12)
+  end)
+
+  it('should convert diminished octave to integer 11', function()
+    expect(tointeger(PitchInterval.dimished_octave)).to.be_equal_to(11)
+  end)
+
+  it('should convert octave to integer 12', function()
+    expect(tointeger(PitchInterval.octave)).to.be_equal_to(12)
+  end)
+
+  it('should convert major third to string and back', function()
+    expect(tovalue(tostring(PitchInterval.major_third))).to.be_equal_to(
+      PitchInterval.major_third)
+  end)
+
+  it('should convert perfect fifth to string and back', function()
+    expect(tovalue(tostring(PitchInterval.perfect_fifth))).to.be_equal_to(
+      PitchInterval.perfect_fifth)
+  end)
+
+  it('should convert unison to string and back', function()
+    expect(tovalue(tostring(PitchInterval.unison))).to.be_equal_to(PitchInterval.unison)
+  end)
+
+  it('should convert octave to string and back', function()
+    expect(tovalue(tostring(PitchInterval.octave))).to.be_equal_to(PitchInterval.octave)
+  end)
+
+  it('should convert double diminished fifth to string and back', function()
     local double_diminished_fifth = PitchInterval{number=4, accidentals=-2}
-    EXPECT_EQ(tovalue(tostring(double_diminished_fifth)),
-              double_diminished_fifth)
-  end,
-}
+    expect(tovalue(tostring(double_diminished_fifth))).to.be_equal_to(
+      double_diminished_fifth)
+  end)
+end)
 
 if main_file() then
   unit.run_unit_tests()

@@ -2,18 +2,20 @@ local unit = require 'unit'
 require 'musica.figure'
 require 'musica.note'
 
-test_class 'FigureTest' {
-  [test 'init' - 'notes'] = function(self)
+_ENV = unit.create_test_env(_ENV)
+
+describe('FigureTest', function()
+  it('should set notes when constructed with notes', function()
     local notes = List{
       Note{pitch=Pitch.c4, time=0, duration=2, volume=1.0},
       Note{pitch=Pitch.e4, time=1, duration=2, volume=1.0},
       Note{pitch=Pitch.g4, time=2, duration=2, volume=1.0},
     }
     local figure = Figure{duration=4, notes=notes}
-    EXPECT_EQ(figure.notes, notes)
-  end,
+    expect(figure.notes).to.be_equal_to(notes)
+  end)
 
-  [test 'init' - 'melody'] = function(self)
+  it('should create notes from melody when constructed with melody', function()
     local melody = List{
       {pitch=Pitch.c4, duration=1, volume=1.0},
       {pitch=Pitch.e4, duration=2, volume=1.0},
@@ -26,13 +28,10 @@ test_class 'FigureTest' {
       Note{pitch=Pitch.e4, time=1, duration=2, volume=1.0},
       Note{pitch=Pitch.g4, time=3, duration=1, volume=1.0},
     }
-    EXPECT_EQ(figure.notes, expected_notes)
-  end,
+    expect(figure.notes).to.be_equal_to(expected_notes)
+  end)
 
-  [test 'apply'] = function(self)
-  end,
-
-  [test 'add / merge'] = function(self)
+  it('should merge figures correctly when using add operator', function()
     local figure_1 = Figure{
       duration=4,
       notes=List{
@@ -69,15 +68,52 @@ test_class 'FigureTest' {
       Note{pitch=Pitch.g6, time=2, duration=2, volume=1.0},
     }
     local merged_figure = figure_1 + figure_2 + figure_3
-    EXPECT_EQ(merged_figure.duration, 4)
-    EXPECT_EQ(merged_figure.notes, expected_notes)
+    expect(merged_figure.duration).to.be_equal_to(4)
+    expect(merged_figure.notes).to.be_equal_to(expected_notes)
+  end)
 
+  it('should merge figures correctly when using merge function', function()
+    local figure_1 = Figure{
+      duration=4,
+      notes=List{
+        Note{pitch=Pitch.c4, time=0, duration=2, volume=1.0},
+        Note{pitch=Pitch.e4, time=1, duration=2, volume=1.0},
+        Note{pitch=Pitch.g4, time=2, duration=2, volume=1.0},
+      }
+    }
+    local figure_2 = Figure{
+      duration=4,
+      notes=List{
+        Note{pitch=Pitch.c5, time=0, duration=1, volume=1.0},
+        Note{pitch=Pitch.e5, time=0, duration=2, volume=1.0},
+        Note{pitch=Pitch.g5, time=0, duration=3, volume=1.0},
+      }
+    }
+    local figure_3 = Figure{
+      duration=4,
+      notes=List{
+        Note{pitch=Pitch.c6, time=2, duration=2, volume=1.0},
+        Note{pitch=Pitch.e6, time=2, duration=2, volume=1.0},
+        Note{pitch=Pitch.g6, time=2, duration=2, volume=1.0},
+      }
+    }
+    local expected_notes = List{
+      Note{pitch=Pitch.c4, time=0, duration=2, volume=1.0},
+      Note{pitch=Pitch.e4, time=1, duration=2, volume=1.0},
+      Note{pitch=Pitch.g4, time=2, duration=2, volume=1.0},
+      Note{pitch=Pitch.c5, time=0, duration=1, volume=1.0},
+      Note{pitch=Pitch.e5, time=0, duration=2, volume=1.0},
+      Note{pitch=Pitch.g5, time=0, duration=3, volume=1.0},
+      Note{pitch=Pitch.c6, time=2, duration=2, volume=1.0},
+      Note{pitch=Pitch.e6, time=2, duration=2, volume=1.0},
+      Note{pitch=Pitch.g6, time=2, duration=2, volume=1.0},
+    }
     merged_figure = merge{figure_1, figure_2, figure_3}
-    EXPECT_EQ(merged_figure.duration, 4)
-    EXPECT_EQ(merged_figure.notes, expected_notes)
-  end,
+    expect(merged_figure.duration).to.be_equal_to(4)
+    expect(merged_figure.notes).to.be_equal_to(expected_notes)
+  end)
 
-  [test 'concat / concatenate'] = function(self)
+  it('should concatenate figures correctly when using concat operator', function()
     local figure_1 = Figure{
       duration=4,
       notes=List{
@@ -114,15 +150,52 @@ test_class 'FigureTest' {
       Note{pitch=Pitch.g6, time=10, duration=2, volume=1.0},
     }
     local concatenated_figure = figure_1 .. figure_2 .. figure_3
-    EXPECT_EQ(concatenated_figure.duration, 12)
-    EXPECT_EQ(concatenated_figure.notes, expected_notes)
+    expect(concatenated_figure.duration).to.be_equal_to(12)
+    expect(concatenated_figure.notes).to.be_equal_to(expected_notes)
+  end)
 
+  it('should concatenate figures correctly when using concatenate function', function()
+    local figure_1 = Figure{
+      duration=4,
+      notes=List{
+        Note{pitch=Pitch.c4, time=0, duration=2, volume=1.0},
+        Note{pitch=Pitch.e4, time=1, duration=2, volume=1.0},
+        Note{pitch=Pitch.g4, time=2, duration=2, volume=1.0},
+      }
+    }
+    local figure_2 = Figure{
+      duration=4,
+      notes=List{
+        Note{pitch=Pitch.c5, time=0, duration=1, volume=1.0},
+        Note{pitch=Pitch.e5, time=0, duration=2, volume=1.0},
+        Note{pitch=Pitch.g5, time=0, duration=3, volume=1.0},
+      }
+    }
+    local figure_3 = Figure{
+      duration=4,
+      notes=List{
+        Note{pitch=Pitch.c6, time=2, duration=2, volume=1.0},
+        Note{pitch=Pitch.e6, time=2, duration=2, volume=1.0},
+        Note{pitch=Pitch.g6, time=2, duration=2, volume=1.0},
+      }
+    }
+    local expected_notes = List{
+      Note{pitch=Pitch.c4, time=0, duration=2, volume=1.0},
+      Note{pitch=Pitch.e4, time=1, duration=2, volume=1.0},
+      Note{pitch=Pitch.g4, time=2, duration=2, volume=1.0},
+      Note{pitch=Pitch.c5, time=4, duration=1, volume=1.0},
+      Note{pitch=Pitch.e5, time=4, duration=2, volume=1.0},
+      Note{pitch=Pitch.g5, time=4, duration=3, volume=1.0},
+      Note{pitch=Pitch.c6, time=10, duration=2, volume=1.0},
+      Note{pitch=Pitch.e6, time=10, duration=2, volume=1.0},
+      Note{pitch=Pitch.g6, time=10, duration=2, volume=1.0},
+    }
     concatenated_figure = concatenate{figure_1, figure_2, figure_3}
-    EXPECT_EQ(concatenated_figure.duration, 12)
-    EXPECT_EQ(concatenated_figure.notes, expected_notes)
-  end,
+    expect(concatenated_figure.duration).to.be_equal_to(12)
+    expect(concatenated_figure.notes).to.be_equal_to(expected_notes)
+  end)
 
-  [test 'mul / repeat'] = function(self)
+  it('should repeat figure correctly when using mul operator', function()
     local figure = Figure{
       duration=4,
       notes=List{
@@ -143,15 +216,11 @@ test_class 'FigureTest' {
         Note{pitch=Pitch.g4, time=10, duration=2, volume=1.0},
     }
     local repeated_figure = figure * 3
-    EXPECT_EQ(repeated_figure.duration, 12)
-    EXPECT_EQ(repeated_figure.notes, expected_notes)
+    expect(repeated_figure.duration).to.be_equal_to(12)
+    expect(repeated_figure.notes).to.be_equal_to(expected_notes)
+  end)
 
-    repeated_figure = repeat_figure(figure, 3)
-    EXPECT_EQ(repeated_figure.duration, 12)
-    EXPECT_EQ(repeated_figure.notes, expected_notes)
-  end,
-
-  [test 'tostring'] = function(self)
+  it('should repeat figure correctly when using repeat_figure function', function()
     local figure = Figure{
       duration=4,
       notes=List{
@@ -160,10 +229,35 @@ test_class 'FigureTest' {
         Note{pitch=Pitch.g4, time=2, duration=2, volume=1.0},
       }
     }
-    EXPECT_EQ(tovalue(tostring(figure)), figure)
-  end,
+    local expected_notes = List{
+        Note{pitch=Pitch.c4, time=0, duration=2, volume=1.0},
+        Note{pitch=Pitch.e4, time=1, duration=2, volume=1.0},
+        Note{pitch=Pitch.g4, time=2, duration=2, volume=1.0},
+        Note{pitch=Pitch.c4, time=4, duration=2, volume=1.0},
+        Note{pitch=Pitch.e4, time=5, duration=2, volume=1.0},
+        Note{pitch=Pitch.g4, time=6, duration=2, volume=1.0},
+        Note{pitch=Pitch.c4, time=8, duration=2, volume=1.0},
+        Note{pitch=Pitch.e4, time=9, duration=2, volume=1.0},
+        Note{pitch=Pitch.g4, time=10, duration=2, volume=1.0},
+    }
+    repeated_figure = repeat_figure(figure, 3)
+    expect(repeated_figure.duration).to.be_equal_to(12)
+    expect(repeated_figure.notes).to.be_equal_to(expected_notes)
+  end)
 
-  [test 'repeat_volta'] = function(self)
+  it('should convert figure to string and back to same figure', function()
+    local figure = Figure{
+      duration=4,
+      notes=List{
+        Note{pitch=Pitch.c4, time=0, duration=2, volume=1.0},
+        Note{pitch=Pitch.e4, time=1, duration=2, volume=1.0},
+        Note{pitch=Pitch.g4, time=2, duration=2, volume=1.0},
+      }
+    }
+    expect(tovalue(tostring(figure))).to.be_equal_to(figure)
+  end)
+
+  it('should repeat figure with voltas correctly', function()
     local figure = Figure{
       duration=4,
       notes=List{
@@ -203,10 +297,10 @@ test_class 'FigureTest' {
         Note{pitch=Pitch.g6, time=14, duration=2, volume=1.0},
     }
     local repeated_figure = repeat_volta(figure, {volta_1, volta_2})
-    EXPECT_EQ(repeated_figure.duration, 16)
-    EXPECT_EQ(repeated_figure.notes, expected_notes)
-  end,
-}
+    expect(repeated_figure.duration).to.be_equal_to(16)
+    expect(repeated_figure.notes).to.be_equal_to(expected_notes)
+  end)
+end)
 
 if main_file() then
   unit.run_unit_tests()

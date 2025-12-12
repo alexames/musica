@@ -2,35 +2,39 @@ local unit = require 'unit'
 require 'llx'
 require 'musica.quality'
 
-test_class 'QualityTest' {
-  [test('init')] = function(self)
+_ENV = unit.create_test_env(_ENV)
+
+describe('QualityTest', function()
+  it('should create major quality from major scale pitches', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    EXPECT_EQ(Quality{pitches=scale:pitches(0, 2, 4)}, Quality.major)
+    expect(Quality{pitches=scale:pitches(0, 2, 4)}).to.be_equal_to(Quality.major)
+  end)
 
+  it('should create minor quality from minor scale pitches', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.minor}
-    EXPECT_EQ(Quality{pitches=scale:pitches(0, 2, 4)}, Quality.minor)
-  end;
+    expect(Quality{pitches=scale:pitches(0, 2, 4)}).to.be_equal_to(Quality.minor)
+  end)
 
-  [test('pitch_intervals')] = function(self)
-    EXPECT_EQ(Quality.major.pitch_intervals,
-              List{PitchInterval.unison,
-                   PitchInterval.majorThird,
-                   PitchInterval.perfectFifth})
-  end;
+  it('should have correct pitch intervals for major quality', function()
+    expect(Quality.major.pitch_intervals).to.be_equal_to(
+      List{PitchInterval.unison,
+           PitchInterval.majorThird,
+           PitchInterval.perfectFifth})
+  end)
 
-  [test('eq')] = function(self)
+  it('should return true when quality equals minor', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.minor}
-    self.assertTrue(Quality{pitches=scale:pitches(0, 2, 4)} == Quality.minor)
-  end;
+    expect(Quality{pitches=scale:pitches(0, 2, 4)} == Quality.minor).to.be_truthy()
+  end)
 
-  [test('len')] = function(self)
-    EXPECT_EQ(#Quality.major, 3)
-  end;
+  it('should return length of 3 for major quality', function()
+    expect(#Quality.major).to.be_equal_to(3)
+  end)
 
-  [test('repr')] = function(self)
-    EXPECT_EQ(eval(repr(Quality.major)), Quality.major)
-  end;
-}
+  it('should evaluate repr of major quality correctly', function()
+    expect(eval(repr(Quality.major))).to.be_equal_to(Quality.major)
+  end)
+end)
 
 if main_file() then
   unit.run_unit_tests()
