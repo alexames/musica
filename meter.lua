@@ -59,12 +59,6 @@ MeterProgression = class 'MeterProgression' {
   end;
 }
 
-
--- A sequence of durations and intensities.
-Rhythm = class 'Rhythm' {
-
-}
-
 four_four = Meter(List{StressedPulse(),
                        UnstressedPulse(),
                        StressedPulse(),
