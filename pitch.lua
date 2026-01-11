@@ -1,5 +1,12 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
+--- Pitch representation for musical notes.
+-- A Pitch represents an absolute musical pitch, combining a pitch class
+-- (A-G), octave number, and any accidentals (sharps/flats).
+-- Pitches support arithmetic: adding a PitchInterval to a Pitch yields
+-- a new Pitch, and subtracting two Pitches yields a PitchInterval.
+-- @module musica.pitch
+
 local accidental = require 'musica.accidental'
 local llx = require 'llx'
 local pitch_class = require 'musica.pitch_class'
@@ -21,8 +28,12 @@ local zip = llx.functional.zip
 local tostringf = tostringf_module.tostringf
 local styles = tostringf_module.styles
 
+--- The octave number for middle C (C4).
 local middle_octave = 4
 
+--- MIDI note numbers for the lowest octave of each pitch class.
+-- Maps PitchClass to the MIDI note number of the lowest occurrence
+-- (octave 0 for C-G, but octave 0 starts at A for historical reasons).
 local lowest_pitch_indices = {
   [PitchClass.A] = 21,
   [PitchClass.B] = 23,
@@ -33,7 +44,27 @@ local lowest_pitch_indices = {
   [PitchClass.G] = 31,
 }
 
+--- Represents an absolute musical pitch.
+-- A Pitch combines a pitch class (A-G), octave, and accidentals to
+-- represent a specific frequency. Pitches can be compared, added to
+-- intervals, and converted to/from MIDI note numbers.
+-- @type Pitch
 Pitch = class 'Pitch' {
+  --- Creates a new Pitch.
+  -- Can be constructed from pitch_class/octave/accidentals, from a
+  -- pitch_index (MIDI-like absolute number), or from a midi_index.
+  -- @function Pitch:__init
+  -- @tparam Pitch self
+  -- @tparam table args Table with construction parameters
+  -- @tparam[opt] PitchClass args.pitch_class PitchClass (A-G)
+  -- @tparam[opt=4] number args.octave Octave number (default: 4 for middle octave)
+  -- @tparam[opt=0] number args.accidentals Number of semitones sharp (+) or flat (-)
+  -- @tparam[opt] number args.pitch_index Absolute pitch as integer (alternative to above)
+  -- @tparam[opt] number args.midi_index MIDI note number (alternative, 0-127)
+  -- @usage
+  -- local c4 = Pitch{pitch_class=PitchClass.C, octave=4}
+  -- local fsharp3 = Pitch{pitch_class=PitchClass.F, octave=3, accidentals=1}
+  -- local from_midi = Pitch{midi_index=60}  -- Middle C
   __init = function(self, args)
     local pitch_class = args.pitch_class
     local octave = args.octave or middle_octave
@@ -41,8 +72,6 @@ Pitch = class 'Pitch' {
     local pitch_index = args.pitch_index
     local midi_index = args.midi_index
     if midi_index then
-      -- Handle midi time signatures to guess whether to use sharps or flats.
-      -- Write unit tests for this.
       local pitch_classes = {
         [0] = PitchClass.C, PitchClass.C,
         PitchClass.D, PitchClass.D,
@@ -66,30 +95,66 @@ Pitch = class 'Pitch' {
     end
   end,
 
+  --- Checks if two pitches are enharmonically equivalent.
+  -- Two pitches are enharmonic if they sound the same (same MIDI number)
+  -- but may be spelled differently (e.g., C# and Db).
+  -- @function Pitch:is_enharmonic
+  -- @tparam Pitch self
+  -- @tparam Pitch other Another Pitch to compare
+  -- @treturn boolean true if enharmonically equivalent
+  -- @usage
+  -- local csharp = Pitch{pitch_class=PitchClass.C, accidentals=1}
+  -- local dflat = Pitch{pitch_class=PitchClass.D, accidentals=-1}
+  -- csharp:is_enharmonic(dflat)  -- true
   is_enharmonic = function(self, other)
     return tointeger(self) == tointeger(other)
   end,
 
+  --- Converts the pitch to an integer (MIDI note number).
+  -- @return MIDI note number (0-127 for standard range)
   __tointeger = function(self)
     return lowest_pitch_indices[self.pitch_class]
            + (self.octave * 12)
            + self.accidentals
   end,
 
+  --- Checks equality of two pitches.
+  -- Pitches are equal if they have the same MIDI note number.
+  -- @function Pitch:__eq
+  -- @tparam Pitch self
+  -- @tparam Pitch other Another Pitch
+  -- @treturn boolean true if equal
   __eq = function(self, other)
     return tointeger(self) == tointeger(other)
   end,
 
+  --- Less-than comparison.
+  -- @function Pitch:__lt
+  -- @tparam Pitch self
+  -- @tparam Pitch other Another Pitch
+  -- @treturn boolean true if self is lower than other
   __lt = function(self, other)
     return tointeger(self) < tointeger(other)
   end,
 
+  --- Less-than-or-equal comparison.
+  -- @function Pitch:__le
+  -- @tparam Pitch self
+  -- @tparam Pitch other Another Pitch
+  -- @treturn boolean true if self is lower than or equal to other
   __le = function(self, other)
     return tointeger(self) <= tointeger(other)
   end,
 
+  --- Adds a PitchInterval to this pitch.
+  -- @function Pitch:__add
+  -- @tparam Pitch self
+  -- @tparam PitchInterval pitch_interval The interval to add
+  -- @treturn Pitch A new Pitch that is the given interval above this one
+  -- @usage
+  -- local c4 = Pitch.c4
+  -- local e4 = c4 + PitchInterval.major_third
   __add = function(self, pitch_interval)
-    -- check_arguments{self=Pitch, pitch_interval=PitchInterval}
     local pitch_class = PitchClass[(self.pitch_class.index + pitch_interval.number - 1) % 7 + 1]
     local octave = math.floor(self.octave + (self.pitch_class.index + pitch_interval.number - 1) / 7)
     local pitch_index = tointeger(self) + tointeger(pitch_interval)
@@ -98,9 +163,20 @@ Pitch = class 'Pitch' {
                  pitch_index=pitch_index}
   end,
 
+  --- Subtracts a Pitch or PitchInterval.
+  -- If subtracting a Pitch, returns the PitchInterval between them.
+  -- If subtracting a PitchInterval, returns a new lower Pitch.
+  -- @function Pitch:__sub
+  -- @tparam Pitch self
+  -- @tparam Pitch|PitchInterval other A Pitch or PitchInterval
+  -- @treturn PitchInterval|Pitch PitchInterval (if Pitch) or Pitch (if PitchInterval)
+  -- @usage
+  -- local c4 = Pitch.c4
+  -- local e4 = Pitch.e4
+  -- local interval = e4 - c4  -- major third
+  -- local a3 = c4 - PitchInterval.minor_third
   __sub = function(self, other)
     self, other = llx.metamethod_args(Pitch, self, other)
-    -- check_arguments{self=Pitch, other=Union{Pitch,PitchInterval}}
     if isinstance(other, Pitch) then
       local self_pitch_class_octave = (self.pitch_class.index - 1) + self.octave * 7
       local other_pitch_class_octave = (other.pitch_class.index - 1) + other.octave * 7
@@ -115,6 +191,10 @@ Pitch = class 'Pitch' {
     end
   end,
 
+  --- Formats the pitch for the tostringf system.
+  -- @function Pitch:__tostringf
+  -- @tparam Pitch self
+  -- @tparam StringFormatter formatter The StringFormatter to use
   __tostringf = function(self, formatter)
     if lowest_pitch_indices[PitchClass.A] <= tointeger(self)
         and tointeger(self) < 128
@@ -127,38 +207,27 @@ Pitch = class 'Pitch' {
       elseif self.accidentals == Accidental.sharp then
         accidental = 'sharp'
       end
-      -- formatter:insert(tostring(self))
       formatter:module_class_field(
-        'midi', 'Pitch',
+        'musica', 'Pitch',
         pitch_class_name .. accidental .. tostring(self.octave))
     end
 
-    local accidental_string
-    if self.accidentals then
-      local coeffecient = math.abs(self.accidentals)
-      local coeffecient_string
-      if coeffecient > 1 then
-        coeffecient_string = string.format('%s * ', coeffecient)
-      else
-        coeffecient_string = ''
-      end
-      accidental_string = string.format(
-          ', accidentals=%s%s', coeffecient_string,
-          self.accidentals > 0 and 'Accidental.sharp' or 'Accidental.flat')
-    else
-      accidental_string = ''
-    end
     formatter:table_cons{'musica', 'Pitch'} {
-      {pitch_class=self.pitch_class},
-      {octave=self.octave .. accidental_string},
+      {'pitch_class', self.pitch_class},
+      {'octave', self.octave},
+      {'accidentals', self.accidentals}
     }
   end,
 
+  --- Returns a string representation of the pitch.
+  -- @return String like "Pitch.c4" or "Pitch.fsharp3"
   __tostring = function(self)
     return tostringf(self, styles.abbrev)
   end,
 }
 
+-- Generate named pitch constants (Pitch.c4, Pitch.csharp4, etc.)
+-- for all pitches in the MIDI range (0-127).
 local current_pitch = lowest_pitch_indices[PitchClass.A]
 local current_octave = 0
 local accidental_args = {

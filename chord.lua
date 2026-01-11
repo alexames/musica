@@ -1,5 +1,11 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
+--- Chord representation and operations.
+-- A Chord consists of a root pitch and a quality (the pattern of intervals).
+-- Chords can be constructed from explicit pitches or from a root and quality.
+-- Supports inversions, arpeggiation, and pitch extraction.
+-- @module musica.chord
+
 local llx = require 'llx'
 local figure = require 'musica.figure'
 local note = require 'musica.note'
@@ -25,10 +31,12 @@ local Optional = llx.Optional
 local Pitch = pitch.Pitch
 local PitchInterval = pitch_interval.PitchInterval
 local Quality = quality.Quality
+local range = llx.functional.range
 local Schema = llx.Schema
 local Table = llx.Table
 local Union = llx.Union
 
+--- Schema for constructing a chord from explicit pitches.
 local ChordByPitches = Schema{
   __name='ChordByPitches',
   type=Table,
@@ -41,6 +49,7 @@ local ChordByPitches = Schema{
   required={'pitches'},
 }
 
+--- Schema for constructing a chord from root and quality.
 local ChordByRootQuality = Schema{
   __name='ChordByRootQuality',
   type=Table,
@@ -51,12 +60,28 @@ local ChordByRootQuality = Schema{
   required={'root', 'quality'},
 }
 
+--- Combined schema for chord construction arguments.
 local ChordArgs = Schema{
   __name='ChordArgs',
   type=Union{ChordByPitches, ChordByRootQuality},
 }
 
+--- Represents a musical chord.
+-- A chord is defined by its root pitch and quality (the pattern of intervals
+-- that define the chord type, e.g., major, minor, diminished).
+-- @type Chord
 Chord = class 'Chord' {
+  --- Creates a new Chord.
+  -- Can be constructed either from a list of pitches or from a root and quality.
+  -- @function Chord:__init
+  -- @tparam Chord self
+  -- @tparam table args Construction arguments
+  -- @tparam[opt] List args.pitches List of Pitch objects (derives root and quality)
+  -- @tparam[opt] Pitch args.root Root Pitch of the chord
+  -- @tparam[opt] Quality args.quality Quality defining the chord type (default: major)
+  -- @usage
+  -- local c_major = Chord{root=Pitch.c4, quality=Quality.major}
+  -- local from_pitches = Chord{pitches=List{Pitch.c4, Pitch.e4, Pitch.g4}}
   __init = function(self, args)
     check_arguments{self=Chord, args=ChordArgs}
     if args.pitches then
@@ -68,21 +93,35 @@ Chord = class 'Chord' {
     end
   end,
 
+  --- Gets all pitches in the chord.
+  -- @return List of Pitch objects
   get_pitches = function(self)
     check_arguments{self=Chord}
     return self:to_pitches(range(0, #self-1))
   end,
 
+  --- Gets the chord's quality.
+  -- @return Quality object
   get_quality = function(self)
     check_arguments{self=Chord}
     return self.quality
   end,
 
+  --- Converts a chord index to a pitch.
+  -- @function Chord:to_pitch
+  -- @tparam Chord self
+  -- @tparam number chord_index Zero-based index into the chord
+  -- @treturn Pitch Pitch at that index
   to_pitch = function(self, chord_index)
     check_arguments{self=Chord, chord_index=Integer}
     return self.root + self.quality[chord_index + 1]
   end,
 
+  --- Converts multiple chord indices to pitches.
+  -- @function Chord:to_pitches
+  -- @tparam Chord self
+  -- @tparam List scale_indices List of zero-based indices
+  -- @treturn List List of Pitch objects
   to_pitches = function(self, scale_indices)
     check_arguments{self=Chord,
                     scale_indices=Schema{type=List,
@@ -92,6 +131,13 @@ Chord = class 'Chord' {
     end, scale_indices)
   end,
 
+  --- Gets a pitch at an extended index (wrapping through octaves).
+  -- Indices beyond the chord size wrap around with octave transposition.
+  -- @function Chord:to_extended_pitch
+  -- @tparam Chord self
+  -- @tparam number chord_index The extended index
+  -- @tparam[opt] PitchInterval extension_interval Interval for octave extension (default: octave)
+  -- @treturn Pitch Pitch at the extended index
   to_extended_pitch = function(self, chord_index, extension_interval)
     check_arguments{self=Chord,
                     chord_index=Integer,
@@ -102,6 +148,12 @@ Chord = class 'Chord' {
                                            extension_interval)
   end,
 
+  --- Converts multiple extended indices to pitches.
+  -- @function Chord:to_extended_pitches
+  -- @tparam Chord self
+  -- @tparam List chord_indices List of extended indices
+  -- @tparam[opt] PitchInterval extension_interval Interval for octave extension (default: octave)
+  -- @treturn List List of Pitch objects
   to_extended_pitches = function(self, chord_indices, extension_interval)
     check_arguments{self=Chord,
                     chord_indices=Schema{type=Any, items={type=Integer}},
@@ -112,12 +164,21 @@ Chord = class 'Chord' {
     end, chord_indices)
   end,
 
+  --- Creates an inversion of the chord.
+  -- An inversion moves the lowest n notes up by an octave.
+  -- @function Chord:inversion
+  -- @tparam Chord self
+  -- @tparam number n The inversion number (0 = root position, 1 = first inversion, etc.)
+  -- @tparam[opt] PitchInterval octave_interval Interval for octave (default: PitchInterval.octave)
+  -- @treturn Chord New Chord in the specified inversion
+  -- @usage
+  -- local c_major = Chord{root=Pitch.c4, quality=Quality.major}
+  -- local first_inv = c_major:inversion(1)  -- E in bass
   inversion = function(self, n, octave_interval)
     check_arguments{self=Chord,
                     n=Integer,
                     octave_interval=Optional{Integer}}
     octave_interval = octave_interval or PitchInterval.octave
-    -- Short circuit if there is nothing to be done.
     if n == 0 then
       return self
     end
@@ -133,16 +194,33 @@ Chord = class 'Chord' {
                  quality=Quality{pitch_intervals=inverted_intervals}}
   end,
 
+  --- Checks if the chord contains a specific pitch.
+  -- @function Chord:contains
+  -- @tparam Chord self
+  -- @tparam Pitch pitch The Pitch to check
+  -- @treturn boolean true if the chord contains the pitch
   contains = function(self, pitch)
     check_arguments{self=Chord, pitch=Pitch}
     return self:get_pitches():find(pitch) ~= nil
   end,
 
+  --- Checks equality of two chords.
+  -- @function Chord:__eq
+  -- @tparam Chord self
+  -- @tparam Chord other Another Chord
+  -- @treturn boolean true if root and quality are equal
   __eq = function(self, other)
     check_arguments{self=Chord, other=Chord}
     return self.root == other.root and self.quality == other.quality
   end,
 
+  --- Combines chords or adds a bass note (slash chord).
+  -- @function Chord:__div
+  -- @tparam Chord self
+  -- @tparam Pitch|Chord other A Pitch (for slash chord) or another Chord
+  -- @treturn Chord New Chord combining all pitches
+  -- @usage
+  -- local c_over_g = c_major / Pitch.g3  -- C/G slash chord
   __div = function(self, other)
     check_arguments{self=Chord, other=Union{Pitch,Chord}}
     local other_pitches
@@ -158,21 +236,43 @@ Chord = class 'Chord' {
     return Chord{pitches=pitches}
   end,
 
+  --- Returns the number of notes in the chord.
+  -- @return Number of pitches
   __len = function(self)
     check_arguments{self=Chord}
     return #self.quality
   end,
 
+  --- Allows indexing the chord to get pitches.
+  -- @param index Zero-based index
+  -- @return Pitch at that index
   __index = multi_index(function(self, index)
     return self:to_pitch(index)
   end),
 
+  --- Returns a string representation of the chord.
+  -- @return String like "Chord{root=Pitch.c4, quality=Quality.major}"
   __tostring = function(self)
     check_arguments{self=Chord}
     return string.format('Chord{root=%s, quality=%s}', self.root, self.quality)
   end,
 }
 
+--- Creates an arpeggiated figure from a chord.
+-- Generates a sequence of notes playing the chord tones in order.
+-- @param args Arpeggiation parameters
+-- @param args.chord The Chord to arpeggiate
+-- @param args.duration Note duration (default: 1.0)
+-- @param args.time_step Time between notes (default: same as duration)
+-- @param args.volume Note volume
+-- @param args.index_pattern Custom pattern of chord indices
+-- @param args.index_pattern_fn Function to generate index pattern
+-- @param args.count Number of notes if using pattern function
+-- @param args.figure_duration Total duration of the figure
+-- @param args.extension_interval Interval for extending beyond chord size
+-- @return Figure containing the arpeggiated notes
+-- @usage
+-- local arp = arpeggiate{chord=c_major, duration=0.25, time_step=0.25}
 function arpeggiate(args)
   check_arguments{
     args=Schema{
@@ -202,7 +302,6 @@ function arpeggiate(args)
   local count
   if index_pattern then
     chord_indices = index_pattern
-    -- count = args.count or #chord_indices
   else
     local index_pattern_fn = args.index_pattern_fn or range
     count = args.count or #chord
@@ -226,23 +325,5 @@ function arpeggiate(args)
   end
   return Figure{duration=figure_duration, notes=notes}
 end
-
--- nearest_inversionchord = function, tonic):
---   scale_indices = []
---   for i in interleave(count(1, 1), count(-1, -1)):
---     scale_index = tonic + i
---     if scale_index in chord:
---       scale_indices.append(scale_index)
---     if #scale_indices == #chord.scale_indices:
---       break
---   return Chord(chord.scale, chord.index_offset, scale_indices)
-
-
--- modulo_scale_indiceschord = function, lower_bound):
---   # upper bound == implied to be lower_bound + octave
---   octave = #chord.scale.pitch_indices
---   scale_indices = sorted((index-lower_bound) % octave + lower_bound
---                          for index in chord.scale_indices)
---   return Chord(chord.scale, scale_indices[0], indices_to_intervals(scale_indices))
 
 return _M

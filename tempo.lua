@@ -1,5 +1,9 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
+--- Tempo representation and operations.
+-- Provides utilities for working with musical tempo markings and BPM.
+-- @module musica.tempo
+
 local llx = require 'llx'
 
 local _ENV, _M = llx.environment.create_module_environment()
@@ -24,10 +28,13 @@ local tempo_markings = {
   prestissimo = {min = 200, max = 240, typical = 220},
 }
 
---- Tempo class representing musical tempo
+--- Tempo class representing musical tempo.
+-- @type Tempo
 Tempo = class 'Tempo' {
-  --- Constructor
-  -- @param args Table with 'bpm' (number) or 'marking' (string)
+  --- Constructor.
+  -- @function Tempo:__init
+  -- @tparam Tempo self
+  -- @tparam table|number args Table with 'bpm' (number) or 'marking' (string), or just a number for BPM
   __init = function(self, args)
     if type(args) == 'number' then
       -- Allow Tempo(120) shorthand
@@ -71,9 +78,11 @@ Tempo = class 'Tempo' {
     end
   end,
 
-  --- Check if BPM is within range for a tempo marking
-  -- @param marking Tempo marking name
-  -- @return true if BPM is in range
+  --- Check if BPM is within range for a tempo marking.
+  -- @function Tempo:is_in_range
+  -- @tparam Tempo self
+  -- @tparam string marking Tempo marking name
+  -- @treturn boolean true if BPM is in range
   is_in_range = function(self, marking)
     local marking_lower = marking:lower()
     local marking_data = tempo_markings[marking_lower]

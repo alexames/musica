@@ -1,15 +1,22 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
+--- Time signature representation and operations.
+-- Provides utilities for working with musical time signatures.
+-- @module musica.time_signature
+
 local llx = require 'llx'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
 local class = llx.class
 
---- TimeSignature class representing musical time signature
+--- TimeSignature class representing musical time signature.
+-- @type TimeSignature
 TimeSignature = class 'TimeSignature' {
-  --- Constructor
-  -- @param args Table with 'numerator' and 'denominator'
+  --- Constructor.
+  -- @function TimeSignature:__init
+  -- @tparam TimeSignature self
+  -- @tparam table args Table with 'numerator' and 'denominator'
   __init = function(self, args)
     if type(args) == 'table' and args.numerator and args.denominator then
       self.numerator = args.numerator

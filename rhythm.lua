@@ -1,5 +1,9 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
+--- Rhythm representation and operations.
+-- Provides utilities for working with rhythmic patterns and note durations.
+-- @module musica.rhythm
+
 local llx = require 'llx'
 
 local _ENV, _M = llx.environment.create_module_environment()
@@ -7,10 +11,13 @@ local _ENV, _M = llx.environment.create_module_environment()
 local class = llx.class
 local List = llx.List
 
---- Rhythm class representing a sequence of note durations
+--- Rhythm class representing a sequence of note durations.
+-- @type Rhythm
 Rhythm = class 'Rhythm' {
-  --- Constructor
-  -- @param args Table with 'durations' (list of numbers)
+  --- Constructor.
+  -- @function Rhythm:__init
+  -- @tparam Rhythm self
+  -- @tparam table args Table with 'durations' (list of numbers)
   __init = function(self, args)
     if type(args) == 'table' and args.durations then
       self.durations = List(args.durations)
@@ -32,9 +39,11 @@ Rhythm = class 'Rhythm' {
     return total
   end,
 
-  --- Augment rhythm (multiply all durations by factor)
-  -- @param factor Multiplication factor
-  -- @return New Rhythm with augmented durations
+  --- Augment rhythm (multiply all durations by factor).
+  -- @function Rhythm:augment
+  -- @tparam Rhythm self
+  -- @tparam number factor Multiplication factor
+  -- @treturn Rhythm New Rhythm with augmented durations
   augment = function(self, factor)
     local new_durations = List{}
     for _, duration in ipairs(self.durations) do
@@ -43,16 +52,20 @@ Rhythm = class 'Rhythm' {
     return Rhythm{durations = new_durations}
   end,
 
-  --- Diminish rhythm (divide all durations by factor)
-  -- @param factor Division factor
-  -- @return New Rhythm with diminished durations
+  --- Diminish rhythm (divide all durations by factor).
+  -- @function Rhythm:diminish
+  -- @tparam Rhythm self
+  -- @tparam number factor Division factor
+  -- @treturn Rhythm New Rhythm with diminished durations
   diminish = function(self, factor)
     return self:augment(1.0 / factor)
   end,
 
-  --- Repeat rhythm n times
-  -- @param n Number of repetitions
-  -- @return New Rhythm with repeated pattern
+  --- Repeat rhythm n times.
+  -- @function Rhythm:repeat_pattern
+  -- @tparam Rhythm self
+  -- @tparam number n Number of repetitions
+  -- @treturn Rhythm New Rhythm with repeated pattern
   repeat_pattern = function(self, n)
     local new_durations = List{}
     for i = 1, n do
