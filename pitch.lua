@@ -210,6 +210,7 @@ Pitch = class 'Pitch' {
       formatter:module_class_field(
         'musica', 'Pitch',
         pitch_class_name .. accidental .. tostring(self.octave))
+        return
     end
 
     formatter:table_cons{'musica', 'Pitch'} {

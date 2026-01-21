@@ -14,10 +14,11 @@ local tostringf = tostringf_module.tostringf
 local styles = tostringf_module.styles
 
 FigureInstance = class 'FigureInstance' {
-  __init = function(self, time, figure)
+  __init = function(self, args)
     -- check_arguments{self=FigureInstance, time=Number, figure=Figure}
-    self.time = time
-    self.figure = figure
+
+    self.time = args and args.time or 0
+    self.figure = args and args.figure
   end,
 
   time_adjusted_notes = function(self)
@@ -41,14 +42,14 @@ FigureInstance = class 'FigureInstance' {
   end,
 
   __tostring = function(self)
-    return string.format('FigureInstance(%s, %s)', self.time, self.figure)
+    return tostringf(self, styles.abbrev)
   end,
 }
 
 Channel = class 'Channel' {
-  __init = function(self, instrument)
-    self.instrument = instrument
-    self.figure_instances = llx.List{}
+  __init = function(self, args)
+    self.instrument = args.instrument
+    self.figure_instances = args.figure_instances or llx.List{}
   end,
 
   __tostringf = function(self, formatter)

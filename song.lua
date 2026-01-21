@@ -5,7 +5,7 @@ local chord = require 'musica.chord'
 local figure = require 'musica.figure'
 local llx = require 'llx'
 local meter = require 'musica.meter'
-local midi = require 'midi'
+local midi = require 'lua-midi'
 local note = require 'musica.note'
 local pitch = require 'musica.pitch'
 local tostringf_module = require 'llx.tostringf'
@@ -61,21 +61,29 @@ Song = class 'Song' {
           -- Maybe we should have an option to quantize this.
           note.duration = (time_in_ticks / midi_file.ticks) - note.time
         elseif isinstance(event, midi.event.NoteBeginEvent) then
-          local note = Note{
-            pitch=Pitch{midi_index=event.note_number},
-            time=time_in_ticks / midi_file.ticks,
-            duration=nil, -- Unknown until NoteEndEvent
-            volume=event.velocity / MIDI_VOLUME_MAX,
-          }
-          unfinished_notes[event.note_number] = note
-          local channel = instrument_channel_map[current_instrument]
-          if not channel then
-            channel = self:make_channel(current_instrument)
-            channel.figure_instances:insert(FigureInstance(0, Figure{}))
-            instrument_channel_map[current_instrument] = channel
+          if event.velocity == 0 then
+            -- Some MIDI files use NoteBeginEvent with velocity 0 as NoteEndEvent
+            local note = assert(
+              unfinished_notes[event.note_number],
+              'encountered NoteBeginEvent with velocity 0 without corresponding NoteBeginEvent')
+            note.duration = (time_in_ticks / midi_file.ticks) - note.time
+          else
+            local note = Note{
+              pitch=Pitch{midi_index=event.note_number},
+              time=time_in_ticks / midi_file.ticks,
+              duration=nil, -- Unknown until NoteEndEvent
+              volume=event.velocity / MIDI_VOLUME_MAX,
+            }
+            unfinished_notes[event.note_number] = note
+            local channel = instrument_channel_map[current_instrument]
+            if not channel then
+              channel = self:make_channel(current_instrument)
+              channel.figure_instances:insert(FigureInstance{time=0, figure=Figure{}})
+              instrument_channel_map[current_instrument] = channel
+            end
+            local figure = assert(channel.figure_instances[1].figure)
+            figure.notes:insert(note)
           end
-          local figure = assert(channel.figure_instances[1].figure)
-          figure.notes:insert(note)
         elseif isinstance(event, midi.event.VelocityChangeEvent) then
           -- Currently not supported
         elseif isinstance(event, midi.event.ControllerChangeEvent) then
@@ -95,7 +103,7 @@ Song = class 'Song' {
   end,
 
   make_channel = function(self, instrument)
-    local channel = Channel(instrument)
+    local channel = Channel{instrument=instrument}
     self.channels:insert(channel)
     return channel
   end,
