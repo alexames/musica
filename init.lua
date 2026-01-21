@@ -37,4 +37,5 @@ return require 'llx.flatten_submodules' { --        |
   require 'musica.spiral',           -- No     | No
   require 'musica.tempo',            -- No     | No
   require 'musica.util',             -- No     | No
+  require 'musica.generation',       -- No     | No
 }
