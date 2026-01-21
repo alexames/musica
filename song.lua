@@ -3,9 +3,10 @@
 local channel = require 'musica.channel'
 local chord = require 'musica.chord'
 local figure = require 'musica.figure'
+local lilypond = require 'musica.lilypond'
 local llx = require 'llx'
 local meter = require 'musica.meter'
-local midi = require 'midi'
+local midi = require 'lua-midi'
 local note = require 'musica.note'
 local pitch = require 'musica.pitch'
 local tostringf_module = require 'llx.tostringf'
@@ -41,6 +42,17 @@ local MIDI_VOLUME_MAX <const> = 127.0
 Song = class 'Song' {
   __init = function(self, args)
     self.channels = args and args.channels or llx.List{}
+    -- Metadata for sheet music
+    self.title = args and args.title or nil
+    self.subtitle = args and args.subtitle or nil
+    self.composer = args and args.composer or nil
+    self.arranger = args and args.arranger or nil
+    self.opus = args and args.opus or nil
+    self.dedication = args and args.dedication or nil
+    self.copyright = args and args.copyright or nil
+    self.tempo = args and args.tempo or nil
+    self.meter = args and args.meter or nil
+    self.key = args and args.key or nil
     if args and args.midi_file then
       self:_song_from_midi_file(args.midi_file)
     end
@@ -61,21 +73,39 @@ Song = class 'Song' {
           -- Maybe we should have an option to quantize this.
           note.duration = (time_in_ticks / midi_file.ticks) - note.time
         elseif isinstance(event, midi.event.NoteBeginEvent) then
-          local note = Note{
-            pitch=Pitch{midi_index=event.note_number},
-            time=time_in_ticks / midi_file.ticks,
-            duration=nil, -- Unknown until NoteEndEvent
-            volume=event.velocity / MIDI_VOLUME_MAX,
-          }
-          unfinished_notes[event.note_number] = note
-          local channel = instrument_channel_map[current_instrument]
-          if not channel then
-            channel = self:make_channel(current_instrument)
-            channel.figure_instances:insert(FigureInstance(0, Figure{}))
-            instrument_channel_map[current_instrument] = channel
+          -- Some MIDI files use NoteBeginEvent with velocity 0 as note-off
+          if event.velocity == 0 then
+            local note = unfinished_notes[event.note_number]
+            if note then
+              note.duration = (time_in_ticks / midi_file.ticks) - note.time
+              unfinished_notes[event.note_number] = nil
+            end
+          else
+            -- If there's already an unfinished note with this pitch, finish it first
+            -- (handles overlapping notes / re-triggers)
+            local existing = unfinished_notes[event.note_number]
+            if existing then
+              existing.duration = (time_in_ticks / midi_file.ticks) - existing.time
+              if existing.duration < 0.0625 then
+                existing.duration = 0.0625  -- Minimum 64th note duration
+              end
+            end
+            local note = Note{
+              pitch=Pitch{midi_index=event.note_number},
+              time=time_in_ticks / midi_file.ticks,
+              duration=nil, -- Unknown until NoteEndEvent
+              volume=event.velocity / MIDI_VOLUME_MAX,
+            }
+            unfinished_notes[event.note_number] = note
+            local channel = instrument_channel_map[current_instrument]
+            if not channel then
+              channel = self:make_channel(current_instrument)
+              channel.figure_instances:insert(FigureInstance(0, Figure{}))
+              instrument_channel_map[current_instrument] = channel
+            end
+            local figure = assert(channel.figure_instances[1].figure)
+            figure.notes:insert(note)
           end
-          local figure = assert(channel.figure_instances[1].figure)
-          figure.notes:insert(note)
         elseif isinstance(event, midi.event.VelocityChangeEvent) then
           -- Currently not supported
         elseif isinstance(event, midi.event.ControllerChangeEvent) then
@@ -89,6 +119,16 @@ Song = class 'Song' {
         elseif isinstance(event, midi.event.MetaEvent) then
           -- Currently not supported
         else
+        end
+      end
+      -- Handle any notes that never received a note-off event
+      -- Give them a duration extending to the end of the track
+      local track_end_time = time_in_ticks / midi_file.ticks
+      for note_number, note in pairs(unfinished_notes) do
+        note.duration = track_end_time - note.time
+        -- Ensure minimum duration of a 64th note to avoid zero-duration notes
+        if note.duration < 0.0625 then
+          note.duration = 0.0625
         end
       end
     end
@@ -147,6 +187,18 @@ Song = class 'Song' {
 
   __tostring = function(self)
     return tostringf(self, styles.abbrev)
+  end,
+
+  --- Convert the Song to LilyPond notation for sheet music engraving.
+  -- Returns a table containing LilyPond engravings for the conductor's score
+  -- and each individual part.
+  -- @treturn table Map of part names to LilyPond content strings
+  -- @usage
+  -- local engravings = song:tolilypond()
+  -- -- engravings["Conductor"] contains the full score with all parts
+  -- -- engravings["Flute I"] contains just the first flute part
+  tolilypond = function(self)
+    return lilypond.tolilypond(self)
   end,
 }
 

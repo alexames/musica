@@ -18,6 +18,7 @@ return require 'llx.flatten_submodules' { --        |
   require 'musica.figure',           -- Yes    | No
   require 'musica.instrument',       -- No     | No
   require 'musica.interval_quality', -- No     | No
+  require 'musica.lilypond',         -- No     | No
   require 'musica.meter',            -- No     | No
   require 'musica.mode',             -- Yes    | No
   require 'musica.modes',            -- No     | No

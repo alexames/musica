@@ -46,9 +46,15 @@ FigureInstance = class 'FigureInstance' {
 }
 
 Channel = class 'Channel' {
-  __init = function(self, instrument)
+  __init = function(self, instrument, args)
     self.instrument = instrument
     self.figure_instances = llx.List{}
+    -- Metadata for sheet music
+    args = args or {}
+    self.part_name = args.part_name or nil
+    self.short_name = args.short_name or nil
+    self.clef = args.clef or nil  -- e.g., 'treble', 'bass', 'alto', 'tenor'
+    self.transposition = args.transposition or nil  -- For transposing instruments
   end,
 
   __tostringf = function(self, formatter)
