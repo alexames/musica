@@ -29,7 +29,8 @@ jobs:
     - name: Set up Lua package path
       run: |
         eval "$(luarocks path --lua-version 5.4)"
-        echo "LUA_PATH=$LUA_PATH;$GITHUB_WORKSPACE/?.lua;$GITHUB_WORKSPACE/?/init.lua;;" >> $GITHUB_ENV
+        PARENT_DIR=$(dirname "$GITHUB_WORKSPACE")
+        echo "LUA_PATH=$PARENT_DIR/?.lua;$PARENT_DIR/?/init.lua;$LUA_PATH;;" >> $GITHUB_ENV
         echo "LUA_CPATH=$LUA_CPATH" >> $GITHUB_ENV
 
     - name: Run all tests
