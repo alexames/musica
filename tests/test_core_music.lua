@@ -1,7 +1,7 @@
 -- test_core_music.lua
 -- Unit tests for core music modules (tempo, time_signature, rhythm, articulation)
 
-local unit = require 'unit'
+local unit = require 'llx.unit'
 
 local Tempo = require 'musica.tempo'.Tempo
 local TimeSignature = require 'musica.time_signature'.TimeSignature

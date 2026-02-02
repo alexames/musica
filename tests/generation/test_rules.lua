@@ -15,7 +15,7 @@ package.cpath = package.cpath .. ";C:/Users/Alexa/Programming/lua-z3/Build/Sourc
 -- Require z3 before llx to avoid strict mode conflicts with z3's global registration
 local z3 = require 'z3'
 
-local unit = require 'unit'
+local unit = require 'llx.unit'
 local llx = require 'llx'
 
 -- Load individual modules to avoid full musica import overhead

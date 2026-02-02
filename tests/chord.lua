@@ -1,4 +1,4 @@
-local unit = require 'unit'
+local unit = require 'llx.unit'
 require 'musica.chord'
 require 'musica.pitch'
 require 'musica.quality'

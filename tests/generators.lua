@@ -1,4 +1,4 @@
-require 'unit'
+require 'llx.unit'
 require 'musica.generators'
 
 _ENV = unit.create_test_env(_ENV)
