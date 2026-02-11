@@ -53,7 +53,7 @@ Quality = llx.class 'Quality' {
       end
     elseif pitches then
       pitch_intervals = llx.List{}
-      pitches:sort()
+      table.sort(pitches)
       local first_pitch = pitches[1]
       for i, pitch in ipairs(pitches) do
         pitch_intervals[i] = pitch - first_pitch
@@ -75,22 +75,16 @@ Quality = llx.class 'Quality' {
   end;
 
   __tostring = function(self)
-    if self == Quality.major then
-      return "Quality.major"
-    elseif self == Quality.minor then
-      return "Quality.minor"
-    elseif self == Quality.augmented then
-      return "Quality.augmented"
-    elseif self == Quality.diminished then
-      return "Quality.diminished"
+    if self.name then
+      return string.format("Quality.%s", self.name)
     end
     return string.format("Quality{pitch_intervals=%s}", self.pitch_intervals)
   end;
 }
 
-Quality.major = Quality{pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.perfect_fifth}}
-Quality.minor = Quality{pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.perfect_fifth}}
-Quality.augmented = Quality{pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.augmented_fifth}}
-Quality.diminished = Quality{pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.diminished_fifth}}
+Quality.major = Quality{name='major', pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.perfect_fifth}}
+Quality.minor = Quality{name='minor', pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.perfect_fifth}}
+Quality.augmented = Quality{name='augmented', pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.augmented_fifth}}
+Quality.diminished = Quality{name='diminished', pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.diminished_fifth}}
 
 return _M
