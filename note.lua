@@ -26,22 +26,29 @@ local NoteArgs = llx.Schema{
 Note = class 'Note' {
   --- Initializes a Note.
   __init = function(self, arg)
-    -- llx.check_arguments{self=Note, arg=NoteArgs}
     self.pitch = arg.pitch
     self.time = arg.time
     self.duration = arg.duration
     self.volume = arg.volume or 1.0
   end,
 
-  --- Adjust the duration so that the note finishes at the given time.
+  --- Returns a new Note whose duration ends at the given finish time.
+  -- @tparam Note self
+  -- @tparam number finish The desired finish time
+  -- @treturn Note A new Note with adjusted duration
+  with_finish = function(self, finish)
+    return Note{pitch=self.pitch, time=self.time,
+                duration=finish - self.time, volume=self.volume}
+  end,
+
+  --- Mutates the duration so that the note finishes at the given time.
+  -- Prefer with_finish for new code; this mutates in place.
   set_finish = function(self, finish)
-    -- llx.check_arguments{self=Note, finish=Number}
     self.duration = finish - self.time
   end,
 
   --- Returns the time at which the note terminates.
   finish = function(self)
-    -- llx.check_arguments{self=Note}
     return self.time + self.duration
   end,
 
@@ -52,6 +59,20 @@ Note = class 'Note' {
            and self.time == other.time
            and self.duration == other.duration
            and self.volume == other.volume
+  end,
+
+  --- Less-than comparison.
+  -- Ordered by time first, then by pitch (MIDI number).
+  __lt = function(self, other)
+    if self.time ~= other.time then
+      return self.time < other.time
+    end
+    return self.pitch < other.pitch
+  end,
+
+  --- Less-than-or-equal comparison.
+  __le = function(self, other)
+    return self == other or self < other
   end,
   
   __tostringf = function(self, formatter)
