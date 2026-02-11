@@ -204,6 +204,8 @@ Pitch = class 'Pitch' {
       local pitch_index = tointeger(self) - tointeger(other)
       return Pitch{pitch_class=pitch_class,
                    pitch_index=pitch_index}
+    else
+      error('Pitch.__sub: expected Pitch or PitchInterval, got ' .. type(other), 2)
     end
   end,
 
