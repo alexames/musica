@@ -46,26 +46,6 @@ function multi_index(callback)
   end
 end
 
---- Iterator for zero-based indexing.
--- @param t The table to iterate
--- @return Iterator function, table, and starting index (-1)
-function ipairs0(t)
-  local f, t, i = ipairs(t)
-  return f, t, -1
-end
-
--- function interleave(...)
---   return (val for pair in zip(*lists)
---               for val in pair)
--- end
-
-
--- function zip_tuple(*args)
---   return [t for t in zip(*args)]
--- end
-
--- Music utilities
-
 --- Converts a list of intervals to cumulative indices.
 -- @param intervals List of interval values
 -- @return List of cumulative indices
@@ -80,10 +60,6 @@ function intervals_to_indices(intervals)
   return indices
 end
 
--- function indices_to_intervals(indices)
---   return [int(i2) - int(i1) for i1, i2 in by_pairs(indices)]
-
-
 --- Gets an extended index that wraps around with interval offset.
 -- @param index The index to look up
 -- @param indices The list of base indices
@@ -94,9 +70,5 @@ function extended_index(index, indices, interval)
   local extension_offset = interval * extension_index
   return indices[index % #indices + 1] + extension_offset
 end
-
--- function extended_indices(indices, interval)
---   return [extended_index(index, indices, interval)
---           for index in indices]
 
 return _M

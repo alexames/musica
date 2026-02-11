@@ -34,7 +34,11 @@ Spiral = class 'Spiral' {
   end),
 
   __tostring = function(self)
-    return "Spiral{".. table.concat(self._values, ', ') .. '}'
+    local strs = {}
+    for i, v in ipairs(self._values) do
+      strs[i] = tostring(v)
+    end
+    return "Spiral{".. table.concat(strs, ', ') .. '}'
   end,
 }
 
