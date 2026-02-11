@@ -325,6 +325,32 @@ describe('PitchIntervalTest', function()
     expect(tovalue(tostring(double_diminished_fifth))).to.be_equal_to(
       double_diminished_fifth)
   end)
+
+  -- Ordering tests
+  it('should order minor third less than major third', function()
+    expect(PitchInterval.minor_third < PitchInterval.major_third).to.be_truthy()
+  end)
+
+  it('should order unison less than minor second', function()
+    expect(PitchInterval.unison < PitchInterval.minor_second).to.be_truthy()
+  end)
+
+  it('should not order major third less than minor third', function()
+    expect(PitchInterval.major_third < PitchInterval.minor_third).to.be_falsy()
+  end)
+
+  it('should order enharmonic intervals by number: augmented second < minor third', function()
+    -- Both are 3 semitones, but aug 2nd has number=1 < minor 3rd number=2
+    expect(PitchInterval.augmented_second < PitchInterval.minor_third).to.be_truthy()
+  end)
+
+  it('should order minor third less than or equal to major third', function()
+    expect(PitchInterval.minor_third <= PitchInterval.major_third).to.be_truthy()
+  end)
+
+  it('should order unison less than or equal to itself', function()
+    expect(PitchInterval.unison <= PitchInterval.unison).to.be_truthy()
+  end)
 end)
 
 if main_file() then

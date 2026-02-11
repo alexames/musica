@@ -116,6 +116,25 @@ PitchInterval = llx.class 'PitchInterval' {
     return self.number == other.number and self.accidentals == other.accidentals
   end,
 
+  --- Less-than comparison.
+  -- Ordered by semitone value first, then by interval number for
+  -- enharmonic distinctions (e.g., augmented second < minor third).
+  __lt = function(self, other)
+    check_arguments{self=PitchInterval, other=PitchInterval}
+    local self_int = tointeger(self)
+    local other_int = tointeger(other)
+    if self_int ~= other_int then
+      return self_int < other_int
+    end
+    return self.number < other.number
+  end,
+
+  --- Less-than-or-equal comparison.
+  __le = function(self, other)
+    check_arguments{self=PitchInterval, other=PitchInterval}
+    return self == other or self < other
+  end,
+
   __tointeger = function(self)
     check_arguments{self=PitchInterval}
     return self:_number_to_semitones() + self.accidentals
