@@ -32,6 +32,10 @@ FigureInstance = class 'FigureInstance' {
     end, self, 0
   end,
 
+  __eq = function(self, other)
+    return self.time == other.time and self.figure == other.figure
+  end,
+
   __tostringf = function(self, formatter)
     formatter:table_cons 'FigureInstance' {
       {'time', self.time},

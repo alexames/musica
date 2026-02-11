@@ -13,6 +13,15 @@ Ring = llx.class 'Ring' {
     self._values = args
   end,
 
+  __eq = function(self, other)
+    local a, b = self._values, other._values
+    if #a ~= #b then return false end
+    for i = 1, #a do
+      if a[i] ~= b[i] then return false end
+    end
+    return true
+  end,
+
   __index = multi_index(function(self, key)
     local values = self._values
     local length = #values
