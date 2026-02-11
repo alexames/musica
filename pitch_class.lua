@@ -12,6 +12,10 @@ PitchClass = class 'PitchClass' {
     self.index = args.index
   end,
 
+  __eq = function(self, other)
+    return self.index == other.index
+  end,
+
   __tostring = function(self)
     local fmt = 'PitchClass.%s'
     return fmt:format(self.name)

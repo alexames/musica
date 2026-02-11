@@ -92,6 +92,10 @@ Tempo = class 'Tempo' {
     return self.bpm >= marking_data.min and self.bpm <= marking_data.max
   end,
 
+  __eq = function(self, other)
+    return self.bpm == other.bpm
+  end,
+
   __tostring = function(self)
     return self:describe()
   end,

@@ -9,6 +9,7 @@ local multi_index = util.multi_index
 
 Ring = llx.class 'Ring' {
   __init = function(self, args)
+    assert(#args > 0, 'Ring requires a non-empty sequence')
     self._values = args
   end,
 
