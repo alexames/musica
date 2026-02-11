@@ -1,9 +1,23 @@
 local unit = require 'llx.unit'
-require 'llx'
-require 'musica.direction'
-require 'musica.mode'
-require 'musica.pitch'
-require 'musica.scale'
+local llx = require 'llx'
+local direction_module = require 'musica.direction'
+local mode_module = require 'musica.mode'
+require 'musica.modes'
+local pitch_module = require 'musica.pitch'
+local scale_module = require 'musica.scale'
+
+local Direction = direction_module.Direction
+local Mode = mode_module.Mode
+local Pitch = pitch_module.Pitch
+local Scale = scale_module.Scale
+local List = llx.List
+local tovalue = llx.tovalue
+local main_file = llx.main_file
+
+_G.Scale = Scale
+_G.Pitch = Pitch
+_G.Mode = Mode
+_G.List = List
 
 _ENV = unit.create_test_env(_ENV)
 

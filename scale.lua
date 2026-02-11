@@ -63,7 +63,7 @@ Scale = llx.class 'Scale' {
     check_arguments{self=Scale, scale_indices=Table}
     return map(function(scale_index)
       return self:to_pitch(scale_index)
-    end, scale_indices)
+    end, List(scale_indices))
   end,
 
   to_scale_index = function(self, pitch)
@@ -130,7 +130,7 @@ Scale = llx.class 'Scale' {
     elseif isinstance(other, Chord) or isinstance(other, Scale) then
       other_pitch_indices = other:get_pitches()
     elseif isinstance(other, Table) then
-      other_pitch_indices = other
+      other_pitch_indices = List(other)
     end
 
     local function canonicalize(pitch_indices, octave_interval)
