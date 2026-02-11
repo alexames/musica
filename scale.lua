@@ -86,7 +86,7 @@ Scale = llx.class 'Scale' {
   to_scale_indices = function(self, pitches)
     local result = List{}
     for i, pitch in ipairs(pitches) do
-      result[i] = self.to_scale_index(pitch)
+      result[i] = self:to_scale_index(pitch)
     end
     return result
   end,
@@ -128,12 +128,12 @@ Scale = llx.class 'Scale' {
     if isinstance(other, Number) or isinstance(other, Pitch) then
       other_pitch_indices = List{other}
     elseif isinstance(other, Chord) or isinstance(other, Scale) then
-      other_pitch_indices = other.get_pitches()
+      other_pitch_indices = other:get_pitches()
     elseif isinstance(other, Table) then
       other_pitch_indices = other
     end
 
-    function canonicalize(pitch_indices, octave_interval)
+    local function canonicalize(pitch_indices, octave_interval)
       return map(function(pitch_index)
         return tointeger(pitch_index) % tointeger(octave_interval)
       end, pitch_indices)
@@ -172,15 +172,17 @@ function find_chord(args)
   local scale = args.scale
   local quality = args.quality
   local nth = args.nth or 0
-  local direction = args.direction or up
+  local direction = args.direction or Direction.up
   local relative_scale_indices = args.scale_indices or List{0, 2, 4}
+  local max_octaves = args.max_octaves or 10
   local number_found = 0
   -- Search one octave at a time.
   local start = 0
   local finish = direction * #scale
-  while true do
+  local octaves_searched = 0
+  while octaves_searched < max_octaves do
     for i, root_scale_index in range(start, finish, direction) do
-      local absolute_scale_indices = 
+      local absolute_scale_indices =
         map(function(scale_index)
           return scale_index + root_scale_index
         end, relative_scale_indices)
@@ -196,6 +198,7 @@ function find_chord(args)
     end
     start = start + direction * #scale
     finish = finish + direction * #scale
+    octaves_searched = octaves_searched + 1
     -- If after one full octave there have not been any matches,
     -- there won't be any matches going forward either. We should
     -- return nil. If there was at least one match though, we should
@@ -204,6 +207,7 @@ function find_chord(args)
       return nil
     end
   end
+  return nil
 end
 
 return _M
