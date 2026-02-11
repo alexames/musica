@@ -320,9 +320,8 @@ function arpeggiate(args)
   if figure_duration == nil then
     figure_duration = 0
     for i, note in ipairs(notes) do
-      local note_end = note.time + note.duration
-      if note_end > figure_duration then
-        figure_duration = note_end
+      if note:finish() > figure_duration then
+        figure_duration = note:finish()
       end
     end
   end
