@@ -120,22 +120,37 @@ Pitch = class 'Pitch' {
   end,
 
   --- Checks equality of two pitches.
-  -- Pitches are equal if they have the same MIDI note number.
+  -- Pitches are equal if they have the same pitch class, octave, and
+  -- accidentals (i.e., notational equality). For enharmonic equivalence
+  -- (same MIDI number, possibly different spelling), use is_enharmonic.
   -- @function Pitch:__eq
   -- @tparam Pitch self
   -- @tparam Pitch other Another Pitch
-  -- @treturn boolean true if equal
+  -- @treturn boolean true if notationally equal
   __eq = function(self, other)
-    return tointeger(self) == tointeger(other)
+    return self.pitch_class == other.pitch_class
+           and self.octave == other.octave
+           and self.accidentals == other.accidentals
   end,
 
   --- Less-than comparison.
+  -- Ordered by MIDI note number first, then by pitch class index, then
+  -- by accidentals. This gives a total order consistent with __eq:
+  -- enharmonic equivalents (e.g., C#4 and Db4) are ordered deterministically.
   -- @function Pitch:__lt
   -- @tparam Pitch self
   -- @tparam Pitch other Another Pitch
   -- @treturn boolean true if self is lower than other
   __lt = function(self, other)
-    return tointeger(self) < tointeger(other)
+    local self_int = tointeger(self)
+    local other_int = tointeger(other)
+    if self_int ~= other_int then
+      return self_int < other_int
+    end
+    if self.pitch_class.index ~= other.pitch_class.index then
+      return self.pitch_class.index < other.pitch_class.index
+    end
+    return self.accidentals < other.accidentals
   end,
 
   --- Less-than-or-equal comparison.
@@ -144,7 +159,7 @@ Pitch = class 'Pitch' {
   -- @tparam Pitch other Another Pitch
   -- @treturn boolean true if self is lower than or equal to other
   __le = function(self, other)
-    return tointeger(self) <= tointeger(other)
+    return self == other or self < other
   end,
 
   --- Adds a PitchInterval to this pitch.
