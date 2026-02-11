@@ -1,6 +1,13 @@
 local unit = require 'llx.unit'
-require 'llx'
+local llx = require 'llx'
 require 'musica.util'
+local ring_module = require 'musica.ring'
+local spiral_module = require 'musica.spiral'
+
+local Ring = ring_module.Ring
+local Spiral = spiral_module.Spiral
+local List = llx.List
+local main_file = llx.main_file
 
 _ENV = unit.create_test_env(_ENV)
 

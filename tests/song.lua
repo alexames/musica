@@ -1,6 +1,8 @@
 local unit = require 'llx.unit'
-require 'llx'
+local llx = require 'llx'
 require 'musica.song'
+
+local main_file = llx.main_file
 
 _ENV = unit.create_test_env(_ENV)
 

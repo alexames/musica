@@ -1,6 +1,23 @@
 local unit = require 'llx.unit'
-require 'musica.figure'
-require 'musica.note'
+local llx = require 'llx'
+local figure_module = require 'musica.figure'
+local note_module = require 'musica.note'
+local pitch_module = require 'musica.pitch'
+
+local Figure = figure_module.Figure
+local merge = figure_module.merge
+local concatenate = figure_module.concatenate
+local repeat_figure = figure_module.repeat_figure
+local repeat_volta = figure_module.repeat_volta
+local Note = note_module.Note
+local Pitch = pitch_module.Pitch
+local List = llx.List
+local tovalue = llx.tovalue
+local main_file = llx.main_file
+
+_G.Figure = Figure
+_G.Note = Note
+_G.Pitch = Pitch
 
 _ENV = unit.create_test_env(_ENV)
 
