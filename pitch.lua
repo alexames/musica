@@ -31,17 +31,17 @@ local styles = tostringf_module.styles
 --- The octave number for middle C (C4).
 local middle_octave = 4
 
---- MIDI note numbers for octave 0 of each pitch class.
--- Standard MIDI defines middle C (C4) as note 60.
--- Octave numbering starts from C, so C0=12, D0=14, ..., A0=21, B0=23.
+--- Pitch indices for octave 0 of each pitch class.
+-- Uses A-based octave numbering where octave boundaries align with A.
+-- A0=21, B0=23, C0=24, D0=26, E0=28, F0=29, G0=31.
 local lowest_pitch_indices = {
-  [PitchClass.C] = 12,
-  [PitchClass.D] = 14,
-  [PitchClass.E] = 16,
-  [PitchClass.F] = 17,
-  [PitchClass.G] = 19,
   [PitchClass.A] = 21,
   [PitchClass.B] = 23,
+  [PitchClass.C] = 24,
+  [PitchClass.D] = 26,
+  [PitchClass.E] = 28,
+  [PitchClass.F] = 29,
+  [PitchClass.G] = 31,
 }
 
 --- Represents an absolute musical pitch.
@@ -83,8 +83,8 @@ Pitch = class 'Pitch' {
       }
       pitch_index = midi_index
       pitch_class = pitch_classes[midi_index % 12]
-      -- Octave is calculated from C (MIDI 12 = C0)
-      octave = (midi_index - lowest_pitch_indices[PitchClass.C]) // 12
+      -- Octave is calculated from A (A-based octave numbering)
+      octave = (midi_index - lowest_pitch_indices[PitchClass.A]) // 12
     end
     self.pitch_class = pitch_class
     self.octave = octave
@@ -226,6 +226,7 @@ Pitch = class 'Pitch' {
       formatter:module_class_field(
         'musica', 'Pitch',
         pitch_class_name .. accidental .. tostring(self.octave))
+      return
     end
 
     formatter:table_cons{'musica', 'Pitch'} {

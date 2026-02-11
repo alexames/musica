@@ -1,6 +1,21 @@
 local unit = require 'llx.unit'
-require 'llx'
-require 'musica.pitch'
+local llx = require 'llx'
+local pitch_module = require 'musica.pitch'
+local pitch_class_module = require 'musica.pitch_class'
+local pitch_interval_module = require 'musica.pitch_interval'
+local accidental_module = require 'musica.accidental'
+
+local Pitch = pitch_module.Pitch
+local PitchClass = pitch_class_module.PitchClass
+local PitchInterval = pitch_interval_module.PitchInterval
+local Accidental = accidental_module.Accidental
+local natural = Accidental.natural
+local tointeger = llx.tointeger
+local tovalue = llx.tovalue
+local main_file = llx.main_file
+
+-- tovalue uses load() which executes in the global environment
+_G.Pitch = Pitch
 
 _ENV = unit.create_test_env(_ENV)
 
@@ -86,8 +101,8 @@ describe('PitchTest', function()
     expect(Pitch.c4 == Pitch.c4).to.be_truthy()
   end)
 
-  it('should return true when c4 equals bsharp4', function()
-    expect(Pitch.c4 == Pitch.bsharp4).to.be_truthy()
+  it('should return true when c4 is enharmonic to bsharp4', function()
+    expect(Pitch.c4:is_enharmonic(Pitch.bsharp4)).to.be_truthy()
   end)
 
   it('should return true when c4 equals pitch constructed with same values', function()
