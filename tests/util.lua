@@ -91,6 +91,14 @@ describe('RingTest', function()
       List{9, 3, 6, 9, 3, 6, 9, 3, 6})
   end)
 
+  it('should return length of 3 for ring with 3 elements', function()
+    expect(#Ring{3, 6, 9}).to.be_equal_to(3)
+  end)
+
+  it('should return length of 1 for ring with 1 element', function()
+    expect(#Ring{42}).to.be_equal_to(1)
+  end)
+
   it('should be equal when values match', function()
     expect(Ring{3, 6, 9} == Ring{3, 6, 9}).to.be_truthy()
   end)
@@ -223,6 +231,14 @@ describe('SpiralTest', function()
   it('should return list of values for octave list index', function()
     local octave = Spiral{0, 2, 4, 5, 7, 9, 11, 12}
     expect(octave[{0, 2, 4}]).to.be_equal_to(List{0, 4, 7})
+  end)
+
+  it('should return length of 2 for spiral with 3 values', function()
+    expect(#Spiral{0, 3, 5}).to.be_equal_to(2)
+  end)
+
+  it('should return length of 7 for octave spiral', function()
+    expect(#Spiral{0, 2, 4, 5, 7, 9, 11, 12}).to.be_equal_to(7)
   end)
 
   it('should be equal when values match', function()

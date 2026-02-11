@@ -88,6 +88,10 @@ Rhythm = class 'Rhythm' {
 
   --- Check equality of two rhythms.
   -- Rhythms are equal if they have the same sequence of durations.
+  __len = function(self)
+    return #self.durations
+  end,
+
   __eq = function(self, other)
     return self.durations == other.durations
   end,

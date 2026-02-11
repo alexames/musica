@@ -138,6 +138,11 @@ describe('RhythmTests', function()
     expect(#rhythm.durations).to.be_equal_to(4)
   end)
 
+  it('should return length via __len', function()
+    local rhythm = Rhythm{1, 0.5, 0.5, 1}
+    expect(#rhythm).to.be_equal_to(4)
+  end)
+
   it('should calculate total duration correctly', function()
     local rhythm = Rhythm{1, 0.5, 0.5, 1}
     expect(rhythm:total_duration()).to.be_equal_to(3.0)

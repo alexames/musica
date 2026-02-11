@@ -13,6 +13,10 @@ Spiral = class 'Spiral' {
     self._values = args
   end,
 
+  __len = function(self)
+    return #self._values - 1
+  end,
+
   __eq = function(self, other)
     local a, b = self._values, other._values
     if #a ~= #b then return false end
