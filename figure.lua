@@ -8,6 +8,7 @@ local styles = tostringf_module.styles
 
 local _ENV, _M = llx.environment.create_module_environment()
 
+local check_arguments = llx.check_arguments
 local class = llx.class
 local map = llx.functional.map
 local Note = note.Note
@@ -17,13 +18,14 @@ local FigureArgs = llx.Schema{
   type=llx.Table,
   properties={
     duration={type=llx.Number},
-    notes={type=llx.List, items={type=llx.Table}},
-    melody={type=llx.List, items={type=llx.Table}},
+    notes={type=llx.Table, items={type=llx.Table}},
+    melody={type=llx.Table, items={type=llx.Table}},
   },
 }
 
 Figure = class 'Figure' {
   __init = function(self, args)
+    check_arguments{self=Figure, args=FigureArgs}
     self.duration = args.duration
     local notes = args.notes
     local melody = args.melody
