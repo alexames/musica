@@ -9,6 +9,7 @@ local styles = tostringf_module.styles
 local _ENV, _M = llx.environment.create_module_environment()
 
 local class = llx.class
+local map = llx.functional.map
 local Note = note.Note
 
 local FigureArgs = llx.Schema{
@@ -34,17 +35,16 @@ Figure = class 'Figure' {
     elseif melody then
       local time = 0
       for i, note in ipairs(melody) do
-        local new_note = Note(note)
-        new_note.time = time
-        time = time + new_note.duration
-        new_notes[i] = new_note
+        new_notes[i] = Note{pitch=note.pitch, time=time,
+                            duration=note.duration, volume=note.volume}
+        time = time + new_notes[i].duration
       end
     end
     self.notes = new_notes
   end,
 
   apply = function(self, transformation)
-    return Figure{self.duration, notes=map(self.notes, transformation)}
+    return Figure{duration=self.duration, notes=map(transformation, self.notes)}
   end,
 
   __add = function(self, other)
@@ -82,7 +82,8 @@ function merge(figures)
     if duration == nil then
       duration = figure.duration
     elseif duration ~= figure.duration then
-      -- error(Value_error())
+      error('Cannot merge figures with different durations: '
+            .. duration .. ' ~= ' .. figure.duration, 2)
     end
 
     for i, note in ipairs(figure.notes) do
@@ -97,9 +98,8 @@ function concatenate(figures)
   local result = llx.List{}
   for i, figure in ipairs(figures) do
     for j, note in ipairs(figure.notes) do
-      local new_note = Note(note)
-      new_note.time = new_note.time + offset
-      result:insert(new_note)
+      result:insert(Note{pitch=note.pitch, time=note.time + offset,
+                         duration=note.duration, volume=note.volume})
     end
     offset = offset + figure.duration
   end
