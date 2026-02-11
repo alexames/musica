@@ -26,6 +26,14 @@ Ring = llx.class 'Ring' {
     return true
   end,
 
+  __tostring = function(self)
+    local strs = {}
+    for i, v in ipairs(self._values) do
+      strs[i] = tostring(v)
+    end
+    return "Ring{" .. table.concat(strs, ', ') .. '}'
+  end,
+
   __index = multi_index(function(self, key)
     local values = self._values
     local length = #values

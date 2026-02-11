@@ -110,6 +110,10 @@ describe('RingTest', function()
   it('should not be equal when lengths differ', function()
     expect(Ring{3, 6} == Ring{3, 6, 9}).to.be_falsy()
   end)
+
+  it('should convert to string', function()
+    expect(tostring(Ring{3, 6, 9})).to.be_equal_to('Ring{3, 6, 9}')
+  end)
 end)
 
 describe('SpiralTest', function()
