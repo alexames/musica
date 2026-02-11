@@ -133,18 +133,14 @@ Scale = llx.class 'Scale' {
       other_pitch_indices = List(other)
     end
 
-    local function canonicalize(pitch_indices, octave_interval)
-      return map(function(pitch_index)
-        return tointeger(pitch_index) % tointeger(octave_interval)
-      end, pitch_indices)
+    local octave_interval = tointeger(self.mode:octave_interval())
+    -- Build a set of canonical pitch classes for O(1) lookup
+    local pitch_class_set = {}
+    for i, p in ipairs(self:get_pitches()) do
+      pitch_class_set[tointeger(p) % octave_interval] = true
     end
-
-    local octave_interval = self.mode:octave_interval()
-    other_pitch_indices = canonicalize(other_pitch_indices, octave_interval)
-    local my_pitch_indices = canonicalize(self:get_pitches(), octave_interval)
     for i=1, #other_pitch_indices do
-      local index = other_pitch_indices[i]
-      if not my_pitch_indices:contains(index) then
+      if not pitch_class_set[tointeger(other_pitch_indices[i]) % octave_interval] then
         return false
       end
     end
