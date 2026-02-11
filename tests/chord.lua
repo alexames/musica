@@ -1,7 +1,19 @@
 local unit = require 'llx.unit'
-require 'musica.chord'
-require 'musica.pitch'
-require 'musica.quality'
+local llx = require 'llx'
+local chord_module = require 'musica.chord'
+local pitch_module = require 'musica.pitch'
+local quality_module = require 'musica.quality'
+
+local Chord = chord_module.Chord
+local Pitch = pitch_module.Pitch
+local Quality = quality_module.Quality
+local List = llx.List
+local tovalue = llx.tovalue
+local main_file = llx.main_file
+
+_G.Chord = Chord
+_G.Pitch = Pitch
+_G.Quality = Quality
 
 _ENV = unit.create_test_env(_ENV)
 

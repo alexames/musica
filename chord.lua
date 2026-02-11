@@ -20,6 +20,7 @@ local Any = llx.Any
 local check_arguments = llx.check_arguments
 local class = llx.class
 local Figure = figure.Figure
+local isinstance = llx.isinstance
 local Function = llx.Function
 local Integer = llx.Integer
 local List = llx.List
@@ -86,7 +87,7 @@ Chord = class 'Chord' {
     check_arguments{self=Chord, args=ChordArgs}
     if args.pitches then
       local pitches = List(args.pitches)
-      pitches:sort()
+      table.sort(pitches)
       self.root = pitches[1]
       self.quality = Quality{pitches=pitches}
     else
@@ -99,7 +100,7 @@ Chord = class 'Chord' {
   -- @return List of Pitch objects
   get_pitches = function(self)
     check_arguments{self=Chord}
-    return self:to_pitches(range(0, #self-1))
+    return self:to_pitches(List(range(0, #self)))
   end,
 
   --- Gets the chord's quality.
@@ -203,7 +204,7 @@ Chord = class 'Chord' {
   -- @treturn boolean true if the chord contains the pitch
   contains = function(self, pitch)
     check_arguments{self=Chord, pitch=Pitch}
-    return self:get_pitches():find(pitch) ~= nil
+    return self:get_pitches():contains(pitch)
   end,
 
   --- Checks equality of two chords.
@@ -234,7 +235,7 @@ Chord = class 'Chord' {
 
     local pitches = self:get_pitches()
     pitches = pitches .. other_pitches
-    pitches:sort()
+    table.sort(pitches)
     return Chord{pitches=pitches}
   end,
 
