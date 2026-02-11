@@ -53,6 +53,8 @@ Quality = llx.class 'Quality' {
       end
     elseif pitches then
       pitch_intervals = llx.List{}
+      -- Defensive copy to avoid mutating the caller's list
+      pitches = llx.List(pitches)
       table.sort(pitches)
       local first_pitch = pitches[1]
       for i, pitch in ipairs(pitches) do

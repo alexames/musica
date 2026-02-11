@@ -50,6 +50,13 @@ describe('QualityTest', function()
   it('should evaluate repr of major quality correctly', function()
     expect(tovalue(tostring(Quality.major))).to.be_equal_to(Quality.major)
   end)
+
+  it('should not mutate the input pitches list when constructed from pitches', function()
+    local pitches = List{Pitch.g4, Pitch.c4, Pitch.e4}
+    local original = List{Pitch.g4, Pitch.c4, Pitch.e4}
+    Quality{pitches=pitches}
+    expect(pitches).to.be_equal_to(original)
+  end)
 end)
 
 if main_file() then
