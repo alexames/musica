@@ -93,7 +93,7 @@ Tempo = class 'Tempo' {
   end,
 
   __eq = function(self, other)
-    return self.bpm == other.bpm
+    return self.bpm == other.bpm and self.marking == other.marking
   end,
 
   __tostring = function(self)

@@ -56,6 +56,18 @@ describe('TempoTests', function()
     local tempo = Tempo(130)
     expect(tempo:is_in_range('adagio')).to.be_falsy()
   end)
+
+  it('should be equal when bpm and marking both match', function()
+    local a = Tempo{marking = 'allegro'}
+    local b = Tempo{marking = 'allegro'}
+    expect(a == b).to.be_truthy()
+  end)
+
+  it('should not be equal when markings differ even if bpm matches', function()
+    local a = Tempo{bpm = 138, marking = 'allegro'}
+    local b = Tempo(138)
+    expect(a == b).to.be_falsy()
+  end)
 end)
 
 describe('TimeSignatureTests', function()
