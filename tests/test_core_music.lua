@@ -207,26 +207,32 @@ describe('ArticulationTests', function()
 
   it('should shorten note duration when applying staccato', function()
     local note = Note{pitch = Pitch.c4, duration = 1.0, volume = 1.0}
+    local result = apply_to_note(note, Articulation.staccato)
+    expect(result.duration).to.be_equal_to(0.5)  -- 50%
+  end)
+
+  it('should not mutate original note when applying articulation', function()
+    local note = Note{pitch = Pitch.c4, duration = 1.0, volume = 1.0}
     apply_to_note(note, Articulation.staccato)
-    expect(note.duration).to.be_equal_to(0.5)  -- 50%
+    expect(note.duration).to.be_equal_to(1.0)
   end)
 
   it('should increase note volume when applying accent', function()
     local note = Note{pitch = Pitch.c4, duration = 1.0, volume = 0.5}
-    apply_to_note(note, Articulation.accent)
-    expect(note.volume).to.be_equal_to(0.6)  -- 0.5 * 1.2
+    local result = apply_to_note(note, Articulation.accent)
+    expect(result.volume).to.be_equal_to(0.6)  -- 0.5 * 1.2
   end)
 
   it('should strongly increase note volume when applying marcato', function()
     local note = Note{pitch = Pitch.c4, duration = 1.0, volume = 0.5}
-    apply_to_note(note, Articulation.marcato)
-    expect(note.volume).to.be_equal_to(0.7)  -- 0.5 * 1.4
+    local result = apply_to_note(note, Articulation.marcato)
+    expect(result.volume).to.be_equal_to(0.7)  -- 0.5 * 1.4
   end)
 
   it('should very significantly shorten note duration when applying staccatissimo', function()
     local note = Note{pitch = Pitch.c4, duration = 1.0, volume = 1.0}
-    apply_to_note(note, Articulation.staccatissimo)
-    expect(note.duration).to.be_equal_to(0.25)  -- 25%
+    local result = apply_to_note(note, Articulation.staccatissimo)
+    expect(result.duration).to.be_equal_to(0.25)  -- 25%
   end)
 end)
 

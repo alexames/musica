@@ -1,11 +1,13 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
+local note_module = require 'musica.note'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
 local enum_module = require 'llx.enum'
 local enum = enum_module.enum
+local Note = note_module.Note
 
 --- Articulation enum representing different ways to play notes
 Articulation = enum {
@@ -65,26 +67,29 @@ function get_volume_multiplier(articulation)
   end
 end
 
---- Apply articulation to a note
--- Modifies the note's duration and volume based on articulation
--- @param note Note object to modify
+--- Apply articulation to a note, returning a new Note.
+-- @param note Note object
 -- @param articulation Articulation enum value
+-- @return Note A new Note with adjusted duration and volume
 function apply_to_note(note, articulation)
   local duration_mult = get_duration_multiplier(articulation)
   local volume_mult = get_volume_multiplier(articulation)
-  
-  note.duration = note.duration * duration_mult
-  note.volume = math.min(1.0, note.volume * volume_mult)
-  note.articulation = articulation
+  return Note{
+    pitch = note.pitch,
+    time = note.time,
+    duration = note.duration * duration_mult,
+    volume = math.min(1.0, note.volume * volume_mult),
+  }
 end
 
---- Apply articulation to all notes in a figure
+--- Apply articulation to all notes in a figure, returning a new Figure.
 -- @param figure Figure object
 -- @param articulation Articulation enum value
+-- @return Figure A new Figure with articulated notes
 function apply_to_figure(figure, articulation)
-  for _, note in ipairs(figure.notes) do
-    apply_to_note(note, articulation)
-  end
+  return figure:apply(function(note)
+    return apply_to_note(note, articulation)
+  end)
 end
 
 --- Get human-readable description of articulation
