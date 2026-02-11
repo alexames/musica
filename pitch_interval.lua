@@ -92,8 +92,8 @@ PitchInterval = llx.class 'PitchInterval' {
       return PitchInterval{
         number=self.number + other.number,
         semitone_interval=tointeger(self) + tointeger(other)}
-    elseif isinstance(other, Pitch) then
-      -- If we are adding to a Pitch, the result is a pitch.
+    else
+      -- If we are adding to a Pitch (or other type with __add), delegate.
       return other + self
     end
   end,

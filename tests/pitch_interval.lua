@@ -1,14 +1,27 @@
 local unit = require 'llx.unit'
-require 'llx'
-require 'musica.pitch'
-require 'musica.pitch_interval'
-require 'musica.quality'
+local llx = require 'llx'
+local pitch_module = require 'musica.pitch'
+local pitch_class_module = require 'musica.pitch_class'
+local pitch_interval_module = require 'musica.pitch_interval'
+local interval_quality_module = require 'musica.interval_quality'
+local accidental_module = require 'musica.accidental'
+
+local PitchInterval = pitch_interval_module.PitchInterval
+local Pitch = pitch_module.Pitch
+local PitchClass = pitch_class_module.PitchClass
+local IntervalQuality = interval_quality_module.IntervalQuality
+local Accidental = accidental_module.Accidental
+local tointeger = llx.tointeger
+local tovalue = llx.tovalue
+local main_file = llx.main_file
+
+_G.PitchInterval = PitchInterval
 
 _ENV = unit.create_test_env(_ENV)
 
 describe('PitchIntervalTest', function()
   it('should create major third when constructed with number and quality', function()
-    expect(PitchInterval{number=2, quality=Quality.major}).to.be_equal_to(
+    expect(PitchInterval{number=2, quality=IntervalQuality.major}).to.be_equal_to(
       PitchInterval.major_third)
   end)
 
@@ -262,11 +275,11 @@ describe('PitchIntervalTest', function()
   end)
 
   it('should convert augmented sixth to integer 10', function()
-    expect(tointeger(PitchInterval.augemented_sixth)).to.be_equal_to(10)
+    expect(tointeger(PitchInterval.augmented_sixth)).to.be_equal_to(10)
   end)
 
   it('should convert diminished seventh to integer 9', function()
-    expect(tointeger(PitchInterval.dimished_seventh)).to.be_equal_to(9)
+    expect(tointeger(PitchInterval.diminished_seventh)).to.be_equal_to(9)
   end)
 
   it('should convert minor seventh to integer 10', function()
@@ -282,7 +295,7 @@ describe('PitchIntervalTest', function()
   end)
 
   it('should convert diminished octave to integer 11', function()
-    expect(tointeger(PitchInterval.dimished_octave)).to.be_equal_to(11)
+    expect(tointeger(PitchInterval.diminished_octave)).to.be_equal_to(11)
   end)
 
   it('should convert octave to integer 12', function()
