@@ -15,19 +15,21 @@ local NoteArgs = llx.Schema{
   __name='NoteArgs',
   type=llx.Table,
   properties={
-    -- pitch={type=llx.Union{Pitch,llx.Integer}},
+    pitch={type=llx.Any},
     time={type=llx.Number},
     duration={type=llx.Number},
     volume={type=llx.Number},
   },
+  required={'pitch', 'duration'},
 }
 
 --- A note, with a pitch, time, duration and volume
 Note = class 'Note' {
   --- Initializes a Note.
   __init = function(self, arg)
+    llx.check_arguments{self=Note, arg=NoteArgs}
     self.pitch = arg.pitch
-    self.time = arg.time
+    self.time = arg.time or 0
     self.duration = arg.duration
     self.volume = arg.volume or 1.0
   end,
@@ -39,12 +41,6 @@ Note = class 'Note' {
   with_finish = function(self, finish)
     return Note{pitch=self.pitch, time=self.time,
                 duration=finish - self.time, volume=self.volume}
-  end,
-
-  --- Mutates the duration so that the note finishes at the given time.
-  -- Prefer with_finish for new code; this mutates in place.
-  set_finish = function(self, finish)
-    self.duration = finish - self.time
   end,
 
   --- Returns the time at which the note terminates.

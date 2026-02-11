@@ -1,6 +1,12 @@
 local unit = require 'llx.unit'
-require 'llx'
-require 'musica.note'
+local llx = require 'llx'
+local note_module = require 'musica.note'
+
+local Note = note_module.Note
+local tovalue = llx.tovalue
+local main_file = llx.main_file
+
+_G.Note = Note
 
 _ENV = unit.create_test_env(_ENV)
 
@@ -49,30 +55,27 @@ describe('NoteTest', function()
     expect(function() Note{time=0, duration=2} end).to.throw()
   end)
 
-  it('should throw error when time is missing', function()
-    expect(function() Note{pitch=72, duration=2} end).to.throw()
+  it('should default time to 0 when time is missing', function()
+    local note = Note{pitch=72, duration=2}
+    expect(note.time).to.be_equal_to(0)
   end)
 
   it('should throw error when duration is missing', function()
     expect(function() Note{pitch=72, time=0} end).to.throw()
   end)
 
-  it('should update finish time when set_finish is called', function()
+  it('should return new note with correct finish via with_finish', function()
     local note = Note{pitch=72, time=10, duration=15}
-    note:set_finish(12)
-    expect(note:finish()).to.be_equal_to(12)
+    local adjusted = note:with_finish(12)
+    expect(adjusted:finish()).to.be_equal_to(12)
+    expect(adjusted.time).to.be_equal_to(10)
+    expect(adjusted.duration).to.be_equal_to(2)
   end)
 
-  it('should preserve time when set_finish is called', function()
+  it('with_finish should not mutate original note', function()
     local note = Note{pitch=72, time=10, duration=15}
-    note:set_finish(12)
-    expect(note.time).to.be_equal_to(10)
-  end)
-
-  it('should update duration when set_finish is called', function()
-    local note = Note{pitch=72, time=10, duration=15}
-    note:set_finish(12)
-    expect(note.duration).to.be_equal_to(2)
+    note:with_finish(12)
+    expect(note.duration).to.be_equal_to(15)
   end)
 
   it('should calculate finish time correctly', function()
