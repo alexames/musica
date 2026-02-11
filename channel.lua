@@ -15,7 +15,6 @@ local styles = tostringf_module.styles
 
 FigureInstance = class 'FigureInstance' {
   __init = function(self, time, figure)
-    -- check_arguments{self=FigureInstance, time=Number, figure=Figure}
     self.time = time
     self.figure = figure
   end,
