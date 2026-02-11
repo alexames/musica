@@ -89,15 +89,7 @@ Rhythm = class 'Rhythm' {
   --- Check equality of two rhythms.
   -- Rhythms are equal if they have the same sequence of durations.
   __eq = function(self, other)
-    if #self.durations ~= #other.durations then
-      return false
-    end
-    for i, duration in ipairs(self.durations) do
-      if duration ~= other.durations[i] then
-        return false
-      end
-    end
-    return true
+    return self.durations == other.durations
   end,
 
   __tostring = function(self)
