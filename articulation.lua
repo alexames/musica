@@ -10,7 +10,7 @@ local enum = enum_module.enum
 local Note = note_module.Note
 
 --- Articulation enum representing different ways to play notes
-Articulation = enum {
+Articulation = enum 'Articulation' {
   -- Normal articulation (no modification)
   'normal',
   
