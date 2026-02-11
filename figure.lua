@@ -23,7 +23,6 @@ local FigureArgs = llx.Schema{
 
 Figure = class 'Figure' {
   __init = function(self, args)
-    -- check_arguments{self=Figure, args=FigureArgs}
     self.duration = args.duration
     local notes = args.notes
     local melody = args.melody
@@ -45,27 +44,22 @@ Figure = class 'Figure' {
   end,
 
   apply = function(self, transformation)
-    -- check_arguments{self=Figure, transformation=Function}
     return Figure{self.duration, notes=map(self.notes, transformation)}
   end,
 
   __add = function(self, other)
-    -- check_arguments{self=Figure, other=Figure}
     return merge({self, other})
   end,
 
   __mul = function(self, repetitions)
-    -- check_arguments{self=Figure, repetitions=Integer}
     return repeat_figure(self, repetitions)
   end,
 
   __concat = function(self, other)
-    -- check_arguments{self=Figure, other=Figure}
     return concatenate({self, other})
   end,
 
   __eq = function(self, other)
-    -- check_arguments{self=Figure, other=Figure}
     return self.duration == other.duration and self.notes == other.notes
   end,
 
@@ -77,7 +71,6 @@ Figure = class 'Figure' {
   end,
 
   __tostring = function(self)
-    -- check_arguments{self=Figure}
     return tostringf(self, styles.abbrev)
   end,
 }
@@ -104,8 +97,8 @@ function concatenate(figures)
   local result = llx.List{}
   for i, figure in ipairs(figures) do
     for j, note in ipairs(figure.notes) do
-      new_note = Note(note)
-      new_note.time = new_note.time +offset
+      local new_note = Note(note)
+      new_note.time = new_note.time + offset
       result:insert(new_note)
     end
     offset = offset + figure.duration
