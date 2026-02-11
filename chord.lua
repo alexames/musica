@@ -85,8 +85,10 @@ Chord = class 'Chord' {
   __init = function(self, args)
     check_arguments{self=Chord, args=ChordArgs}
     if args.pitches then
-      self.root = args.pitches[1]
-      self.quality = Quality{pitches=args.pitches}
+      local pitches = List(args.pitches)
+      pitches:sort()
+      self.root = pitches[1]
+      self.quality = Quality{pitches=pitches}
     else
       self.root = args.root
       self.quality = args.quality or Quality.major
