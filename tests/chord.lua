@@ -259,6 +259,13 @@ describe('ChordTest', function()
     local c_major = Chord{root=Pitch.c4, quality=Quality.major}
     expect(tovalue(tostring(c_major))).to.be_equal_to(c_major)
   end)
+
+  it('should return a new chord for inversion 0', function()
+    local c_major = Chord{root=Pitch.c4, quality=Quality.major}
+    local inv0 = c_major:inversion(0)
+    expect(inv0).to.be_equal_to(c_major)
+    expect(rawequal(inv0, c_major)).to.be_falsy()
+  end)
 end)
 
 if main_file() then

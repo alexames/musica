@@ -180,10 +180,10 @@ Chord = class 'Chord' {
   inversion = function(self, n, octave_interval)
     check_arguments{self=Chord,
                     n=Integer,
-                    octave_interval=Optional{Integer}}
+                    octave_interval=Optional{PitchInterval}}
     octave_interval = octave_interval or PitchInterval.octave
     if n == 0 then
-      return self
+      return Chord{root=self.root, quality=self.quality}
     end
 
     local inverted_intervals = List{}
