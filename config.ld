@@ -28,7 +28,7 @@ style = nil
 template = nil
 
 -- Package display name
-package = 'musica'
+package = ''
 
 -- One file per module
 one = false
