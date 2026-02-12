@@ -43,6 +43,20 @@ Scale = llx.class 'Scale' {
     check_arguments{self=Scale, arg=ScaleArgs}
     self.tonic = arg.tonic
     self.mode = arg.mode
+
+    -- Precompute normalized pitch indices and pitch class set.
+    -- These depend only on tonic and mode, which are immutable.
+    local octave_interval = tointeger(self.mode:octave_interval())
+    local normalized = {}
+    local pitch_class_set = {}
+    for i=1, #self.mode do
+      local semitones = tointeger(self.mode[i-1])
+      normalized[i] = semitones
+      pitch_class_set[semitones % octave_interval] = true
+    end
+    self._normalized_indices = normalized
+    self._pitch_class_set = pitch_class_set
+    self._octave_interval = octave_interval
   end,
 
   get_pitches = function(self)
@@ -70,15 +84,14 @@ Scale = llx.class 'Scale' {
     check_arguments{self=Scale, pitch=llx.Union{Pitch, Integer}}
     local pitch_index = tointeger(pitch)
     local pitch_index_offset = pitch_index - tointeger(self.tonic)
-    local offset_modulus = pitch_index_offset % tointeger(self.mode:octave_interval())
-    local offset_octave = pitch_index_offset // tointeger(self.mode:octave_interval())
-    local normalized_indices = map(function(pitch)
-      return tointeger(pitch - self.tonic)
-    end, self:get_pitches())
-    local scale_index_index = normalized_indices:ifind(offset_modulus)
-    if scale_index_index then
-      local scale_index_modulus = scale_index_index - 1
-      return scale_index_modulus + #self * offset_octave
+    local octave_interval = self._octave_interval
+    local offset_modulus = pitch_index_offset % octave_interval
+    local offset_octave = pitch_index_offset // octave_interval
+    local normalized = self._normalized_indices
+    for i = 1, #normalized do
+      if normalized[i] == offset_modulus then
+        return (i - 1) + #self * offset_octave
+      end
     end
     return nil
   end,
@@ -133,12 +146,8 @@ Scale = llx.class 'Scale' {
       other_pitch_indices = List(other)
     end
 
-    local octave_interval = tointeger(self.mode:octave_interval())
-    -- Build a set of canonical pitch classes for O(1) lookup
-    local pitch_class_set = {}
-    for i, p in ipairs(self:get_pitches()) do
-      pitch_class_set[tointeger(p) % octave_interval] = true
-    end
+    local octave_interval = self._octave_interval
+    local pitch_class_set = self._pitch_class_set
     for i=1, #other_pitch_indices do
       if not pitch_class_set[tointeger(other_pitch_indices[i]) % octave_interval] then
         return false
