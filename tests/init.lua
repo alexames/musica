@@ -1,6 +1,7 @@
 require 'musica.tests.articulation'
 require 'musica.tests.chord'
 require 'musica.tests.contour'
+require 'musica.tests.dynamics'
 require 'musica.tests.figure'
 require 'musica.tests.meter'
 require 'musica.tests.mode'

@@ -10,6 +10,24 @@ Dynamic = llx.class 'Dynamic' {
     self.short_name = short_name
     self.volume = volume
   end,
+
+  __eq = function(self, other)
+    return self.long_name == other.long_name
+           and self.short_name == other.short_name
+           and self.volume == other.volume
+  end,
+
+  __lt = function(self, other)
+    return self.volume < other.volume
+  end,
+
+  __le = function(self, other)
+    return self == other or self < other
+  end,
+
+  __tostring = function(self)
+    return string.format('Dynamic.%s', self.short_name)
+  end,
 }
 
 local dynamics_list = llx.List{
