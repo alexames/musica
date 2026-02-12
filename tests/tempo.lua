@@ -62,6 +62,28 @@ describe('TempoTests', function()
     local b = Tempo(138)
     expect(a == b).to.be_falsy()
   end)
+
+  it('should order slower tempo less than faster tempo', function()
+    local adagio = Tempo{marking = 'adagio'}
+    local allegro = Tempo{marking = 'allegro'}
+    expect(adagio < allegro).to.be_truthy()
+  end)
+
+  it('should not order faster tempo less than slower tempo', function()
+    local adagio = Tempo{marking = 'adagio'}
+    local allegro = Tempo{marking = 'allegro'}
+    expect(allegro < adagio).to.be_falsy()
+  end)
+
+  it('should order tempo less than or equal to itself', function()
+    local a = Tempo(120)
+    local b = Tempo(120)
+    expect(a <= b).to.be_truthy()
+  end)
+
+  it('should order slower tempo less than or equal to faster tempo', function()
+    expect(Tempo(60) <= Tempo(120)).to.be_truthy()
+  end)
 end)
 
 if main_file() then

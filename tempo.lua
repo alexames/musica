@@ -96,6 +96,14 @@ Tempo = class 'Tempo' {
     return self.bpm == other.bpm and self.marking == other.marking
   end,
 
+  __lt = function(self, other)
+    return self.bpm < other.bpm
+  end,
+
+  __le = function(self, other)
+    return self == other or self < other
+  end,
+
   __tostring = function(self)
     return self:describe()
   end,
