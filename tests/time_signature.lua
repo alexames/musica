@@ -67,6 +67,37 @@ describe('TimeSignatureTests', function()
     local ts = TimeSignature{numerator = 3, denominator = 4}
     expect(tostring(ts)).to.be_equal_to('3/4')
   end)
+
+  it('should order 2/4 less than 3/4 by measure duration', function()
+    local ts_2_4 = TimeSignature{numerator = 2, denominator = 4}
+    local ts_3_4 = TimeSignature{numerator = 3, denominator = 4}
+    expect(ts_2_4 < ts_3_4).to.be_truthy()
+  end)
+
+  it('should order 3/4 less than 4/4 by measure duration', function()
+    local ts_3_4 = TimeSignature{numerator = 3, denominator = 4}
+    local ts_4_4 = TimeSignature{numerator = 4, denominator = 4}
+    expect(ts_3_4 < ts_4_4).to.be_truthy()
+  end)
+
+  it('should order 6/8 less than 4/4 by measure duration', function()
+    -- 6/8 = 0.75 measures, 4/4 = 1.0 measures
+    local ts_6_8 = TimeSignature{numerator = 6, denominator = 8}
+    local ts_4_4 = TimeSignature{numerator = 4, denominator = 4}
+    expect(ts_6_8 < ts_4_4).to.be_truthy()
+  end)
+
+  it('should order 2/2 less than 4/4 when equal duration (by denominator)', function()
+    -- Both have measure duration 1.0, but 2/2 has smaller denominator
+    local ts_2_2 = TimeSignature{numerator = 2, denominator = 2}
+    local ts_4_4 = TimeSignature{numerator = 4, denominator = 4}
+    expect(ts_2_2 < ts_4_4).to.be_truthy()
+  end)
+
+  it('should order time signature less than or equal to itself', function()
+    local ts = TimeSignature{numerator = 4, denominator = 4}
+    expect(ts <= TimeSignature{numerator = 4, denominator = 4}).to.be_truthy()
+  end)
 end)
 
 if main_file() then

@@ -110,6 +110,22 @@ TimeSignature = class 'TimeSignature' {
   __eq = function(self, other)
     return self.numerator == other.numerator and self.denominator == other.denominator
   end,
+
+  --- Less-than comparison.
+  -- Ordered by measure duration (numerator/denominator), then by
+  -- denominator for equal durations (e.g., 2/2 < 4/4).
+  __lt = function(self, other)
+    local self_duration = self.numerator / self.denominator
+    local other_duration = other.numerator / other.denominator
+    if self_duration ~= other_duration then
+      return self_duration < other_duration
+    end
+    return self.denominator < other.denominator
+  end,
+
+  __le = function(self, other)
+    return self == other or self < other
+  end,
 }
 
 -- Common time signatures
