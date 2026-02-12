@@ -1,16 +1,5 @@
 -- Unit tests for generation rules
--- Usage: lua tests/generation/test_rules.lua
-
-package.path = package.path .. ";C:/Users/Alexa/Programming/llx/?.lua"
-package.path = package.path .. ";C:/Users/Alexa/Programming/llx/?/init.lua"
-package.path = package.path .. ";C:/Users/Alexa/Programming/musica/?.lua"
-package.path = package.path .. ";C:/Users/Alexa/Programming/musica/?/init.lua"
--- lua-midi module is named 'midi' but in directory 'lua-midi'
-package.path = package.path .. ";C:/Users/Alexa/Programming/lua-midi/?.lua"
-package.path = package.path .. ";C:/Users/Alexa/Programming/lua-midi/?/init.lua"
-package.preload['midi'] = function() return dofile('C:/Users/Alexa/Programming/lua-midi/init.lua') end
-package.path = package.path .. ";C:/Users/Alexa/Programming/unit/?.lua"
-package.cpath = package.cpath .. ";C:/Users/Alexa/Programming/lua-z3/Build/Source/z3/Debug/?.dll"
+-- Usage: lua tests/test_rules.lua
 
 -- Require z3 before llx to avoid strict mode conflicts with z3's global registration
 local z3 = require 'z3'

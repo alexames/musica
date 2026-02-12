@@ -9,13 +9,7 @@ with musical concepts like pitches, scales, chords, rhythm, and composition.
 ]]
 
 -- Source files
-file = {
-  '.',
-  exclude = {
-    'tests',
-    'transformations.lua',  -- Python file, not Lua
-  }
-}
+file = 'src'
 
 -- Output directory
 dir = 'docs'

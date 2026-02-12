@@ -38,10 +38,23 @@ jobs:
         sudo apt-get install -y lua5.4 liblua5.4-dev luarocks
         sudo luarocks install ldoc
 
+    - name: Install dependencies
+      run: |
+        luarocks install --local --lua-version 5.4 --server=https://alexames.github.io/luarocks-repository lua-midi
+
+    - name: Install llx from checkout
+      working-directory: llx
+      run: luarocks make --local --lua-version 5.4
+
+    - name: Install musica locally
+      working-directory: musica
+      run: luarocks make --local --lua-version 5.4 --deps-mode=none
+
     - name: Set up Lua package path
       run: |
-        export LUA_PATH="$GITHUB_WORKSPACE/?.lua;$GITHUB_WORKSPACE/?/init.lua;;"
+        eval "$(luarocks path --lua-version 5.4)"
         echo "LUA_PATH=$LUA_PATH" >> $GITHUB_ENV
+        echo "LUA_CPATH=$LUA_CPATH" >> $GITHUB_ENV
 
     - name: Generate documentation
       working-directory: musica

@@ -32,56 +32,77 @@ dependencies = {
    "lua-z3",
 }
 
+test = {
+   type = "command",
+   command = "cd tests && for f in test_*.lua; do echo \"=== $f ===\"; lua \"$f\" || exit 1; done",
+}
+
 build = {
    type = "builtin",
    modules = {
-      ["musica"] = "init.lua",
-      ["musica.accidental"] = "accidental.lua",
-      ["musica.articulation"] = "articulation.lua",
-      ["musica.beat"] = "beat.lua",
-      ["musica.channel"] = "channel.lua",
-      ["musica.chord"] = "chord.lua",
-      ["musica.contour"] = "contour.lua",
-      ["musica.direction"] = "direction.lua",
-      ["musica.dynamics"] = "dynamics.lua",
-      ["musica.figure"] = "figure.lua",
-      ["musica.instrument"] = "instrument.lua",
-      ["musica.interval_quality"] = "interval_quality.lua",
-      ["musica.lilypond"] = "lilypond.lua",
-      ["musica.meter"] = "meter.lua",
-      ["musica.mode"] = "mode.lua",
-      ["musica.modes"] = "modes.lua",
-      ["musica.note"] = "note.lua",
-      ["musica.pattern"] = "pattern.lua",
-      ["musica.pitch"] = "pitch.lua",
-      ["musica.pitch_class"] = "pitch_class.lua",
-      ["musica.pitch_interval"] = "pitch_interval.lua",
-      ["musica.pitch_util"] = "pitch_util.lua",
-      ["musica.quality"] = "quality.lua",
-      ["musica.rhythm"] = "rhythm.lua",
-      ["musica.ring"] = "ring.lua",
-      ["musica.scale"] = "scale.lua",
-      ["musica.scale_degree"] = "scale_degree.lua",
-      ["musica.scale_index"] = "scale_index.lua",
-      ["musica.song"] = "song.lua",
-      ["musica.spiral"] = "spiral.lua",
-      ["musica.tempo"] = "tempo.lua",
-      ["musica.time_signature"] = "time_signature.lua",
-      ["musica.transformations"] = "transformations.lua",
-      ["musica.util"] = "util.lua",
-      ["musica.generation"] = "generation/init.lua",
-      ["musica.generation.context"] = "generation/context.lua",
-      ["musica.generation.generator"] = "generation/generator.lua",
-      ["musica.generation.rule"] = "generation/rule.lua",
-      ["musica.generation.rules"] = "generation/rules/init.lua",
-      ["musica.generation.rules.boundary"] = "generation/rules/boundary.lua",
-      ["musica.generation.rules.composite"] = "generation/rules/composite.lua",
-      ["musica.generation.rules.duration"] = "generation/rules/duration.lua",
-      ["musica.generation.rules.in_scale"] = "generation/rules/in_scale.lua",
-      ["musica.generation.rules.interval"] = "generation/rules/interval.lua",
-      ["musica.generation.rules.monotonic"] = "generation/rules/monotonic.lua",
-      ["musica.generation.rules.overshoot"] = "generation/rules/overshoot.lua",
-      ["musica.generation.rules.range"] = "generation/rules/range.lua",
-      ["musica.generation.rules.volume"] = "generation/rules/volume.lua",
+      -- Main entry point
+      ["musica"] = "src/init.lua",
+
+      -- Utility
+      ["musica.util"] = "src/util/util.lua",
+      ["musica.ring"] = "src/util/ring.lua",
+      ["musica.spiral"] = "src/util/spiral.lua",
+
+      -- Pitch
+      ["musica.accidental"] = "src/pitch/accidental.lua",
+      ["musica.direction"] = "src/pitch/direction.lua",
+      ["musica.interval_quality"] = "src/pitch/interval_quality.lua",
+      ["musica.pitch"] = "src/pitch/pitch.lua",
+      ["musica.pitch_class"] = "src/pitch/pitch_class.lua",
+      ["musica.pitch_interval"] = "src/pitch/pitch_interval.lua",
+      ["musica.pitch_util"] = "src/pitch/pitch_util.lua",
+
+      -- Scale / Harmony
+      ["musica.chord"] = "src/scale/chord.lua",
+      ["musica.contour"] = "src/scale/contour.lua",
+      ["musica.mode"] = "src/scale/mode.lua",
+      ["musica.modes"] = "src/scale/modes.lua",
+      ["musica.quality"] = "src/scale/quality.lua",
+      ["musica.scale"] = "src/scale/scale.lua",
+      ["musica.scale_degree"] = "src/scale/scale_degree.lua",
+      ["musica.scale_index"] = "src/scale/scale_index.lua",
+
+      -- Rhythm / Time
+      ["musica.beat"] = "src/rhythm/beat.lua",
+      ["musica.meter"] = "src/rhythm/meter.lua",
+      ["musica.rhythm"] = "src/rhythm/rhythm.lua",
+      ["musica.tempo"] = "src/rhythm/tempo.lua",
+      ["musica.time_signature"] = "src/rhythm/time_signature.lua",
+
+      -- Note / Figure
+      ["musica.channel"] = "src/note/channel.lua",
+      ["musica.figure"] = "src/note/figure.lua",
+      ["musica.note"] = "src/note/note.lua",
+
+      -- Expression
+      ["musica.articulation"] = "src/expression/articulation.lua",
+      ["musica.dynamics"] = "src/expression/dynamics.lua",
+
+      -- Song / Export
+      ["musica.instrument"] = "src/song/instrument.lua",
+      ["musica.lilypond"] = "src/song/lilypond.lua",
+      ["musica.pattern"] = "src/song/pattern.lua",
+      ["musica.song"] = "src/song/song.lua",
+
+      -- Generation
+      ["musica.generation"] = "src/generation/init.lua",
+      ["musica.generation.context"] = "src/generation/context.lua",
+      ["musica.generation.generator"] = "src/generation/generator.lua",
+      ["musica.generation.rule"] = "src/generation/rule.lua",
+      ["musica.generation.rules"] = "src/generation/rules/init.lua",
+      ["musica.generation.rules.boundary"] = "src/generation/rules/boundary.lua",
+      ["musica.generation.rules.composite"] = "src/generation/rules/composite.lua",
+      ["musica.generation.rules.duration"] = "src/generation/rules/duration.lua",
+      ["musica.generation.rules.in_scale"] = "src/generation/rules/in_scale.lua",
+      ["musica.generation.rules.interval"] = "src/generation/rules/interval.lua",
+      ["musica.generation.rules.monotonic"] = "src/generation/rules/monotonic.lua",
+      ["musica.generation.rules.overshoot"] = "src/generation/rules/overshoot.lua",
+      ["musica.generation.rules.range"] = "src/generation/rules/range.lua",
+      ["musica.generation.rules.volume"] = "src/generation/rules/volume.lua",
    },
 }
