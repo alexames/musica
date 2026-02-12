@@ -8,6 +8,7 @@ local _ENV, _M = llx.environment.create_module_environment()
 
 local Direction = direction.Direction
 local List = llx.List
+local map = llx.functional.map
 local tointeger = llx.tointeger
 
 --- Compares two pitch integers, returning a Direction constant.
@@ -54,29 +55,17 @@ end
 
 -- Gives the contour of a melody in pitch indices
 function pitch_index_contour(melody)
-  local contour = List{}
-  for i, v in ipairs(melody) do
-    contour[i] = tointeger(v.pitch)
-  end
-  return contour
+  return map(function(note) return tointeger(note.pitch) end, List(melody))
 end
 
 -- Gives the contour of a melody in scale indices
 function scale_index_contour(melody, scale)
-  local contour = List{}
-  for i, v in ipairs(melody) do
-    contour[i] = scale:to_scale_index(v.pitch)
-  end
-  return contour
+  return map(function(note) return scale:to_scale_index(note.pitch) end, List(melody))
 end
 
 -- Gives the contour of a melody in pitch classes
 function pitch_class_contour(melody)
-  local contour = List{}
-  for i, v in ipairs(melody) do
-    contour[i] = v.pitch.pitch_class
-  end
-  return contour
+  return map(function(note) return note.pitch.pitch_class end, List(melody))
 end
 
 return _M
