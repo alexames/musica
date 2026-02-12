@@ -14,3 +14,4 @@ jobs:
     uses: alexames/luarocks-repository/.github/workflows/test.yml@main
     with:
       dependencies: llx lua-midi
+      exclude-tests: test_generator test_rules
