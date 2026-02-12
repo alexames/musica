@@ -70,7 +70,7 @@ Note = class 'Note' {
   __le = function(self, other)
     return self == other or self < other
   end,
-  
+
   __tostringf = function(self, formatter)
     formatter:table_cons 'Note' {
       {'pitch', self.pitch},

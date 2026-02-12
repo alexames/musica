@@ -132,13 +132,13 @@ common_patterns = {
   four_quarters = Rhythm{quarter_note, quarter_note, quarter_note, quarter_note},
   eight_eighths = Rhythm{eighth_note, eighth_note, eighth_note, eighth_note,
                         eighth_note, eighth_note, eighth_note, eighth_note},
-  
+
   -- Dotted patterns
   dotted_quarter_eighth = Rhythm{dotted_quarter, eighth_note},
-  
+
   -- Syncopated patterns
   eighth_quarter_eighth = Rhythm{eighth_note, quarter_note, eighth_note},
-  
+
   -- Triplet patterns
   quarter_triplets = Rhythm{quarter_triplet, quarter_triplet, quarter_triplet},
 }

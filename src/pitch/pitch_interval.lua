@@ -171,7 +171,7 @@ PitchInterval = llx.class 'PitchInterval' {
         end
       end
     end
-    return string.format('PitchInterval{number=%s,accidentals=%s}', 
+    return string.format('PitchInterval{number=%s,accidentals=%s}',
                          self.number, self.accidentals)
   end,
 

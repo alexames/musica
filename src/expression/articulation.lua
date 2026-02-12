@@ -13,25 +13,25 @@ local Note = note_module.Note
 Articulation = enum 'Articulation' {
   -- Normal articulation (no modification)
   'normal',
-  
+
   -- Staccato: Short, detached (50% duration)
   'staccato',
-  
+
   -- Staccatissimo: Very short, very detached (25% duration)
   'staccatissimo',
-  
+
   -- Legato: Smooth, connected (100% duration, overlapping)
   'legato',
-  
+
   -- Tenuto: Full value, slight emphasis (100% duration, +10% volume)
   'tenuto',
-  
+
   -- Accent: Emphasized (100% duration, +20% volume)
   'accent',
-  
+
   -- Marcato: Strongly accented (100% duration, +40% volume)
   'marcato',
-  
+
   -- Portato/Mezzo-staccato: Half-detached (75% duration)
   'portato',
 }

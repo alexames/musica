@@ -24,7 +24,7 @@ TimeSignature = class 'TimeSignature' {
     else
       error('TimeSignature requires numerator and denominator', 2)
     end
-    
+
     -- Validate
     if self.numerator <= 0 then
       error('Numerator must be positive', 2)
@@ -96,8 +96,8 @@ TimeSignature = class 'TimeSignature' {
   describe = function(self)
     local meter_class = self:is_simple() and 'Simple' or 'Compound'
     local meter_type = self:get_meter_type()
-    return string.format('%s %s (%d/%d)', 
-                        meter_class, 
+    return string.format('%s %s (%d/%d)',
+                        meter_class,
                         meter_type:gsub('^%l', string.upper),
                         self.numerator,
                         self.denominator)
