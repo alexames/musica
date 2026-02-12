@@ -351,6 +351,18 @@ describe('PitchIntervalTest', function()
   it('should order unison less than or equal to itself', function()
     expect(PitchInterval.unison <= PitchInterval.unison).to.be_truthy()
   end)
+
+  it('should throw when constructing perfect interval with minor quality', function()
+    expect(function()
+      PitchInterval{number=0, quality=IntervalQuality.minor}
+    end).to.throw()
+  end)
+
+  it('should throw when constructing imperfect interval with perfect quality', function()
+    expect(function()
+      PitchInterval{number=1, quality=IntervalQuality.perfect}
+    end).to.throw()
+  end)
 end)
 
 if main_file() then

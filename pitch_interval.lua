@@ -81,6 +81,10 @@ PitchInterval = llx.class 'PitchInterval' {
         result = Accidental.sharp
       end
     end
+    assert(result ~= nil,
+           string.format('invalid quality %s for %s interval',
+                         tostring(quality),
+                         self:is_perfect() and 'perfect' or 'imperfect'))
     return result
   end,
 
