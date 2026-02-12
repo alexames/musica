@@ -117,6 +117,14 @@ describe('RingTest', function()
 end)
 
 describe('SpiralTest', function()
+  it('should throw when constructed with empty table', function()
+    expect(function() Spiral{} end).to.throw()
+  end)
+
+  it('should throw when constructed with single value', function()
+    expect(function() Spiral{5} end).to.throw()
+  end)
+
   it('should return -10 for index -4', function()
     local spiral = Spiral{0, 3, 5}
     expect(spiral[-4]).to.be_equal_to(-10)

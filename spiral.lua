@@ -10,6 +10,7 @@ local multi_index = util.multi_index
 
 Spiral = class 'Spiral' {
   __init = function(self, args)
+    assert(#args > 1, 'Spiral requires at least two values (base values and a multiplicative operand)')
     self._values = args
   end,
 
