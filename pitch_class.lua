@@ -16,6 +16,14 @@ PitchClass = class 'PitchClass' {
     return self.index == other.index
   end,
 
+  __lt = function(self, other)
+    return self.index < other.index
+  end,
+
+  __le = function(self, other)
+    return self.index <= other.index
+  end,
+
   __tostring = function(self)
     local fmt = 'PitchClass.%s'
     return fmt:format(self.name)
