@@ -57,7 +57,8 @@ Channel = class 'Channel' {
     self.part_name = args.part_name or nil
     self.short_name = args.short_name or nil
     self.clef = args.clef or nil  -- e.g., 'treble', 'bass', 'alto', 'tenor'
-    self.transposition = args.transposition or nil  -- For transposing instruments
+    -- For transposing instruments
+    self.transposition = args.transposition or nil
   end,
 
   __tostringf = function(self, formatter)

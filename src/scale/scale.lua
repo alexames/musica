@@ -125,7 +125,8 @@ Scale = llx.class 'Scale' {
       mode = self.mode << scale_index
     end
 
-    local tonic_scale_index = self:to_scale_index(tointeger(self.tonic)) + scale_index
+    local tonic_scale_index =
+      self:to_scale_index(tointeger(self.tonic)) + scale_index
     local tonic = self:to_pitch(tonic_scale_index)
 
     return Scale{tonic=tonic, mode=mode}
@@ -149,7 +150,9 @@ Scale = llx.class 'Scale' {
     local octave_interval = self._octave_interval
     local pitch_class_set = self._pitch_class_set
     for i=1, #other_pitch_indices do
-      if not pitch_class_set[tointeger(other_pitch_indices[i]) % octave_interval] then
+      local pc = tointeger(other_pitch_indices[i])
+          % octave_interval
+      if not pitch_class_set[pc] then
         return false
       end
     end

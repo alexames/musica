@@ -1,7 +1,8 @@
 -- Unit tests for generation rules
 -- Usage: lua tests/test_rules.lua
 
--- Require z3 before llx to avoid strict mode conflicts with z3's global registration
+-- Require z3 before llx to avoid strict mode conflicts
+-- with z3's global registration
 local z3 = require 'z3'
 
 local unit = require 'llx.unit'
@@ -309,7 +310,8 @@ describe('ConjunctMotionRule', function()
 
   it('should reject leaps', function()
     local rule = ConjunctMotionRule{}
-    local figure = make_figure({Pitch.c4, Pitch.e4})  -- Major third = 4 semitones
+    -- Major third = 4 semitones
+    local figure = make_figure({Pitch.c4, Pitch.e4})
 
     local ok, err = rule:validate(figure)
     expect(ok).to.be_falsy()

@@ -66,12 +66,15 @@ InScaleRule = class 'InScaleRule' : extends(Rule) {
       end
     end
 
-    -- For each note position, pitch % 12 must equal one of the valid pitch classes
+    -- For each note position, pitch % 12 must equal one of
+    -- the valid pitch classes
     for i, pitch_var in ipairs(ctx:get_pitch_vars()) do
       local valid_options = List{}
       for j, pc in ipairs(valid_pitch_classes) do
         -- (pitch_var % 12) == pc
-        local mod_expr = pitch_var - (pitch_var / z3_ctx:int_val(12)) * z3_ctx:int_val(12)
+        local twelve = z3_ctx:int_val(12)
+        local mod_expr =
+          pitch_var - (pitch_var / twelve) * twelve
         valid_options:insert(mod_expr:eq(z3_ctx:int_val(pc)))
       end
 

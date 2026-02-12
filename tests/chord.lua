@@ -33,7 +33,8 @@ describe('ChordTest', function()
     expect(chord.root).to.be_equal_to(Pitch.c5)
   end)
 
-  it('should infer quality from pitches when constructed with pitches', function()
+  it('should infer quality from pitches when constructed'
+    .. ' with pitches', function()
     local chord = Chord{pitches=List{Pitch.c5, Pitch.eflat5, Pitch.g5}}
     expect(chord.quality).to.be_equal_to(Quality.minor)
   end)
@@ -168,7 +169,8 @@ describe('ChordTest', function()
     expect(c_major_inv4:to_pitch(2)).to.be_equal_to(Pitch.c6)
   end)
 
-  it('should return fifth octave down for negative inversion -1 at index 0', function()
+  it('should return fifth octave down for negative'
+    .. ' inversion -1 at index 0', function()
     local c_major = Chord{root=Pitch.c4, quality=Quality.major}
     local c_major_inv0 = c_major:inversion(-1)
     expect(c_major_inv0:to_pitch(0)).to.be_equal_to(Pitch.g3)
@@ -250,7 +252,8 @@ describe('ChordTest', function()
     expect(c_major:contains(Pitch.f4)).to.be_falsy()
   end)
 
-  it('should return false when chord does not contain pitch in different octave', function()
+  it('should return false when chord does not contain'
+    .. ' pitch in different octave', function()
     local c_major = Chord{root=Pitch.c4, quality=Quality.major}
     expect(c_major:contains(Pitch.c5)).to.be_falsy()
   end)

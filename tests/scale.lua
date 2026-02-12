@@ -121,7 +121,9 @@ describe('ScaleTest', function()
 
   it('should return correct pitches for multiple indices', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale:to_pitches({-8, -7, -5, -3, -1, 0, 1, 3, 5, 7, 8})).to.be_equal_to(
+    expect(scale:to_pitches(
+      {-8, -7, -5, -3, -1, 0, 1, 3, 5, 7, 8}
+    )).to.be_equal_to(
       List{Pitch.b3,
            Pitch.c3,
            Pitch.e3,
@@ -158,7 +160,9 @@ describe('ScaleTest', function()
 
   it('should return relative minor scale going down', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale:relative{mode=Mode.minor, direction=Direction.down}).to.be_equal_to(
+    expect(scale:relative{
+      mode=Mode.minor, direction=Direction.down,
+    }).to.be_equal_to(
       Scale{tonic=Pitch.a4, mode=Mode.minor})
   end)
 
@@ -292,7 +296,9 @@ describe('ScaleTest', function()
 
   it('should return true when scale contains all pitches in list', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale:contains({Pitch.a0, Pitch.b1, Pitch.c2, Pitch.d3})).to.be_truthy()
+    expect(scale:contains(
+      {Pitch.a0, Pitch.b1, Pitch.c2, Pitch.d3}
+    )).to.be_truthy()
   end)
 
   it('should return false when scale does not contain csharp4', function()
@@ -300,9 +306,12 @@ describe('ScaleTest', function()
     expect(scale:contains(Pitch.csharp4)).to.be_falsy()
   end)
 
-  it('should return false when scale does not contain all pitches in list', function()
+  it('should return false when scale does not contain '
+    .. 'all pitches in list', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale:contains({Pitch.asharp0, Pitch.b1, Pitch.c2, Pitch.d3})).to.be_falsy()
+    expect(scale:contains(
+      {Pitch.asharp0, Pitch.b1, Pitch.c2, Pitch.d3}
+    )).to.be_falsy()
   end)
 
   it('should convert scale to string and back to same scale', function()

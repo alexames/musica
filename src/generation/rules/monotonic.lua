@@ -23,7 +23,8 @@ MonotonicPitchRule = class 'MonotonicPitchRule' : extends(Rule) {
   --- Creates a new MonotonicPitchRule.
   -- @tparam MonotonicPitchRule self
   -- @tparam table args Configuration table
-  -- @tparam[opt=Direction.up] Direction args.direction Up for ascending, down for descending
+  -- @tparam[opt=Direction.up] Direction args.direction
+  -- Up for ascending, down for descending
   -- @tparam[opt=true] boolean args.strict If true, no repeated pitches allowed
   -- @tparam[opt='monotonic'] string args.name Rule name
   __init = function(self, args)
@@ -45,19 +46,31 @@ MonotonicPitchRule = class 'MonotonicPitchRule' : extends(Rule) {
 
       if self.direction == Direction.up then
         if self.strict and curr <= prev then
-          return false, string.format('Note %d (%s) not strictly ascending from note %d (%s)',
-            i, figure.notes[i].pitch, i-1, figure.notes[i-1].pitch)
+          return false, string.format(
+            'Note %d (%s) not strictly ascending'
+              .. ' from note %d (%s)',
+            i, figure.notes[i].pitch,
+            i-1, figure.notes[i-1].pitch)
         elseif not self.strict and curr < prev then
-          return false, string.format('Note %d (%s) not ascending from note %d (%s)',
-            i, figure.notes[i].pitch, i-1, figure.notes[i-1].pitch)
+          return false, string.format(
+            'Note %d (%s) not ascending'
+              .. ' from note %d (%s)',
+            i, figure.notes[i].pitch,
+            i-1, figure.notes[i-1].pitch)
         end
       else
         if self.strict and curr >= prev then
-          return false, string.format('Note %d (%s) not strictly descending from note %d (%s)',
-            i, figure.notes[i].pitch, i-1, figure.notes[i-1].pitch)
+          return false, string.format(
+            'Note %d (%s) not strictly descending'
+              .. ' from note %d (%s)',
+            i, figure.notes[i].pitch,
+            i-1, figure.notes[i-1].pitch)
         elseif not self.strict and curr > prev then
-          return false, string.format('Note %d (%s) not descending from note %d (%s)',
-            i, figure.notes[i].pitch, i-1, figure.notes[i-1].pitch)
+          return false, string.format(
+            'Note %d (%s) not descending'
+              .. ' from note %d (%s)',
+            i, figure.notes[i].pitch,
+            i-1, figure.notes[i-1].pitch)
         end
       end
     end

@@ -34,7 +34,8 @@ Tempo = class 'Tempo' {
   --- Constructor.
   -- @function Tempo:__init
   -- @tparam Tempo self
-  -- @tparam table|number args Table with 'bpm' (number) or 'marking' (string), or just a number for BPM
+  -- @tparam table|number args Table with 'bpm' (number) or
+  -- 'marking' (string), or just a number for BPM
   __init = function(self, args)
     if type(args) == 'number' then
       -- Allow Tempo(120) shorthand
@@ -72,7 +73,9 @@ Tempo = class 'Tempo' {
   -- @return String describing the tempo
   describe = function(self)
     if self.marking then
-      return string.format('%s (%d BPM)', self.marking:gsub('^%l', string.upper), self.bpm)
+      return string.format(
+        '%s (%d BPM)',
+        self.marking:gsub('^%l', string.upper), self.bpm)
     else
       return string.format('%d BPM', self.bpm)
     end

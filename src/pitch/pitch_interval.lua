@@ -89,10 +89,14 @@ PitchInterval = llx.class 'PitchInterval' {
   end,
 
   __add = function(self, other)
-    check_arguments{self=PitchInterval, other=llx.Any --[[Union{Pitch,PitchInterval]] }
+    check_arguments{
+      self=PitchInterval,
+      other=llx.Any --[[Union{Pitch,PitchInterval]]
+    }
     self, other = llx.metamethod_args(PitchInterval, self, other)
     if isinstance(other, PitchInterval) then
-      -- If we are adding to another PitchInterval, the result is a PitchInterval.
+      -- If we are adding to another PitchInterval,
+      -- the result is a PitchInterval.
       return PitchInterval{
         number=self.number + other.number,
         semitone_interval=tointeger(self) + tointeger(other)}
@@ -145,8 +149,14 @@ PitchInterval = llx.class 'PitchInterval' {
   end,
 
   __reprPerfectQualities={[-1]="diminished", [0]="perfect", [1]="augmented"},
-  __reprImperfectQualities={[-2]="diminished", [-1]="minor", [0]="major", [1]="augmented"},
-  __reprNumbers={[0]="unison", "second", "third", "fourth", "fifth", "sixth", "seventh", "octave"},
+  __reprImperfectQualities={
+    [-2]="diminished", [-1]="minor",
+    [0]="major", [1]="augmented",
+  },
+  __reprNumbers={
+    [0]="unison", "second", "third", "fourth",
+    "fifth", "sixth", "seventh", "octave",
+  },
 
   __tostring = function(self)
     check_arguments{self=PitchInterval}
@@ -188,38 +198,66 @@ PitchInterval = llx.class 'PitchInterval' {
   imperfect_intervals = List{1, 2, 5, 6},
 }
 
-PitchInterval.unison             = PitchInterval{number=0, quality=IntervalQuality.perfect}
-PitchInterval.augmented_unison   = PitchInterval{number=0, quality=IntervalQuality.augmented}
+local IQ = IntervalQuality
 
-PitchInterval.diminished_second  = PitchInterval{number=1, quality=IntervalQuality.diminished}
-PitchInterval.minor_second       = PitchInterval{number=1, quality=IntervalQuality.minor}
-PitchInterval.major_second       = PitchInterval{number=1, quality=IntervalQuality.major}
-PitchInterval.augmented_second   = PitchInterval{number=1, quality=IntervalQuality.augmented}
+PitchInterval.unison = PitchInterval{
+  number=0, quality=IQ.perfect}
+PitchInterval.augmented_unison = PitchInterval{
+  number=0, quality=IQ.augmented}
 
-PitchInterval.diminished_third   = PitchInterval{number=2, quality=IntervalQuality.diminished}
-PitchInterval.minor_third        = PitchInterval{number=2, quality=IntervalQuality.minor}
-PitchInterval.major_third        = PitchInterval{number=2, quality=IntervalQuality.major}
-PitchInterval.augmented_third    = PitchInterval{number=2, quality=IntervalQuality.augmented}
+PitchInterval.diminished_second = PitchInterval{
+  number=1, quality=IQ.diminished}
+PitchInterval.minor_second = PitchInterval{
+  number=1, quality=IQ.minor}
+PitchInterval.major_second = PitchInterval{
+  number=1, quality=IQ.major}
+PitchInterval.augmented_second = PitchInterval{
+  number=1, quality=IQ.augmented}
 
-PitchInterval.diminished_fourth  = PitchInterval{number=3, quality=IntervalQuality.diminished}
-PitchInterval.perfect_fourth     = PitchInterval{number=3, quality=IntervalQuality.perfect}
-PitchInterval.augmented_fourth   = PitchInterval{number=3, quality=IntervalQuality.augmented}
+PitchInterval.diminished_third = PitchInterval{
+  number=2, quality=IQ.diminished}
+PitchInterval.minor_third = PitchInterval{
+  number=2, quality=IQ.minor}
+PitchInterval.major_third = PitchInterval{
+  number=2, quality=IQ.major}
+PitchInterval.augmented_third = PitchInterval{
+  number=2, quality=IQ.augmented}
 
-PitchInterval.diminished_fifth   = PitchInterval{number=4, quality=IntervalQuality.diminished}
-PitchInterval.perfect_fifth      = PitchInterval{number=4, quality=IntervalQuality.perfect}
-PitchInterval.augmented_fifth    = PitchInterval{number=4, quality=IntervalQuality.augmented}
+PitchInterval.diminished_fourth = PitchInterval{
+  number=3, quality=IQ.diminished}
+PitchInterval.perfect_fourth = PitchInterval{
+  number=3, quality=IQ.perfect}
+PitchInterval.augmented_fourth = PitchInterval{
+  number=3, quality=IQ.augmented}
 
-PitchInterval.diminished_sixth   = PitchInterval{number=5, quality=IntervalQuality.diminished}
-PitchInterval.minor_sixth        = PitchInterval{number=5, quality=IntervalQuality.minor}
-PitchInterval.major_sixth        = PitchInterval{number=5, quality=IntervalQuality.major}
-PitchInterval.augmented_sixth    = PitchInterval{number=5, quality=IntervalQuality.augmented}
+PitchInterval.diminished_fifth = PitchInterval{
+  number=4, quality=IQ.diminished}
+PitchInterval.perfect_fifth = PitchInterval{
+  number=4, quality=IQ.perfect}
+PitchInterval.augmented_fifth = PitchInterval{
+  number=4, quality=IQ.augmented}
 
-PitchInterval.diminished_seventh = PitchInterval{number=6, quality=IntervalQuality.diminished}
-PitchInterval.minor_seventh      = PitchInterval{number=6, quality=IntervalQuality.minor}
-PitchInterval.major_seventh      = PitchInterval{number=6, quality=IntervalQuality.major}
-PitchInterval.augmented_seventh  = PitchInterval{number=6, quality=IntervalQuality.augmented}
+PitchInterval.diminished_sixth = PitchInterval{
+  number=5, quality=IQ.diminished}
+PitchInterval.minor_sixth = PitchInterval{
+  number=5, quality=IQ.minor}
+PitchInterval.major_sixth = PitchInterval{
+  number=5, quality=IQ.major}
+PitchInterval.augmented_sixth = PitchInterval{
+  number=5, quality=IQ.augmented}
 
-PitchInterval.diminished_octave  = PitchInterval{number=7, quality=IntervalQuality.diminished}
-PitchInterval.octave             = PitchInterval{number=7, quality=IntervalQuality.perfect}
+PitchInterval.diminished_seventh = PitchInterval{
+  number=6, quality=IQ.diminished}
+PitchInterval.minor_seventh = PitchInterval{
+  number=6, quality=IQ.minor}
+PitchInterval.major_seventh = PitchInterval{
+  number=6, quality=IQ.major}
+PitchInterval.augmented_seventh = PitchInterval{
+  number=6, quality=IQ.augmented}
+
+PitchInterval.diminished_octave = PitchInterval{
+  number=7, quality=IQ.diminished}
+PitchInterval.octave = PitchInterval{
+  number=7, quality=IQ.perfect}
 
 return _M

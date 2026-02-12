@@ -34,8 +34,10 @@ GenerationContext = class 'GenerationContext' {
   -- @tparam GenerationContext self
   -- @tparam table args Configuration table
   -- @tparam number args.num_notes Number of notes to generate
-  -- @tparam[opt=1000] number args.duration_precision Multiplier for duration (Z3 uses integers)
-  -- @tparam[opt=1000] number args.volume_precision Multiplier for volume (Z3 uses integers)
+  -- @tparam[opt=1000] number args.duration_precision
+  -- Multiplier for duration (Z3 uses integers)
+  -- @tparam[opt=1000] number args.volume_precision
+  -- Multiplier for volume (Z3 uses integers)
   __init = function(self, args)
     args = args or {}
     self.z3_ctx = z3.Context()
@@ -66,12 +68,14 @@ GenerationContext = class 'GenerationContext' {
       self.pitch_vars:insert(pitch_var)
 
       -- Duration as integer (real duration * precision)
-      local duration_var = self.z3_ctx:int_const(string.format("duration_%d", i))
+      local duration_var = self.z3_ctx:int_const(
+        string.format("duration_%d", i))
       self.duration_vars:insert(duration_var)
       -- Duration must be positive
       self.solver:add(duration_var:gt(self.z3_ctx:int_val(0)))
 
-      -- Volume as integer (real volume * precision, range 0-1 maps to 0-precision)
+      -- Volume as integer (real volume * precision,
+      -- range 0-1 maps to 0-precision)
       local volume_var = self.z3_ctx:int_const(string.format("volume_%d", i))
       self.volume_vars:insert(volume_var)
       -- Volume must be in range [0, precision] (maps to [0.0, 1.0])
@@ -204,7 +208,8 @@ GenerationContext = class 'GenerationContext' {
   -- @tparam number duration The real duration
   -- @treturn z3.expr Z3 integer literal
   duration_to_z3 = function(self, duration)
-    return self.z3_ctx:int_val(math.floor(duration * self.duration_precision + 0.5))
+    return self.z3_ctx:int_val(
+      math.floor(duration * self.duration_precision + 0.5))
   end,
 
   --- Converts a volume Z3 value to a real number.

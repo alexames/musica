@@ -96,7 +96,8 @@ FixedVolumeRule = class 'FixedVolumeRule' : extends(Rule) {
   -- @treturn string|nil error message if validation fails
   validate = function(self, figure)
     if self.index > #figure.notes then
-      return false, string.format('Note index %d out of range (figure has %d notes)',
+      return false, string.format(
+        'Note index %d out of range (figure has %d notes)',
         self.index, #figure.notes)
     end
     local note = figure.notes[self.index]
@@ -133,8 +134,10 @@ MonotonicVolumeRule = class 'MonotonicVolumeRule' : extends(Rule) {
   --- Creates a new MonotonicVolumeRule.
   -- @tparam MonotonicVolumeRule self
   -- @tparam table args Configuration table
-  -- @tparam boolean args.increasing If true, volume must increase; if false, decrease
-  -- @tparam[opt=false] boolean args.strict If true, volumes must strictly increase/decrease
+  -- @tparam boolean args.increasing If true, volume must
+  -- increase; if false, decrease
+  -- @tparam[opt=false] boolean args.strict If true, volumes
+  -- must strictly increase/decrease
   -- @tparam[opt='monotonic_volume'] string args.name Rule name
   __init = function(self, args)
     Rule.__init(self, {name = args.name or 'monotonic_volume'})
@@ -153,7 +156,9 @@ MonotonicVolumeRule = class 'MonotonicVolumeRule' : extends(Rule) {
       local curr = figure.notes[i].volume
       if self.increasing then
         if self.strict and curr <= prev then
-          return false, string.format('Note %d volume %.3f not strictly greater than %.3f',
+          return false, string.format(
+            'Note %d volume %.3f not strictly'
+              .. ' greater than %.3f',
             i, curr, prev)
         elseif not self.strict and curr < prev then
           return false, string.format('Note %d volume %.3f less than %.3f',
@@ -161,7 +166,9 @@ MonotonicVolumeRule = class 'MonotonicVolumeRule' : extends(Rule) {
         end
       else
         if self.strict and curr >= prev then
-          return false, string.format('Note %d volume %.3f not strictly less than %.3f',
+          return false, string.format(
+            'Note %d volume %.3f not strictly'
+              .. ' less than %.3f',
             i, curr, prev)
         elseif not self.strict and curr > prev then
           return false, string.format('Note %d volume %.3f greater than %.3f',

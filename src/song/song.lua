@@ -81,11 +81,13 @@ Song = class 'Song' {
               unfinished_notes[event.note_number] = nil
             end
           else
-            -- If there's already an unfinished note with this pitch, finish it first
+            -- If there's already an unfinished note with
+            -- this pitch, finish it first
             -- (handles overlapping notes / re-triggers)
             local existing = unfinished_notes[event.note_number]
             if existing then
-              existing.duration = (time_in_ticks / midi_file.ticks) - existing.time
+              existing.duration =
+                (time_in_ticks / midi_file.ticks) - existing.time
               if existing.duration < 0.0625 then
                 existing.duration = 0.0625  -- Minimum 64th note duration
               end
@@ -151,8 +153,10 @@ Song = class 'Song' {
         for k, adjusted_note in figure_instance:time_adjusted_notes() do
           local note_number = tointeger(adjusted_note.pitch)
           local volume_int = tointeger(adjusted_note.volume * MIDI_VOLUME_MAX)
-          local note_begin = midi.event.NoteBeginEvent(0, channel, note_number, volume_int)
-          local note_end = midi.event.NoteEndEvent(0, channel, note_number, volume_int)
+          local note_begin = midi.event.NoteBeginEvent(
+            0, channel, note_number, volume_int)
+          local note_end = midi.event.NoteEndEvent(
+            0, channel, note_number, volume_int)
           note_begin.time = adjusted_note.time
           note_end.time = adjusted_note:finish()
           events:insert(note_begin)

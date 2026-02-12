@@ -57,9 +57,12 @@ Pitch = class 'Pitch' {
   -- @tparam Pitch self
   -- @tparam table args Table with construction parameters
   -- @tparam[opt] PitchClass args.pitch_class PitchClass (A-G)
-  -- @tparam[opt=4] number args.octave Octave number (default: 4 for middle octave)
-  -- @tparam[opt=0] number args.accidentals Number of semitones sharp (+) or flat (-)
-  -- @tparam[opt] number args.pitch_index Absolute pitch as integer (alternative to above)
+  -- @tparam[opt=4] number args.octave Octave number
+  -- (default: 4 for middle octave)
+  -- @tparam[opt=0] number args.accidentals Number of
+  -- semitones sharp (+) or flat (-)
+  -- @tparam[opt] number args.pitch_index Absolute pitch as
+  -- integer (alternative to above)
   -- @tparam[opt] number args.midi_index MIDI note number (alternative, 0-127)
   -- @usage
   -- local c4 = Pitch{pitch_class=PitchClass.C, octave=4}
@@ -89,7 +92,8 @@ Pitch = class 'Pitch' {
     self.pitch_class = pitch_class
     self.octave = octave
     if pitch_index then
-      local natural_pitch = lowest_pitch_indices[pitch_class] + (self.octave * 12)
+      local natural_pitch =
+        lowest_pitch_indices[pitch_class] + (self.octave * 12)
       self.accidentals = pitch_index - natural_pitch
     else
       self.accidentals = accidentals
@@ -171,8 +175,12 @@ Pitch = class 'Pitch' {
   -- local c4 = Pitch.c4
   -- local e4 = c4 + PitchInterval.major_third
   __add = function(self, pitch_interval)
-    local pitch_class = PitchClass[(self.pitch_class.index + pitch_interval.number - 1) % 7 + 1]
-    local octave = math.floor(self.octave + (self.pitch_class.index + pitch_interval.number - 1) / 7)
+    local pitch_class = PitchClass[
+      (self.pitch_class.index
+        + pitch_interval.number - 1) % 7 + 1]
+    local octave = math.floor(
+      self.octave + (self.pitch_class.index
+        + pitch_interval.number - 1) / 7)
     local pitch_index = tointeger(self) + tointeger(pitch_interval)
     return Pitch{pitch_class=pitch_class,
                  octave=octave,
@@ -185,7 +193,8 @@ Pitch = class 'Pitch' {
   -- @function Pitch:__sub
   -- @tparam Pitch self
   -- @tparam Pitch|PitchInterval other A Pitch or PitchInterval
-  -- @treturn PitchInterval|Pitch PitchInterval (if Pitch) or Pitch (if PitchInterval)
+  -- @treturn PitchInterval|Pitch PitchInterval (if Pitch)
+  -- or Pitch (if PitchInterval)
   -- @usage
   -- local c4 = Pitch.c4
   -- local e4 = Pitch.e4
@@ -194,18 +203,30 @@ Pitch = class 'Pitch' {
   __sub = function(self, other)
     self, other = llx.metamethod_args(Pitch, self, other)
     if isinstance(other, Pitch) then
-      local self_pitch_class_octave = (self.pitch_class.index - 1) + self.octave * 7
-      local other_pitch_class_octave = (other.pitch_class.index - 1) + other.octave * 7
-      return PitchInterval{number=self_pitch_class_octave - other_pitch_class_octave,
-                           semitone_interval=tointeger(self) - tointeger(other)}
+      local self_pitch_class_octave =
+        (self.pitch_class.index - 1) + self.octave * 7
+      local other_pitch_class_octave =
+        (other.pitch_class.index - 1) + other.octave * 7
+      return PitchInterval{
+        number=self_pitch_class_octave
+          - other_pitch_class_octave,
+        semitone_interval=tointeger(self)
+          - tointeger(other),
+      }
     elseif isinstance(other, PitchInterval) then
-      local pitch_class = PitchClass[(self.pitch_class.index - other.number - 1) % 7 + 1]
-      local octave = self.octave + math.floor((self.pitch_class.index - other.number - 1) / 7)
+      local pitch_class = PitchClass[
+        (self.pitch_class.index
+          - other.number - 1) % 7 + 1]
+      local octave = self.octave + math.floor(
+        (self.pitch_class.index
+          - other.number - 1) / 7)
       local pitch_index = tointeger(self) - tointeger(other)
       return Pitch{pitch_class=pitch_class,
                    pitch_index=pitch_index}
     else
-      error('Pitch.__sub: expected Pitch or PitchInterval, got ' .. type(other), 2)
+      error(
+        'Pitch.__sub: expected Pitch or PitchInterval,'
+          .. ' got ' .. type(other), 2)
     end
   end,
 
@@ -267,7 +288,8 @@ local pitch_classes = List{
 while current_pitch < 128 do
   for i, pitch_class, interval in zip(pitch_classes, minor_pitch_intervals) do
     for unused, args in ipairs(accidental_args) do
-      local pitch_name = pitch_class.name:lower() .. args.suffix .. current_octave
+      local pitch_name = pitch_class.name:lower()
+        .. args.suffix .. current_octave
       Pitch[pitch_name] = Pitch{pitch_class=pitch_class,
                                 octave=current_octave,
                                 accidentals=args.accidental}

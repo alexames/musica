@@ -84,9 +84,37 @@ Quality = llx.class 'Quality' {
   end;
 }
 
-Quality.major = Quality{name='major', pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.perfect_fifth}}
-Quality.minor = Quality{name='minor', pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.perfect_fifth}}
-Quality.augmented = Quality{name='augmented', pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.major_third, PitchInterval.augmented_fifth}}
-Quality.diminished = Quality{name='diminished', pitch_intervals=llx.List{PitchInterval.unison, PitchInterval.minor_third, PitchInterval.diminished_fifth}}
+Quality.major = Quality{
+  name='major',
+  pitch_intervals=llx.List{
+    PitchInterval.unison,
+    PitchInterval.major_third,
+    PitchInterval.perfect_fifth,
+  },
+}
+Quality.minor = Quality{
+  name='minor',
+  pitch_intervals=llx.List{
+    PitchInterval.unison,
+    PitchInterval.minor_third,
+    PitchInterval.perfect_fifth,
+  },
+}
+Quality.augmented = Quality{
+  name='augmented',
+  pitch_intervals=llx.List{
+    PitchInterval.unison,
+    PitchInterval.major_third,
+    PitchInterval.augmented_fifth,
+  },
+}
+Quality.diminished = Quality{
+  name='diminished',
+  pitch_intervals=llx.List{
+    PitchInterval.unison,
+    PitchInterval.minor_third,
+    PitchInterval.diminished_fifth,
+  },
+}
 
 return _M

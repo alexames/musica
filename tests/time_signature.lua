@@ -87,7 +87,8 @@ describe('TimeSignatureTests', function()
     expect(ts_6_8 < ts_4_4).to.be_truthy()
   end)
 
-  it('should order 2/2 less than 4/4 when equal duration (by denominator)', function()
+  it('should order 2/2 less than 4/4 when equal duration'
+    .. ' (by denominator)', function()
     -- Both have measure duration 1.0, but 2/2 has smaller denominator
     local ts_2_2 = TimeSignature{numerator = 2, denominator = 2}
     local ts_4_4 = TimeSignature{numerator = 4, denominator = 4}

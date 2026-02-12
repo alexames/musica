@@ -25,12 +25,15 @@ function directional_contour(melody)
   for i=2, #melody do
     local previous_note = melody[i-1]
     local next_note = melody[i]
-    contour:insert(cmp(tointeger(next_note.pitch), tointeger(previous_note.pitch)))
+    contour:insert(cmp(
+      tointeger(next_note.pitch),
+      tointeger(previous_note.pitch)))
   end
   return contour
 end
 
--- Gives series of arbitrary indices that represent the relative pitches of the notes
+-- Gives series of arbitrary indices that represent the
+-- relative pitches of the notes
 function relative_contour(melody)
   local pitch_values = {}
   local seen = {}
@@ -60,7 +63,9 @@ end
 
 -- Gives the contour of a melody in scale indices
 function scale_index_contour(melody, scale)
-  return map(function(note) return scale:to_scale_index(note.pitch) end, List(melody))
+  return map(
+    function(note) return scale:to_scale_index(note.pitch) end,
+    List(melody))
 end
 
 -- Gives the contour of a melody in pitch classes

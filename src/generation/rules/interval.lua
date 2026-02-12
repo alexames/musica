@@ -39,7 +39,9 @@ MaxIntervalRule = class 'MaxIntervalRule' : extends(Rule) {
       local curr = tointeger(figure.notes[i].pitch)
       local interval = math.abs(curr - prev)
       if interval > self.max_semitones then
-        return false, string.format('Interval of %d semitones between notes %d and %d exceeds maximum %d',
+        return false, string.format(
+          'Interval of %d semitones between notes'
+            .. ' %d and %d exceeds maximum %d',
           interval, i-1, i, self.max_semitones)
       end
     end
@@ -74,7 +76,8 @@ MaxIntervalRule = class 'MaxIntervalRule' : extends(Rule) {
   end,
 
   __tostring = function(self)
-    return string.format('MaxIntervalRule{max_semitones=%d}', self.max_semitones)
+    return string.format(
+      'MaxIntervalRule{max_semitones=%d}', self.max_semitones)
   end,
 }
 
@@ -104,7 +107,9 @@ ConjunctMotionRule = class 'ConjunctMotionRule' : extends(Rule) {
       local curr = tointeger(figure.notes[i].pitch)
       local interval = math.abs(curr - prev)
       if interval > self.max_step then
-        return false, string.format('Leap of %d semitones between notes %d and %d (max step: %d)',
+        return false, string.format(
+          'Leap of %d semitones between notes'
+            .. ' %d and %d (max step: %d)',
           interval, i-1, i, self.max_step)
       end
     end

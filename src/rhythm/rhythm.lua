@@ -129,7 +129,10 @@ common_patterns = {
   -- Simple patterns
   whole = Rhythm{whole_note},
   half_half = Rhythm{half_note, half_note},
-  four_quarters = Rhythm{quarter_note, quarter_note, quarter_note, quarter_note},
+  four_quarters = Rhythm{
+    quarter_note, quarter_note,
+    quarter_note, quarter_note,
+  },
   eight_eighths = Rhythm{eighth_note, eighth_note, eighth_note, eighth_note,
                         eighth_note, eighth_note, eighth_note, eighth_note},
 

@@ -108,7 +108,8 @@ TimeSignature = class 'TimeSignature' {
   end,
 
   __eq = function(self, other)
-    return self.numerator == other.numerator and self.denominator == other.denominator
+    return self.numerator == other.numerator
+      and self.denominator == other.denominator
   end,
 
   --- Less-than comparison.

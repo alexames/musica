@@ -130,7 +130,8 @@ describe('FigureTest', function()
     expect(merged_figure.notes).to.be_equal_to(expected_notes)
   end)
 
-  it('should concatenate figures correctly when using concat operator', function()
+  it('should concatenate figures correctly when using'
+    .. ' concat operator', function()
     local figure_1 = Figure{
       duration=4,
       notes=List{
@@ -171,7 +172,8 @@ describe('FigureTest', function()
     expect(concatenated_figure.notes).to.be_equal_to(expected_notes)
   end)
 
-  it('should concatenate figures correctly when using concatenate function', function()
+  it('should concatenate figures correctly when using'
+    .. ' concatenate function', function()
     local figure_1 = Figure{
       duration=4,
       notes=List{
@@ -237,7 +239,8 @@ describe('FigureTest', function()
     expect(repeated_figure.notes).to.be_equal_to(expected_notes)
   end)
 
-  it('should repeat figure correctly when using repeat_figure function', function()
+  it('should repeat figure correctly when using'
+    .. ' repeat_figure function', function()
     local figure = Figure{
       duration=4,
       notes=List{

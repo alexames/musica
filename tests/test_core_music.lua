@@ -1,5 +1,6 @@
 -- test_core_music.lua
--- Unit tests for core music modules (tempo, time_signature, rhythm, articulation)
+-- Unit tests for core music modules
+-- (tempo, time_signature, rhythm, articulation)
 
 local unit = require 'llx.unit'
 
@@ -234,7 +235,8 @@ describe('ArticulationTests', function()
     expect(result.volume).to.be_equal_to(0.7)  -- 0.5 * 1.4
   end)
 
-  it('should very significantly shorten note duration when applying staccatissimo', function()
+  it('should very significantly shorten note duration '
+    .. 'when applying staccatissimo', function()
     local note = Note{pitch = Pitch.c4, duration = 1.0, volume = 1.0}
     local result = apply_to_note(note, Articulation.staccatissimo)
     expect(result.duration).to.be_equal_to(0.25)  -- 25%

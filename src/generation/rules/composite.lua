@@ -162,7 +162,9 @@ NotRule = class 'NotRule' : extends(Rule) {
   validate = function(self, figure)
     local ok, _ = self.child:validate(figure)
     if ok then
-      return false, string.format('Child rule %s should have failed', self.child.name)
+      return false, string.format(
+        'Child rule %s should have failed',
+        self.child.name)
     end
     return true
   end,

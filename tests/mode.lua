@@ -56,7 +56,8 @@ describe('ModeTest', function()
     expect(Mode.minor >> 5).to.be_equal_to(Mode.major)
   end)
 
-  it('should return true when ionian equals mode with same intervals', function()
+  it('should return true when ionian equals mode'
+    .. ' with same intervals', function()
     expect(Mode.ionian == Mode(List{
       PitchInterval.whole,
       PitchInterval.whole,
@@ -68,7 +69,8 @@ describe('ModeTest', function()
     })).to.be_truthy()
   end)
 
-  it('should return false when ionian does not equal mode with different intervals', function()
+  it('should return false when ionian does not equal mode'
+    .. ' with different intervals', function()
     expect(Mode.ionian == Mode(List{
       PitchInterval.whole,
       PitchInterval.half,

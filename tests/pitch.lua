@@ -20,11 +20,16 @@ _G.Pitch = Pitch
 _ENV = unit.create_test_env(_ENV)
 
 describe('PitchTest', function()
-  it('should create pitch equal to c4 when constructed with pitch class, octave, and natural accidentals', function()
-    expect(Pitch.c4).to.be_equal_to(Pitch{pitch_class=PitchClass.C, octave=4, accidentals=natural})
+  it('should create pitch equal to c4 when constructed'
+    .. ' with pitch class, octave, and natural accidentals',
+  function()
+    expect(Pitch.c4).to.be_equal_to(
+      Pitch{pitch_class=PitchClass.C,
+        octave=4, accidentals=natural})
   end)
 
-  it('should create pitch equal to c4 when constructed with pitch class and octave only', function()
+  it('should create pitch equal to c4 when constructed'
+    .. ' with pitch class and octave only', function()
     expect(Pitch.c4).to.be_equal_to(Pitch{pitch_class=PitchClass.C, octave=4})
   end)
 
@@ -40,12 +45,15 @@ describe('PitchTest', function()
     expect(Pitch.c4.accidentals).to.be_equal_to(0)
   end)
 
-  it('should create pitch equal to c4 when constructed with pitch class and pitch index', function()
-    expect(Pitch.c4).to.be_equal_to(Pitch{pitch_class=PitchClass.C, pitch_index=72})
+  it('should create pitch equal to c4 when constructed'
+    .. ' with pitch class and pitch index', function()
+    expect(Pitch.c4).to.be_equal_to(
+      Pitch{pitch_class=PitchClass.C, pitch_index=72})
   end)
 
   it('should create csharp4 when constructed with pitch index 73', function()
-    expect(Pitch.csharp4).to.be_equal_to(Pitch{pitch_class=PitchClass.C, pitch_index=73})
+    expect(Pitch.csharp4).to.be_equal_to(
+      Pitch{pitch_class=PitchClass.C, pitch_index=73})
   end)
 
   it('should set accidentals to 1 for csharp4', function()
@@ -53,15 +61,22 @@ describe('PitchTest', function()
   end)
 
   it('should add augmented unison correctly', function()
-    expect((Pitch.c4 + PitchInterval.augmented_unison).accidentals).to.be_equal_to(1)
+    expect(
+      (Pitch.c4 + PitchInterval.augmented_unison)
+        .accidentals).to.be_equal_to(1)
   end)
 
   it('should create cflat4 when constructed with pitch index 71', function()
-    expect(Pitch.cflat4).to.be_equal_to(Pitch{pitch_class=PitchClass.C, pitch_index=71})
+    expect(Pitch.cflat4).to.be_equal_to(
+      Pitch{pitch_class=PitchClass.C, pitch_index=71})
   end)
 
-  it('should create pitch with double sharp when constructed with accidentals', function()
-    expect(Pitch{pitch_class=PitchClass.C, octave=4, accidentals=2 * Accidental.sharp}).to.be_equal_to(
+  it('should create pitch with double sharp when'
+    .. ' constructed with accidentals', function()
+    expect(Pitch{
+      pitch_class=PitchClass.C, octave=4,
+      accidentals=2 * Accidental.sharp,
+    }).to.be_equal_to(
       Pitch{pitch_class=PitchClass.C, pitch_index=74})
   end)
 
@@ -105,7 +120,8 @@ describe('PitchTest', function()
     expect(Pitch.c4:is_enharmonic(Pitch.bsharp4)).to.be_truthy()
   end)
 
-  it('should return true when c4 equals pitch constructed with same values', function()
+  it('should return true when c4 equals pitch constructed'
+    .. ' with same values', function()
     expect(Pitch.c4 == Pitch{pitch_class=PitchClass.C,
                               octave=4,
                               accidentals=0}).to.be_truthy()
@@ -119,19 +135,22 @@ describe('PitchTest', function()
     expect(Pitch.c4 < Pitch.csharp4).to.be_truthy()
   end)
 
-  it('should return true when c4 is less than pitch with higher pitch class', function()
+  it('should return true when c4 is less than pitch'
+    .. ' with higher pitch class', function()
     expect(Pitch.c4 < Pitch{pitch_class=PitchClass.D,
                             octave=4,
                             accidentals=0}).to.be_truthy()
   end)
 
-  it('should return true when c4 is less than pitch with higher octave', function()
+  it('should return true when c4 is less than pitch'
+    .. ' with higher octave', function()
     expect(Pitch.c4 < Pitch{pitch_class=PitchClass.C,
                             octave=5,
                             accidentals=0}).to.be_truthy()
   end)
 
-  it('should return true when c4 is less than pitch with sharp accidental', function()
+  it('should return true when c4 is less than pitch'
+    .. ' with sharp accidental', function()
     expect(Pitch.c4 < Pitch{pitch_class=PitchClass.C,
                             octave=4,
                             accidentals=Accidental.sharp}).to.be_truthy()
@@ -145,19 +164,22 @@ describe('PitchTest', function()
     expect(Pitch.c4 < Pitch.cflat4).to.be_falsy()
   end)
 
-  it('should return false when c4 is not less than pitch with lower pitch class', function()
+  it('should return false when c4 is not less than pitch'
+    .. ' with lower pitch class', function()
     expect(Pitch.c4 < Pitch{pitch_class=PitchClass.B,
                             octave=4,
                             accidentals=0}).to.be_falsy()
   end)
 
-  it('should return false when c4 is not less than pitch with lower octave', function()
+  it('should return false when c4 is not less than pitch'
+    .. ' with lower octave', function()
     expect(Pitch.c4 < Pitch{pitch_class=PitchClass.C,
                             octave=3,
                             accidentals=0}).to.be_falsy()
   end)
 
-  it('should return false when c4 is not less than pitch with flat accidental', function()
+  it('should return false when c4 is not less than pitch'
+    .. ' with flat accidental', function()
     expect(Pitch.c4 < Pitch{pitch_class=PitchClass.C,
                             octave=4,
                             accidentals=Accidental.flat}).to.be_falsy()
@@ -177,19 +199,22 @@ describe('PitchTest', function()
                              accidentals=0}).to.be_truthy()
   end)
 
-  it('should return true when c4 is less than or equal to pitch with higher pitch class', function()
+  it('should return true when c4 is less than or equal'
+    .. ' to pitch with higher pitch class', function()
     expect(Pitch.c4 <= Pitch{pitch_class=PitchClass.D,
                              octave=4,
                              accidentals=0}).to.be_truthy()
   end)
 
-  it('should return true when c4 is less than or equal to pitch with higher octave', function()
+  it('should return true when c4 is less than or equal'
+    .. ' to pitch with higher octave', function()
     expect(Pitch.c4 <= Pitch{pitch_class=PitchClass.C,
                              octave=5,
                              accidentals=0}).to.be_truthy()
   end)
 
-  it('should return true when c4 is less than or equal to pitch with sharp accidental', function()
+  it('should return true when c4 is less than or equal'
+    .. ' to pitch with sharp accidental', function()
     expect(Pitch.c4 <= Pitch{pitch_class=PitchClass.C,
                              octave=4,
                              accidentals=Accidental.sharp}).to.be_truthy()
@@ -199,23 +224,27 @@ describe('PitchTest', function()
     expect(Pitch.c4 <= Pitch.b4).to.be_falsy()
   end)
 
-  it('should return false when c4 is not less than or equal to cflat4', function()
+  it('should return false when c4 is not less than or'
+    .. ' equal to cflat4', function()
     expect(Pitch.c4 <= Pitch.cflat4).to.be_falsy()
   end)
 
-  it('should return false when c4 is not less than or equal to pitch with lower pitch class', function()
+  it('should return false when c4 is not less than or'
+    .. ' equal to pitch with lower pitch class', function()
     expect(Pitch.c4 <= Pitch{pitch_class=PitchClass.B,
                              octave=4,
                              accidentals=0}).to.be_falsy()
   end)
 
-  it('should return false when c4 is not less than or equal to pitch with lower octave', function()
+  it('should return false when c4 is not less than or'
+    .. ' equal to pitch with lower octave', function()
     expect(Pitch.c4 <= Pitch{pitch_class=PitchClass.C,
                              octave=3,
                              accidentals=0}).to.be_falsy()
   end)
 
-  it('should return false when c4 is not less than or equal to pitch with flat accidental', function()
+  it('should return false when c4 is not less than or'
+    .. ' equal to pitch with flat accidental', function()
     expect(Pitch.c4 <= Pitch{pitch_class=PitchClass.C,
                              octave=4,
                              accidentals=Accidental.flat}).to.be_falsy()
@@ -230,7 +259,8 @@ describe('PitchTest', function()
   end)
 
   it('should add augmented third correctly', function()
-    expect(Pitch.c4 + PitchInterval.augmented_third).to.be_equal_to(Pitch.esharp4)
+    expect(Pitch.c4 + PitchInterval.augmented_third)
+      .to.be_equal_to(Pitch.esharp4)
   end)
 
   it('should subtract pitch to get minor third interval', function()
@@ -246,7 +276,8 @@ describe('PitchTest', function()
   end)
 
   it('should subtract pitch to get augmented third interval', function()
-    expect(Pitch.esharp4 - Pitch.c4).to.be_equal_to(PitchInterval.augmented_third)
+    expect(Pitch.esharp4 - Pitch.c4)
+      .to.be_equal_to(PitchInterval.augmented_third)
   end)
 
   it('should subtract major third interval to get lower pitch', function()
@@ -258,7 +289,8 @@ describe('PitchTest', function()
   end)
 
   it('should subtract augmented third interval to get lower pitch', function()
-    expect(Pitch.esharp4 - PitchInterval.augmented_third).to.be_equal_to(Pitch.c4)
+    expect(Pitch.esharp4 - PitchInterval.augmented_third)
+      .to.be_equal_to(Pitch.c4)
   end)
 
   it('should convert c4 to string and back to same pitch', function()

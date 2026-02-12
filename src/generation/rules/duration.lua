@@ -82,7 +82,8 @@ TotalDurationRule = class 'TotalDurationRule' : extends(Rule) {
   -- @tparam table args Configuration table
   -- @tparam[opt] number args.min_total Minimum total duration
   -- @tparam[opt] number args.max_total Maximum total duration
-  -- @tparam[opt] number args.exact_total Exact total duration (overrides min/max)
+  -- @tparam[opt] number args.exact_total Exact total
+  -- duration (overrides min/max)
   -- @tparam[opt='total_duration'] string args.name Rule name
   __init = function(self, args)
     Rule.__init(self, {name = args.name or 'total_duration'})
@@ -193,7 +194,8 @@ FixedDurationRule = class 'FixedDurationRule' : extends(Rule) {
   -- @treturn string|nil error message if validation fails
   validate = function(self, figure)
     if self.index > #figure.notes then
-      return false, string.format('Note index %d out of range (figure has %d notes)',
+      return false, string.format(
+        'Note index %d out of range (figure has %d notes)',
         self.index, #figure.notes)
     end
     local note = figure.notes[self.index]

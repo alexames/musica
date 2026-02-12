@@ -124,7 +124,8 @@ duration_to_lilypond = function(duration)
     end
   end
 
-  -- For non-standard durations, find the largest fitting duration and return remainder
+  -- For non-standard durations, find the largest fitting
+  -- duration and return remainder
   for _, d in ipairs(standard_durations) do
     if duration > d.beats + DURATION_TOLERANCE then
       return d.lily, duration - d.beats
@@ -248,7 +249,9 @@ key_to_lilypond = function(key)
   end
   -- If key is a Scale object, extract the tonic and mode
   if key.tonic and key.mode then
-    local tonic_str = pitch_to_lilypond(key.tonic):gsub("[',]", "")  -- Remove octave marks
+    -- Remove octave marks
+    local tonic_str =
+      pitch_to_lilypond(key.tonic):gsub("[',]", "")
     local mode_str = key.mode.name or 'major'
     return string.format('\\key %s \\%s', tonic_str, mode_str:lower())
   end
@@ -283,7 +286,8 @@ local function group_simultaneous_notes(notes)
   local current_time = nil
 
   for _, note in ipairs(notes) do
-    if current_time == nil or math.abs(note.time - current_time) > DURATION_TOLERANCE then
+    if current_time == nil
+        or math.abs(note.time - current_time) > DURATION_TOLERANCE then
       -- New time point
       if current_group then
         table.insert(groups, current_group)
@@ -322,7 +326,8 @@ local function note_group_to_lilypond(notes)
     end
     local chord_pitches = '<' .. table.concat(pitches, ' ') .. '>'
 
-    -- Use duration of first note (they should all be the same for a proper chord)
+    -- Use duration of first note (they should all be
+    -- the same for a proper chord)
     local duration_str, remainder = duration_to_lilypond(notes[1].duration)
 
     if remainder > DURATION_TOLERANCE then

@@ -1,7 +1,8 @@
 -- Integration tests for Generator
 -- Usage: lua tests/test_generator.lua
 
--- Require z3 before llx to avoid strict mode conflicts with z3's global registration
+-- Require z3 before llx to avoid strict mode conflicts
+-- with z3's global registration
 local z3 = require 'z3'
 
 local unit = require 'llx.unit'
@@ -165,8 +166,10 @@ describe('Generator', function()
 
     -- All solutions should start on C4 and end on E4
     for i, figure in ipairs(solutions) do
-      expect(tointeger(figure.notes[1].pitch)).to.be_equal_to(tointeger(Pitch.c4))
-      expect(tointeger(figure.notes[3].pitch)).to.be_equal_to(tointeger(Pitch.e4))
+      expect(tointeger(figure.notes[1].pitch))
+        .to.be_equal_to(tointeger(Pitch.c4))
+      expect(tointeger(figure.notes[3].pitch))
+        .to.be_equal_to(tointeger(Pitch.e4))
     end
   end)
 

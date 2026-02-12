@@ -25,7 +25,8 @@ Generator = class 'Generator' {
   -- @tparam Generator self
   -- @tparam table args Configuration table
   -- @tparam[opt] List args.rules List of Rule objects
-  -- @tparam[opt] table args.context Context configuration (passed to GenerationContext)
+  -- @tparam[opt] table args.context Context configuration
+  -- (passed to GenerationContext)
   -- @tparam[opt=100] number args.max_solutions Maximum solutions to enumerate
   __init = function(self, args)
     args = args or {}
@@ -98,7 +99,8 @@ Generator = class 'Generator' {
       coroutine.yield(count, figure)
 
       -- Add constraint to exclude this solution
-      -- The next solution must differ in at least one variable (pitch, duration, or volume)
+      -- The next solution must differ in at least one
+      -- variable (pitch, duration, or volume)
       local exclusion = List{}
       for i, pitch_var in ipairs(ctx:get_pitch_vars()) do
         local current_val = model:get_value(pitch_var)

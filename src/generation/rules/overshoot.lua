@@ -27,7 +27,8 @@ OvershootRule = class 'OvershootRule' : extends(Rule) {
   -- @tparam Pitch args.source_pitch Starting pitch
   -- @tparam Pitch args.target_pitch Ending pitch (destination)
   -- @tparam[opt=2] number args.overshoot_amount Minimum semitones above target
-  -- @tparam[opt] number args.peak_position Fixed position for the peak (1-based index)
+  -- @tparam[opt] number args.peak_position Fixed position
+  -- for the peak (1-based index)
   -- @tparam[opt='overshoot'] string args.name Rule name
   __init = function(self, args)
     Rule.__init(self, {name = args.name or 'overshoot'})
@@ -76,7 +77,9 @@ OvershootRule = class 'OvershootRule' : extends(Rule) {
 
     -- Peak must exceed target by overshoot_amount
     if peak_val < min_peak then
-      return false, string.format('Peak (%d) does not overshoot target (%d) by %d semitones',
+      return false, string.format(
+        'Peak (%d) does not overshoot target'
+          .. ' (%d) by %d semitones',
         peak_val, target, self.overshoot_amount)
     end
 
@@ -109,7 +112,8 @@ OvershootRule = class 'OvershootRule' : extends(Rule) {
 
     local source = ctx:pitch_to_z3(self.source_pitch)
     local target = ctx:pitch_to_z3(self.target_pitch)
-    local min_peak = z3_ctx:int_val(tointeger(self.target_pitch) + self.overshoot_amount)
+    local min_peak = z3_ctx:int_val(
+      tointeger(self.target_pitch) + self.overshoot_amount)
 
     local constraints = List{}
 

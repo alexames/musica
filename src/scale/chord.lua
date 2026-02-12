@@ -73,13 +73,16 @@ local ChordArgs = Schema{
 -- @type Chord
 Chord = class 'Chord' {
   --- Creates a new Chord.
-  -- Can be constructed either from a list of pitches or from a root and quality.
+  -- Can be constructed either from a list of pitches
+  -- or from a root and quality.
   -- @function Chord:__init
   -- @tparam Chord self
   -- @tparam table args Construction arguments
-  -- @tparam[opt] List args.pitches List of Pitch objects (derives root and quality)
+  -- @tparam[opt] List args.pitches List of Pitch objects
+  -- (derives root and quality)
   -- @tparam[opt] Pitch args.root Root Pitch of the chord
-  -- @tparam[opt] Quality args.quality Quality defining the chord type (default: major)
+  -- @tparam[opt] Quality args.quality Quality defining the
+  -- chord type (default: major)
   -- @usage
   -- local c_major = Chord{root=Pitch.c4, quality=Quality.major}
   -- local from_pitches = Chord{pitches=List{Pitch.c4, Pitch.e4, Pitch.g4}}
@@ -139,7 +142,8 @@ Chord = class 'Chord' {
   -- @function Chord:to_extended_pitch
   -- @tparam Chord self
   -- @tparam number chord_index The extended index
-  -- @tparam[opt] PitchInterval extension_interval Interval for octave extension (default: octave)
+  -- @tparam[opt] PitchInterval extension_interval Interval
+  -- for octave extension (default: octave)
   -- @treturn Pitch Pitch at the extended index
   to_extended_pitch = function(self, chord_index, extension_interval)
     check_arguments{self=Chord,
@@ -155,7 +159,8 @@ Chord = class 'Chord' {
   -- @function Chord:to_extended_pitches
   -- @tparam Chord self
   -- @tparam List chord_indices List of extended indices
-  -- @tparam[opt] PitchInterval extension_interval Interval for octave extension (default: octave)
+  -- @tparam[opt] PitchInterval extension_interval Interval
+  -- for octave extension (default: octave)
   -- @treturn List List of Pitch objects
   to_extended_pitches = function(self, chord_indices, extension_interval)
     check_arguments{self=Chord,
@@ -171,8 +176,10 @@ Chord = class 'Chord' {
   -- An inversion moves the lowest n notes up by an octave.
   -- @function Chord:inversion
   -- @tparam Chord self
-  -- @tparam number n The inversion number (0 = root position, 1 = first inversion, etc.)
-  -- @tparam[opt] PitchInterval octave_interval Interval for octave (default: PitchInterval.octave)
+  -- @tparam number n The inversion number
+  -- (0 = root position, 1 = first inversion, etc.)
+  -- @tparam[opt] PitchInterval octave_interval Interval
+  -- for octave (default: PitchInterval.octave)
   -- @treturn Chord New Chord in the specified inversion
   -- @usage
   -- local c_major = Chord{root=Pitch.c4, quality=Quality.major}
@@ -314,7 +321,10 @@ function arpeggiate(args)
   local pitches = chord:to_extended_pitches(chord_indices)
   local notes = List{}
   for i, pitch in ipairs(pitches) do
-    notes[i] = Note{pitch=pitch, time=(i - 1) * time_step, duration=duration, volume=volume}
+    notes[i] = Note{
+      pitch=pitch, time=(i - 1) * time_step,
+      duration=duration, volume=volume,
+    }
   end
 
   if figure_duration == nil then
