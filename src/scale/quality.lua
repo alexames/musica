@@ -70,7 +70,20 @@ Quality = llx.class 'Quality' {
 
   __eq = function(self, other)
     return self.pitch_intervals == other.pitch_intervals
-  end;
+  end,
+
+  __lt = function(self, other)
+    local a, b = self.pitch_intervals, other.pitch_intervals
+    local n = math.min(#a, #b)
+    for i = 1, n do
+      if a[i] ~= b[i] then return a[i] < b[i] end
+    end
+    return #a < #b
+  end,
+
+  __le = function(self, other)
+    return self == other or self < other
+  end,
 
   __len = function(self)
     return #self.pitch_intervals

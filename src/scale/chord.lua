@@ -221,7 +221,20 @@ Chord = class 'Chord' {
   -- @treturn boolean true if root and quality are equal
   __eq = function(self, other)
     check_arguments{self=Chord, other=Chord}
-    return self.root == other.root and self.quality == other.quality
+    return self.root == other.root
+           and self.quality == other.quality
+  end,
+
+  __lt = function(self, other)
+    check_arguments{self=Chord, other=Chord}
+    if self.root ~= other.root then
+      return self.root < other.root
+    end
+    return self.quality < other.quality
+  end,
+
+  __le = function(self, other)
+    return self == other or self < other
   end,
 
   --- Combines chords or adds a bass note (slash chord).

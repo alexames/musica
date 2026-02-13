@@ -58,6 +58,22 @@ describe('QualityTest', function()
     Quality{pitches=pitches}
     expect(pitches).to.be_equal_to(original)
   end)
+
+  it('should order minor before major', function()
+    expect(Quality.minor < Quality.major).to.be_truthy()
+  end)
+
+  it('should order major before augmented', function()
+    expect(Quality.major < Quality.augmented).to.be_truthy()
+  end)
+
+  it('should not order major before minor', function()
+    expect(Quality.major < Quality.minor).to.be_falsy()
+  end)
+
+  it('should have major <= major', function()
+    expect(Quality.major <= Quality.major).to.be_truthy()
+  end)
 end)
 
 if main_file() then

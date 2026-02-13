@@ -269,6 +269,30 @@ describe('ChordTest', function()
     expect(inv0).to.be_equal_to(c_major)
     expect(rawequal(inv0, c_major)).to.be_falsy()
   end)
+
+  it('should order by root pitch first', function()
+    local c_major = Chord{root=Pitch.c4, quality=Quality.major}
+    local d_major = Chord{root=Pitch.d4, quality=Quality.major}
+    expect(c_major < d_major).to.be_truthy()
+  end)
+
+  it('should order by quality when roots are '
+    .. 'equal', function()
+    local c_minor = Chord{root=Pitch.c4, quality=Quality.minor}
+    local c_major = Chord{root=Pitch.c4, quality=Quality.major}
+    expect(c_minor < c_major).to.be_truthy()
+  end)
+
+  it('should not order equal chords', function()
+    local c1 = Chord{root=Pitch.c4, quality=Quality.major}
+    local c2 = Chord{root=Pitch.c4, quality=Quality.major}
+    expect(c1 < c2).to.be_falsy()
+  end)
+
+  it('should have c_major <= c_major', function()
+    local c = Chord{root=Pitch.c4, quality=Quality.major}
+    expect(c <= c).to.be_truthy()
+  end)
 end)
 
 if main_file() then
