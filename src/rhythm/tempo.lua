@@ -100,7 +100,14 @@ Tempo = class 'Tempo' {
   end,
 
   __lt = function(self, other)
-    return self.bpm < other.bpm
+    if self.bpm ~= other.bpm then
+      return self.bpm < other.bpm
+    end
+    -- Break ties: nil marking sorts before non-nil
+    if self.marking == other.marking then return false end
+    if self.marking == nil then return true end
+    if other.marking == nil then return false end
+    return self.marking < other.marking
   end,
 
   __le = function(self, other)

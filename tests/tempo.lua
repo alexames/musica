@@ -63,6 +63,20 @@ describe('TempoTests', function()
     expect(a == b).to.be_falsy()
   end)
 
+  it('should order nil marking before non-nil marking at same bpm', function()
+    expect(Tempo(138) < Tempo{bpm=138, marking='allegro'}).to.be_truthy()
+  end)
+
+  it('should not order non-nil marking before nil marking at same bpm', function()
+    expect(Tempo{bpm=138, marking='allegro'} < Tempo(138)).to.be_falsy()
+  end)
+
+  it('should not order same bpm and same marking as less than', function()
+    local a = Tempo{bpm=138, marking='allegro'}
+    local b = Tempo{bpm=138, marking='allegro'}
+    expect(a < b).to.be_falsy()
+  end)
+
   it('should order slower tempo less than faster tempo', function()
     local adagio = Tempo{marking = 'adagio'}
     local allegro = Tempo{marking = 'allegro'}
