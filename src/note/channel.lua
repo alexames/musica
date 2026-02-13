@@ -61,6 +61,15 @@ Channel = class 'Channel' {
     self.transposition = args.transposition or nil
   end,
 
+  __eq = function(self, other)
+    return self.instrument == other.instrument
+           and self.figure_instances == other.figure_instances
+           and self.part_name == other.part_name
+           and self.short_name == other.short_name
+           and self.clef == other.clef
+           and self.transposition == other.transposition
+  end,
+
   __tostringf = function(self, formatter)
     formatter:table_cons 'Channel' {
       {'instrument', self.instrument},
