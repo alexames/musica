@@ -176,7 +176,22 @@ Scale = llx.class 'Scale' {
   end,
 }
 
+local FindChordArgs = Schema{
+  __name='FindChordArgs',
+  type=Table,
+  properties={
+    scale={type=Scale},
+    quality={type=Quality},
+    nth={type=Integer},
+    direction={type=Integer},
+    scale_indices={type=List},
+    max_octaves={type=Integer},
+  },
+  required={'scale', 'quality'},
+}
+
 function find_chord(args)
+  check_arguments{args=FindChordArgs}
   local scale = args.scale
   local quality = args.quality
   local nth = args.nth or 0

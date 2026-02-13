@@ -4,12 +4,15 @@ local direction_module = require 'musica.direction'
 local mode_module = require 'musica.mode'
 require 'musica.modes'
 local pitch_module = require 'musica.pitch'
+local quality_module = require 'musica.quality'
 local scale_module = require 'musica.scale'
 
 local Direction = direction_module.Direction
 local Mode = mode_module.Mode
 local Pitch = pitch_module.Pitch
+local Quality = quality_module.Quality
 local Scale = scale_module.Scale
+local find_chord = scale_module.find_chord
 local List = llx.List
 local tovalue = llx.tovalue
 local main_file = llx.main_file
@@ -317,6 +320,20 @@ describe('ScaleTest', function()
   it('should convert scale to string and back to same scale', function()
     local scale = Scale{tonic=Pitch.c4, mode=Mode.major}
     expect(tovalue(tostring(scale))).to.be_equal_to(scale)
+  end)
+end)
+
+describe('FindChordTest', function()
+  it('should throw when scale parameter is missing', function()
+    expect(function()
+      find_chord{quality=Quality.major}
+    end).to.throw()
+  end)
+
+  it('should throw when quality parameter is missing', function()
+    expect(function()
+      find_chord{scale=Scale{tonic=Pitch.c4, mode=Mode.major}}
+    end).to.throw()
   end)
 end)
 
