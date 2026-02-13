@@ -15,7 +15,7 @@ local NoteArgs = llx.Schema{
   __name='NoteArgs',
   type=llx.Table,
   properties={
-    pitch={type=llx.Any},
+    pitch={type=llx.Union{Pitch, llx.Number}},
     time={type=llx.Number},
     duration={type=llx.Number},
     volume={type=llx.Number},
