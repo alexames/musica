@@ -49,6 +49,18 @@ describe('DynamicTest', function()
     expect(tostring(dynamics['fortissimo'])).to.be_equal_to('Dynamic.ff')
   end)
 
+  it('should order same volume by long_name then short_name', function()
+    local a = Dynamic('custom_soft', 'cs', 0.4)
+    local b = Dynamic('piano', 'p', 0.4)
+    expect(a < b).to.be_truthy()
+  end)
+
+  it('should not order higher long_name before lower at same volume', function()
+    local a = Dynamic('custom_soft', 'cs', 0.4)
+    local b = Dynamic('piano', 'p', 0.4)
+    expect(b < a).to.be_falsy()
+  end)
+
   it('should order all dynamics from soft to loud', function()
     expect(dynamics['n'] < dynamics['pppp']).to.be_truthy()
     expect(dynamics['pppp'] < dynamics['ppp']).to.be_truthy()

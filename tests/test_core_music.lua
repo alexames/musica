@@ -9,6 +9,8 @@ local TimeSignature = require 'musica.time_signature'.TimeSignature
 local Rhythm = require 'musica.rhythm'.Rhythm
 local Articulation = require 'musica.articulation'.Articulation
 local apply_to_note = require 'musica.articulation'.apply_to_note
+local Dynamic = require 'musica.dynamics'.Dynamic
+local dynamics = require 'musica.dynamics'.dynamics
 local Note = require 'musica.note'.Note
 local Pitch = require 'musica.pitch'.Pitch
 
@@ -254,6 +256,25 @@ describe('ArticulationTests', function()
     local note = Note{pitch = Pitch.c4, duration = 1.0, volume = 1.0}
     local result = apply_to_note(note, Articulation.staccatissimo)
     expect(result.duration).to.be_equal_to(0.25)  -- 25%
+  end)
+end)
+
+describe('DynamicTrichotomyTests', function()
+  it('should order same volume by long_name then short_name', function()
+    local a = Dynamic('custom_soft', 'cs', 0.4)
+    local b = Dynamic('piano', 'p', 0.4)
+    expect(a < b).to.be_truthy()
+  end)
+
+  it('should not order higher long_name before lower at same volume',
+    function()
+    local a = Dynamic('custom_soft', 'cs', 0.4)
+    local b = Dynamic('piano', 'p', 0.4)
+    expect(b < a).to.be_falsy()
+  end)
+
+  it('should still order piano less than forte', function()
+    expect(dynamics['piano'] < dynamics['forte']).to.be_truthy()
   end)
 end)
 

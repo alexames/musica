@@ -18,7 +18,13 @@ Dynamic = llx.class 'Dynamic' {
   end,
 
   __lt = function(self, other)
-    return self.volume < other.volume
+    if self.volume ~= other.volume then
+      return self.volume < other.volume
+    end
+    if self.long_name ~= other.long_name then
+      return self.long_name < other.long_name
+    end
+    return self.short_name < other.short_name
   end,
 
   __le = function(self, other)
