@@ -58,12 +58,18 @@ Note = class 'Note' {
   end,
 
   --- Less-than comparison.
-  -- Ordered by time first, then by pitch (MIDI number).
+  -- Ordered by time, pitch, duration, then volume.
   __lt = function(self, other)
     if self.time ~= other.time then
       return self.time < other.time
     end
-    return self.pitch < other.pitch
+    if self.pitch ~= other.pitch then
+      return self.pitch < other.pitch
+    end
+    if self.duration ~= other.duration then
+      return self.duration < other.duration
+    end
+    return self.volume < other.volume
   end,
 
   --- Less-than-or-equal comparison.

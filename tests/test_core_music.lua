@@ -278,4 +278,25 @@ describe('DynamicTrichotomyTests', function()
   end)
 end)
 
+describe('NoteTrichotomyTests', function()
+  it('should order by duration when time and pitch match', function()
+    local a = Note{pitch=72, time=0, duration=1, volume=1}
+    local b = Note{pitch=72, time=0, duration=2, volume=1}
+    expect(a < b).to.be_truthy()
+  end)
+
+  it('should order by volume when time pitch and duration match',
+    function()
+    local a = Note{pitch=72, time=0, duration=2, volume=0.5}
+    local b = Note{pitch=72, time=0, duration=2, volume=1.0}
+    expect(a < b).to.be_truthy()
+  end)
+
+  it('should not be less than when all fields equal', function()
+    local a = Note{pitch=72, time=0, duration=2, volume=1}
+    local b = Note{pitch=72, time=0, duration=2, volume=1}
+    expect(a < b).to.be_falsy()
+  end)
+end)
+
 run_unit_tests()
