@@ -62,76 +62,67 @@ Song = class 'Song' {
     local instrument_channel_map = {}
     local current_instrument = midi.instrument.acoustic_grand
     for i, track in ipairs(midi_file.tracks) do
-      local unfinished_notes = {}
+      -- Pending notes store raw data until duration is known.
+      local pending_notes = {}
       local time_in_ticks = 0
+      local function finish_pending(note_number, end_ticks)
+        local pending = pending_notes[note_number]
+        if not pending then return end
+        local duration =
+          (end_ticks / midi_file.ticks) - pending.time
+        if duration < 0.0625 then
+          duration = 0.0625
+        end
+        pending.figure.notes:insert(Note{
+          pitch = pending.pitch,
+          time = pending.time,
+          duration = duration,
+          volume = pending.volume,
+        })
+        pending_notes[note_number] = nil
+      end
       for j, event in ipairs(track.events) do
         time_in_ticks = time_in_ticks + event.time_delta
         if isinstance(event, midi.event.NoteEndEvent) then
-          local note = assert(
-            unfinished_notes[event.note_number],
-            'encountered NoteEndEvent without corresponding NoteBeginEvent')
-          -- Maybe we should have an option to quantize this.
-          note.duration = (time_in_ticks / midi_file.ticks) - note.time
+          assert(
+            pending_notes[event.note_number],
+            'encountered NoteEndEvent without'
+              .. ' corresponding NoteBeginEvent')
+          finish_pending(event.note_number, time_in_ticks)
         elseif isinstance(event, midi.event.NoteBeginEvent) then
-          -- Some MIDI files use NoteBeginEvent with velocity 0 as note-off
           if event.velocity == 0 then
-            local note = unfinished_notes[event.note_number]
-            if note then
-              note.duration = (time_in_ticks / midi_file.ticks) - note.time
-              unfinished_notes[event.note_number] = nil
-            end
+            finish_pending(event.note_number, time_in_ticks)
           else
-            -- If there's already an unfinished note with
-            -- this pitch, finish it first
+            -- Finish any existing note on this pitch
             -- (handles overlapping notes / re-triggers)
-            local existing = unfinished_notes[event.note_number]
-            if existing then
-              existing.duration =
-                (time_in_ticks / midi_file.ticks) - existing.time
-              if existing.duration < 0.0625 then
-                existing.duration = 0.0625  -- Minimum 64th note duration
-              end
-            end
-            local note = Note{
-              pitch=Pitch{midi_index=event.note_number},
-              time=time_in_ticks / midi_file.ticks,
-              duration=nil, -- Unknown until NoteEndEvent
-              volume=event.velocity / MIDI_VOLUME_MAX,
-            }
-            unfinished_notes[event.note_number] = note
-            local channel = instrument_channel_map[current_instrument]
+            finish_pending(event.note_number, time_in_ticks)
+            local channel =
+              instrument_channel_map[current_instrument]
             if not channel then
               channel = self:make_channel(current_instrument)
-              channel.figure_instances:insert(FigureInstance(0, Figure{}))
-              instrument_channel_map[current_instrument] = channel
+              channel.figure_instances:insert(
+                FigureInstance(0, Figure{}))
+              instrument_channel_map[current_instrument] =
+                channel
             end
-            local figure = assert(channel.figure_instances[1].figure)
-            figure.notes:insert(note)
+            pending_notes[event.note_number] = {
+              pitch = Pitch{midi_index=event.note_number},
+              time = time_in_ticks / midi_file.ticks,
+              volume = event.velocity / MIDI_VOLUME_MAX,
+              figure =
+                assert(channel.figure_instances[1].figure),
+            }
           end
-        elseif isinstance(event, midi.event.VelocityChangeEvent) then
-          -- Currently not supported
-        elseif isinstance(event, midi.event.ControllerChangeEvent) then
-          -- Currently not supported
-        elseif isinstance(event, midi.event.ProgramChangeEvent) then
-          current_instrument = midi.instrument[event.new_program_number]
-        elseif isinstance(event, midi.event.ChannelPressureChangeEvent) then
-          -- Currently not supported
-        elseif isinstance(event, midi.event.PitchWheelChangeEvent) then
-          -- Currently not supported
-        elseif isinstance(event, midi.event.MetaEvent) then
-          -- Currently not supported
-        else
+        elseif isinstance(event,
+            midi.event.ProgramChangeEvent) then
+          current_instrument =
+            midi.instrument[event.new_program_number]
         end
       end
-      -- Handle any notes that never received a note-off event
-      -- Give them a duration extending to the end of the track
-      local track_end_time = time_in_ticks / midi_file.ticks
-      for note_number, note in pairs(unfinished_notes) do
-        note.duration = track_end_time - note.time
-        -- Ensure minimum duration of a 64th note to avoid zero-duration notes
-        if note.duration < 0.0625 then
-          note.duration = 0.0625
-        end
+      -- Finish any notes that never received a note-off
+      local track_end_ticks = time_in_ticks
+      for note_number in pairs(pending_notes) do
+        finish_pending(note_number, track_end_ticks)
       end
     end
   end,
