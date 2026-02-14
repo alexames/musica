@@ -20,7 +20,7 @@ local Accidental = accidental.Accidental
 local class = llx.class
 local isinstance = llx.isinstance
 local List = llx.List
-local minor_pitch_intervals = pitch_util.minor_pitch_intervals
+local major_pitch_intervals = pitch_util.major_pitch_intervals
 local PitchClass = pitch_class.PitchClass
 local PitchInterval = pitch_interval.PitchInterval
 local tointeger = llx.tointeger
@@ -31,17 +31,18 @@ local styles = tostringf_module.styles
 --- The octave number for middle C (C4).
 local middle_octave = 4
 
---- Pitch indices for octave 0 of each pitch class.
--- Uses A-based octave numbering where octave boundaries align with A.
--- A0=21, B0=23, C0=24, D0=26, E0=28, F0=29, G0=31.
+--- MIDI note numbers for octave 0 of each pitch class.
+-- Uses C-based octave numbering (standard scientific pitch notation).
+-- C0=12, D0=14, E0=16, F0=17, G0=19, A0=21, B0=23.
+-- Middle C is C4 = MIDI 60.
 local lowest_pitch_indices = {
+  [PitchClass.C] = 12,
+  [PitchClass.D] = 14,
+  [PitchClass.E] = 16,
+  [PitchClass.F] = 17,
+  [PitchClass.G] = 19,
   [PitchClass.A] = 21,
   [PitchClass.B] = 23,
-  [PitchClass.C] = 24,
-  [PitchClass.D] = 26,
-  [PitchClass.E] = 28,
-  [PitchClass.F] = 29,
-  [PitchClass.G] = 31,
 }
 
 --- Represents an absolute musical pitch.
@@ -86,8 +87,8 @@ Pitch = class 'Pitch' {
       }
       pitch_index = midi_index
       pitch_class = pitch_classes[midi_index % 12]
-      -- Octave is calculated from A (A-based octave numbering)
-      octave = (midi_index - lowest_pitch_indices[PitchClass.A]) // 12
+      -- Octave is calculated from C (C-based octave numbering)
+      octave = (midi_index - lowest_pitch_indices[PitchClass.C]) // 12
     end
     self.pitch_class = pitch_class
     self.octave = octave
@@ -235,7 +236,7 @@ Pitch = class 'Pitch' {
   -- @tparam Pitch self
   -- @tparam StringFormatter formatter The StringFormatter to use
   __tostringf = function(self, formatter)
-    if lowest_pitch_indices[PitchClass.A] <= tointeger(self)
+    if lowest_pitch_indices[PitchClass.C] <= tointeger(self)
         and tointeger(self) < 128
         and Accidental.flat <= self.accidentals
         and self.accidentals <= Accidental.sharp then
@@ -268,7 +269,7 @@ Pitch = class 'Pitch' {
 
 -- Generate named pitch constants (Pitch.c4, Pitch.csharp4, etc.)
 -- for all pitches in the MIDI range (0-127).
-local current_pitch = lowest_pitch_indices[PitchClass.A]
+local current_pitch = lowest_pitch_indices[PitchClass.C]
 local current_octave = 0
 local accidental_args = {
   {suffix='', accidental=Accidental.natural},
@@ -277,16 +278,16 @@ local accidental_args = {
 }
 
 local pitch_classes = List{
-  PitchClass.A,
-  PitchClass.B,
   PitchClass.C,
   PitchClass.D,
   PitchClass.E,
   PitchClass.F,
   PitchClass.G,
+  PitchClass.A,
+  PitchClass.B,
 }
 while current_pitch < 128 do
-  for i, pitch_class, interval in zip(pitch_classes, minor_pitch_intervals) do
+  for i, pitch_class, interval in zip(pitch_classes, major_pitch_intervals) do
     for unused, args in ipairs(accidental_args) do
       local pitch_name = pitch_class.name:lower()
         .. args.suffix .. current_octave

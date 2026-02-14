@@ -155,17 +155,20 @@ Song = class 'Song' {
         end
       end
 
-      events:sort(function(a, b) return a.time < b.time end)
+      events = events:sort(function(a, b) return a.time < b.time end)
 
       local midi_track = midi.Track()
       midi_file.tracks:insert(midi_track)
-      local previous_time = 0
       midi_track.events:insert(midi.event.ProgramChangeEvent(
         0, channel, song_track.instrument.value))
+      -- Compute time deltas from absolute tick positions to avoid
+      -- accumulating rounding errors across events.
+      local previous_tick = 0
       for j, event in ipairs(events) do
-        local beats = event.time - previous_time
-        event.time_delta = math.floor(beats * midi_file.ticks)
-        previous_time = event.time
+        local current_tick =
+          math.floor(event.time * midi_file.ticks + 0.5)
+        event.time_delta = current_tick - previous_tick
+        previous_tick = current_tick
         midi_track.events:insert(event)
       end
       midi_track.events:insert(

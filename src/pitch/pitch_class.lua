@@ -30,19 +30,19 @@ PitchClass = class 'PitchClass' {
   end,
 }
 
-PitchClass.A = PitchClass{name='A', index=1}
-PitchClass.B = PitchClass{name='B', index=2}
-PitchClass.C = PitchClass{name='C', index=3}
-PitchClass.D = PitchClass{name='D', index=4}
-PitchClass.E = PitchClass{name='E', index=5}
-PitchClass.F = PitchClass{name='F', index=6}
-PitchClass.G = PitchClass{name='G', index=7}
-PitchClass[1] = PitchClass.A
-PitchClass[2] = PitchClass.B
-PitchClass[3] = PitchClass.C
-PitchClass[4] = PitchClass.D
-PitchClass[5] = PitchClass.E
-PitchClass[6] = PitchClass.F
-PitchClass[7] = PitchClass.G
+PitchClass.C = PitchClass{name='C', index=1}
+PitchClass.D = PitchClass{name='D', index=2}
+PitchClass.E = PitchClass{name='E', index=3}
+PitchClass.F = PitchClass{name='F', index=4}
+PitchClass.G = PitchClass{name='G', index=5}
+PitchClass.A = PitchClass{name='A', index=6}
+PitchClass.B = PitchClass{name='B', index=7}
+PitchClass[1] = PitchClass.C
+PitchClass[2] = PitchClass.D
+PitchClass[3] = PitchClass.E
+PitchClass[4] = PitchClass.F
+PitchClass[5] = PitchClass.G
+PitchClass[6] = PitchClass.A
+PitchClass[7] = PitchClass.B
 
 return _M
