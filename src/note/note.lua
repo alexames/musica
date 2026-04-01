@@ -7,31 +7,49 @@ local tostringf_module = require 'llx.tostringf'
 local _ENV, _M = llx.environment.create_module_environment()
 
 local class = llx.class
+local isinstance = llx.isinstance
+local tointeger = llx.tointeger
 local Pitch = pitch.Pitch
 local tostringf = tostringf_module.tostringf
 local styles = tostringf_module.styles
+
+local dynamics_module = require 'musica.dynamics'
+local Dynamic = dynamics_module.Dynamic
 
 local NoteArgs = llx.Schema{
   __name='NoteArgs',
   type=llx.Table,
   properties={
-    pitch={type=llx.Union{Pitch, llx.Number}},
     time={type=llx.Number},
     duration={type=llx.Number},
-    volume={type=llx.Number},
   },
   required={'pitch', 'duration'},
 }
+
+--- Coerce a pitch value to a number.
+-- Accepts Pitch objects, enums, or plain numbers.
+local function coerce_pitch(value)
+  if isinstance(value, llx.Number) then return value end
+  return tointeger(value)
+end
+
+--- Coerce a volume value to a number.
+-- Accepts Dynamic objects or plain numbers.
+local function coerce_volume(value)
+  if value == nil then return 1.0 end
+  if isinstance(value, Dynamic) then return value.volume end
+  return value
+end
 
 --- A note, with a pitch, time, duration and volume
 Note = class 'Note' {
   --- Initializes a Note.
   __init = function(self, arg)
     llx.check_arguments{self=Note, arg=NoteArgs}
-    self.pitch = arg.pitch
+    self.pitch = coerce_pitch(arg.pitch)
     self.time = arg.time or 0
     self.duration = arg.duration
-    self.volume = arg.volume or 1.0
+    self.volume = coerce_volume(arg.volume)
   end,
 
   --- Returns a new Note whose duration ends at the given finish time.
