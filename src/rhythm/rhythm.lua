@@ -124,6 +124,19 @@ quarter_triplet = quarter_note * 2 / 3  -- 0.667
 eighth_triplet = eighth_note * 2 / 3    -- 0.333
 sixteenth_triplet = sixteenth_note * 2 / 3  -- 0.167
 
+--- Generate a steady pulse of equal subdivisions.
+-- @tparam number subdivision Duration of each pulse (in beats)
+-- @tparam number beats Total duration to fill
+-- @treturn Rhythm A rhythm of equal subdivisions filling the given duration
+function pulse(subdivision, beats)
+  local count = math.floor(beats / subdivision + 0.5)
+  local durations = List{}
+  for i = 1, count do
+    durations:insert(subdivision)
+  end
+  return Rhythm{durations=durations}
+end
+
 -- Common rhythmic patterns
 common_patterns = {
   -- Simple patterns
