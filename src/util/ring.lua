@@ -41,6 +41,16 @@ Ring = llx.class 'Ring' {
     key = (key % length) + 1
     return values[key]
   end),
+
+  take = function(self, count)
+    local result = {}
+    local values = self._values
+    local length = #values
+    for i = 1, count do
+      result[i] = values[((i - 1) % length) + 1]
+    end
+    return result
+  end,
 }
 
 return _M

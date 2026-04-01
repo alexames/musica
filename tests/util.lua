@@ -114,6 +114,31 @@ describe('RingTest', function()
   it('should convert to string', function()
     expect(tostring(Ring{3, 6, 9})).to.be_equal_to('Ring{3, 6, 9}')
   end)
+
+  it('should take 0 elements as empty table', function()
+    local ring = Ring{3, 6, 9}
+    expect(List(ring:take(0))).to.be_equal_to(List{})
+  end)
+
+  it('should take fewer elements than ring length', function()
+    local ring = Ring{3, 6, 9}
+    expect(List(ring:take(2))).to.be_equal_to(List{3, 6})
+  end)
+
+  it('should take exactly ring length elements', function()
+    local ring = Ring{3, 6, 9}
+    expect(List(ring:take(3))).to.be_equal_to(List{3, 6, 9})
+  end)
+
+  it('should take more elements than ring length by cycling', function()
+    local ring = Ring{3, 6, 9}
+    expect(List(ring:take(7))).to.be_equal_to(List{3, 6, 9, 3, 6, 9, 3})
+  end)
+
+  it('should take from single element ring', function()
+    local ring = Ring{42}
+    expect(List(ring:take(4))).to.be_equal_to(List{42, 42, 42, 42})
+  end)
 end)
 
 describe('SpiralTest', function()
