@@ -63,6 +63,7 @@ build = {
       ["musica.mode"] = "src/scale/mode.lua",
       ["musica.modes"] = "src/scale/modes.lua",
       ["musica.quality"] = "src/scale/quality.lua",
+      ["musica.melodic"] = "src/scale/melodic.lua",
       ["musica.scale"] = "src/scale/scale.lua",
       ["musica.scale_degree"] = "src/scale/scale_degree.lua",
       ["musica.scale_index"] = "src/scale/scale_index.lua",
@@ -76,8 +77,10 @@ build = {
 
       -- Note / Figure
       ["musica.channel"] = "src/note/channel.lua",
+      ["musica.drums"] = "src/note/drums.lua",
       ["musica.figure"] = "src/note/figure.lua",
       ["musica.note"] = "src/note/note.lua",
+      ["musica.stamper"] = "src/note/stamper.lua",
 
       -- Expression
       ["musica.articulation"] = "src/expression/articulation.lua",
