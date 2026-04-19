@@ -6,12 +6,14 @@
 -- @module musica.stamper
 
 local llx = require 'llx'
+local dynamics_module = require 'musica.dynamics'
 local figure = require 'musica.figure'
 local note = require 'musica.note'
 local rhythm_module = require 'musica.rhythm'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
+local Dynamic = dynamics_module.Dynamic
 local Figure = figure.Figure
 local isinstance = llx.isinstance
 local List = llx.List
@@ -55,13 +57,25 @@ local function parse_rhythm(rhythm)
 end
 
 --- Resolve volume for a given note index.
+--
+-- Accepts:
+--   nil              -> 1.0
+--   number           -> that number
+--   Dynamic instance -> Dynamic.volume
+--   list             -> list[(index-1) % #list + 1], recursively resolved
+--                       (so a mixed list of numbers and Dynamics works)
 local function resolve_volume(volume, index)
   if volume == nil then
     return 1.0
   elseif type(volume) == 'number' then
     return volume
+  elseif isinstance(volume, Dynamic) then
+    return volume.volume
   elseif type(volume) == 'table' then
-    return volume[((index - 1) % #volume) + 1]
+    if #volume == 0 then
+      return 1.0
+    end
+    return resolve_volume(volume[((index - 1) % #volume) + 1], index)
   end
   return 1.0
 end
