@@ -24,4 +24,8 @@ local lock <close> = llx.lock_global_table()
 
 return require 'llx.flatten_submodules' {
   require 'musica.contour.analysis',
+  require 'musica.contour.frame',
+  require 'musica.contour.contour',
+  require 'musica.contour.sequence',
+  require 'musica.contour.vocabulary',
 }

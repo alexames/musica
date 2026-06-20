@@ -99,6 +99,10 @@ build = {
       -- Contour (shape description / classification / realization)
       ["musica.contour"] = "src/contour/init.lua",
       ["musica.contour.analysis"] = "src/contour/analysis.lua",
+      ["musica.contour.frame"] = "src/contour/frame.lua",
+      ["musica.contour.contour"] = "src/contour/contour.lua",
+      ["musica.contour.sequence"] = "src/contour/sequence.lua",
+      ["musica.contour.vocabulary"] = "src/contour/vocabulary.lua",
 
       -- Generation
       ["musica.generation"] = "src/generation/init.lua",
