@@ -17,6 +17,7 @@ local drum_pattern = musica.drum_pattern
 local pulse = musica.pulse
 local scale_walk = musica.scale_walk
 local sequence = musica.sequence
+local tointeger = require('llx').tointeger
 
 local P8 = PitchInterval.octave
 local pass_count = 0
@@ -110,9 +111,12 @@ print('=== scale_stamper ===')
 local fig4 = scale_stamper{scale=scale, indices={0, 2, 4},
   rhythm=Rhythm{1, 1, 2}, volume=0.8, duration=4}
 check('scale_stamper count', #fig4.notes == 3)
+-- Note stores pitch as a MIDI integer (Note coerces via tointeger), so compare
+-- against the integer value of each scale degree, not the Pitch object.
 check('scale_stamper pitch matches scale',
-  fig4.notes[1].pitch == scale[0] and fig4.notes[2].pitch == scale[2]
-  and fig4.notes[3].pitch == scale[4])
+  fig4.notes[1].pitch == tointeger(scale[0])
+  and fig4.notes[2].pitch == tointeger(scale[2])
+  and fig4.notes[3].pitch == tointeger(scale[4]))
 
 -- Test drum_pattern
 print('=== drum_pattern ===')

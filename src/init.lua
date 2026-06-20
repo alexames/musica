@@ -40,5 +40,9 @@ return require 'llx.flatten_submodules' { --        |
   require 'musica.spiral',           -- No     | No
   require 'musica.tempo',            -- No     | No
   require 'musica.util',             -- No     | No
-  require 'musica.generation',       -- No     | No
+  -- NOTE: `musica.generation` is intentionally NOT loaded here. It depends on
+  -- the native z3 binding (lua-z3), which is optional and ABI-bound to the host
+  -- Lua. Keeping it out of the core means `require 'musica'` works everywhere,
+  -- with or without z3. Use `require 'musica.generation'` explicitly when you
+  -- want the constraint generator.
 }

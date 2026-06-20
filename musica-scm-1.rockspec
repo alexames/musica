@@ -29,7 +29,12 @@ dependencies = {
    "lua >= 5.4",
    "llx",
    "lua-midi",
-   "lua-z3",
+   -- NOTE: `lua-z3` is an OPTIONAL dependency, required only by the
+   -- `musica.generation` submodule (Z3 constraint solving). It is not listed
+   -- here because (a) the core library must install and load without it, and
+   -- (b) the native binding is ABI-bound to the host Lua and is distributed via
+   -- the alexames/vcpkg-registry rather than public LuaRocks. Install lua-z3
+   -- separately to use musica.generation.
 }
 
 test = {
