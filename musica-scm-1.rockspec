@@ -64,7 +64,6 @@ build = {
 
       -- Scale / Harmony
       ["musica.chord"] = "src/scale/chord.lua",
-      ["musica.contour"] = "src/scale/contour.lua",
       ["musica.mode"] = "src/scale/mode.lua",
       ["musica.modes"] = "src/scale/modes.lua",
       ["musica.quality"] = "src/scale/quality.lua",
@@ -96,6 +95,10 @@ build = {
       ["musica.lilypond"] = "src/song/lilypond.lua",
       ["musica.pattern"] = "src/song/pattern.lua",
       ["musica.song"] = "src/song/song.lua",
+
+      -- Contour (shape description / classification / realization)
+      ["musica.contour"] = "src/contour/init.lua",
+      ["musica.contour.analysis"] = "src/contour/analysis.lua",
 
       -- Generation
       ["musica.generation"] = "src/generation/init.lua",
