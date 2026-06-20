@@ -98,14 +98,14 @@ describe('ContourTest', function()
   it('should generate pitch index contour correctly', function()
     contour = pitch_index_contour(mary)
     expect(contour).to.be_equal_to(
-      {76, 74, 72, 74,
-       76, 76, 76,
-       74, 74, 74,
-       76, 79, 79,
-       76, 74, 72, 74,
-       76, 76, 76, 76,
-       74, 74, 76, 74,
-       72})
+      {64, 62, 60, 62,
+       64, 64, 64,
+       62, 62, 62,
+       64, 67, 67,
+       64, 62, 60, 62,
+       64, 64, 64, 64,
+       62, 62, 64, 62,
+       60})
   end)
 
   it('should generate scale index contour correctly', function()
