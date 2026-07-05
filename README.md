@@ -1,5 +1,9 @@
 # musica
 
+[![CI](https://github.com/alexames/musica/actions/workflows/ci.yml/badge.svg)](https://github.com/alexames/musica/actions/workflows/ci.yml)
+[![Docs](https://github.com/alexames/musica/actions/workflows/docs.yml/badge.svg)](https://alexames.github.io/musica)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Music theory utilities and algorithmic composition for Lua.
 
 Provides data structures and operations for pitches, scales, chords, rhythm,
@@ -43,10 +47,23 @@ ldoc .
 
 ## Running Tests
 
+On Windows, `run_tests.ps1` installs the working tree and runs every suite:
+
+```powershell
+.\run_tests.ps1
+```
+
+On any platform, individual suites run directly:
+
 ```sh
 cd tests
-lua5.4 test_core_music.lua
+lua5.4 test_pitch.lua
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, test, and PR
+guidelines. Notable changes are tracked in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
