@@ -38,8 +38,11 @@ dependencies = {
 }
 
 test = {
+   -- Skip the generation suites (test_generator, test_rules): they require
+   -- the optional native lua-z3 binding, which is not a declared dependency,
+   -- so `luarocks test` must pass without it (CI excludes them likewise).
    type = "command",
-   command = "cd tests && for f in test_*.lua; do echo \"=== $f ===\"; lua \"$f\" || exit 1; done",
+   command = "cd tests && for f in test_*.lua; do case \"$f\" in test_generator.lua|test_rules.lua) echo \"=== $f (skipped: needs lua-z3) ===\";; *) echo \"=== $f ===\"; lua \"$f\" || exit 1;; esac; done",
 }
 
 build = {
