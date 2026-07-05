@@ -35,9 +35,13 @@ local function cmp(a, b)
   end
 end
 
--- Only lists whether notes are higher, lower, or the same as previous notes
+-- Only lists whether notes are higher, lower, or the same as previous notes.
+-- The first note has no predecessor, so it is reported as Direction.same;
+-- an empty melody yields an empty contour.
 function directional_contour(melody)
-  local contour = List{Direction.same}
+  local contour = List{}
+  if #melody == 0 then return contour end
+  contour:insert(Direction.same)
   for i=2, #melody do
     local previous_note = melody[i-1]
     local next_note = melody[i]

@@ -46,14 +46,8 @@ describe('analysis.directional_contour', function()
     expect(contour).to.be_equal_to({same})
   end)
 
-  it('should return a one-entry contour for an empty melody', function()
-    -- NOTE: documents current behavior. The function seeds its result with
-    -- Direction.same before looking at the melody, so an empty melody
-    -- yields a contour of length 1 rather than 0 -- the only case where
-    -- the contour is longer than the melody it describes.
-    local contour = analysis.directional_contour({})
-    expect(contour).to.have_length(1)
-    expect(contour[1]).to.be_equal_to(same)
+  it('should return an empty contour for an empty melody', function()
+    expect(analysis.directional_contour({})).to.be_equal_to({})
   end)
 
   it('should accept raw MIDI integers as pitches', function()

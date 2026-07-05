@@ -9,8 +9,6 @@ _ENV = unit.create_test_env(_ENV)
 
 describe('ScaleIndexTest', function()
   it('should map first to 0', function()
-    -- Note: this raw entry shadows the List:first() method on this
-    -- instance; ScaleIndex.first is the value 0, not a function.
     expect(ScaleIndex.first).to.be_equal_to(0)
   end)
 

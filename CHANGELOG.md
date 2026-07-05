@@ -34,6 +34,15 @@ and this project adheres to
 - `StepwiseWalk` scoring now penalizes chromatic (out-of-scale) notes as
   intended; a `nil` hole in the scale-index contour previously truncated
   the penalty loop so chromatic lines scored as perfect stepwise walks.
+- `directional_contour` returns an empty contour for an empty melody
+  instead of a spurious one-entry `{same}`, matching the other analysis
+  functions.
+
+### Changed
+
+- `ScaleIndex` and `ScaleDegree` are plain constant tables rather than
+  `llx.List` instances, so entries like `ScaleIndex.first` no longer
+  shadow inherited `List` methods.
 
 ## [0.1.0]
 
