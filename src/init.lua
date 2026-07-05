@@ -4,42 +4,43 @@ local llx = require 'llx'
 
 local lock <close> = llx.lock_global_table()
 
---                                           Tested | Docs
-----------------------------------------------------+-----
-return require 'llx.flatten_submodules' { --        |
-  require 'musica.accidental',       -- No     | No
-  require 'musica.articulation',     -- No     | No
-  require 'musica.beat',             -- No     | No
-  require 'musica.channel',          -- No     | No
-  require 'musica.chord',            -- Yes    | No
-  require 'musica.contour',          -- No     | No
-  require 'musica.direction',        -- No     | No
-  require 'musica.drums',             -- No     | No
-  require 'musica.dynamics',         -- No     | No
-  require 'musica.figure',           -- Yes    | No
-  require 'musica.instrument',       -- No     | No
-  require 'musica.interval_quality', -- No     | No
-  require 'musica.lilypond',         -- No     | No
-  require 'musica.melodic',           -- No     | No
-  require 'musica.meter',            -- No     | No
-  require 'musica.mode',             -- Yes    | No
-  require 'musica.modes',            -- No     | No
-  require 'musica.note',             -- Yes    | No
-  require 'musica.pattern',          -- No     | No
-  require 'musica.pitch',            -- Yes    | No
-  require 'musica.pitch_class',      -- No     | No
-  require 'musica.pitch_interval',   -- Yes    | No
-  require 'musica.quality',          -- Yes    | No
-  require 'musica.rhythm',           -- No     | No
-  require 'musica.ring',             -- No     | No
-  require 'musica.scale',            -- Yes    | No
-  require 'musica.stamper',          -- No     | No
-  require 'musica.scale_degree',     -- No     | No
-  require 'musica.scale_index',      -- No     | No
-  require 'musica.song',             -- No     | No
-  require 'musica.spiral',           -- No     | No
-  require 'musica.tempo',            -- No     | No
-  require 'musica.util',             -- No     | No
+return require 'llx.flatten_submodules' {
+  --- Library version (semantic versioning).
+  _VERSION = '0.1.0',
+
+  require 'musica.accidental',
+  require 'musica.articulation',
+  require 'musica.beat',
+  require 'musica.channel',
+  require 'musica.chord',
+  require 'musica.contour',
+  require 'musica.direction',
+  require 'musica.drums',
+  require 'musica.dynamics',
+  require 'musica.figure',
+  require 'musica.instrument',
+  require 'musica.interval_quality',
+  require 'musica.lilypond',
+  require 'musica.melodic',
+  require 'musica.meter',
+  require 'musica.mode',
+  require 'musica.modes',
+  require 'musica.note',
+  require 'musica.pattern',
+  require 'musica.pitch',
+  require 'musica.pitch_class',
+  require 'musica.pitch_interval',
+  require 'musica.quality',
+  require 'musica.rhythm',
+  require 'musica.ring',
+  require 'musica.scale',
+  require 'musica.scale_degree',
+  require 'musica.scale_index',
+  require 'musica.song',
+  require 'musica.spiral',
+  require 'musica.stamper',
+  require 'musica.tempo',
+  require 'musica.util',
   -- NOTE: `musica.generation` is intentionally NOT loaded here. It depends on
   -- the native z3 binding (lua-z3), which is optional and ABI-bound to the host
   -- Lua. Keeping it out of the core means `require 'musica'` works everywhere,

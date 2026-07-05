@@ -1,5 +1,14 @@
 Set-Location $PSScriptRoot
 
+# lua.bat resolves musica from lua_modules (the rockspec's module map can't be
+# expressed as a package.path template), so reinstall the working tree first --
+# otherwise tests silently run against a stale snapshot.
+& .\luarocks.bat make --deps-mode=none | Out-Null
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "luarocks make failed" -ForegroundColor Red
+  exit 1
+}
+
 # Discover lua-z3 sibling project for local generation tests.
 # In CI, lua-z3 is installed via luarocks. Locally, we use the sibling
 # lua-z3 project's Lua 5.4 build: rock/z3.lua wraps the native module

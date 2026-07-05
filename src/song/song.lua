@@ -84,10 +84,12 @@ Song = class 'Song' {
       for j, event in ipairs(track.events) do
         time_in_ticks = time_in_ticks + event.time_delta
         if isinstance(event, midi.event.NoteEndEvent) then
-          assert(
-            pending_notes[event.note_number],
-            'encountered NoteEndEvent without'
-              .. ' corresponding NoteBeginEvent')
+          if not pending_notes[event.note_number] then
+            error(('malformed MIDI file: NoteEndEvent for note %d'
+              .. ' (track %d, tick %d) has no corresponding'
+              .. ' NoteBeginEvent'):format(
+                event.note_number, i, time_in_ticks))
+          end
           finish_pending(event.note_number, time_in_ticks)
         elseif isinstance(event, midi.event.NoteBeginEvent) then
           if event.velocity == 0 then
@@ -110,7 +112,9 @@ Song = class 'Song' {
               time = time_in_ticks / midi_file.ticks,
               volume = event.velocity / MIDI_VOLUME_MAX,
               figure =
-                assert(channel.figure_instances[1].figure),
+                assert(channel.figure_instances[1].figure,
+                  'internal error: channel is missing its'
+                    .. ' initial figure'),
             }
           end
         elseif isinstance(event,
