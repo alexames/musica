@@ -6,12 +6,17 @@
 
 local accidental = require 'musica.accidental'
 local llx = require 'llx'
+local mode_module = require 'musica.mode'
 local pitch_class = require 'musica.pitch_class'
+local pitch_module = require 'musica.pitch'
+require 'musica.modes'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
 local Accidental = accidental.Accidental
+local Mode = mode_module.Mode
 local PitchClass = pitch_class.PitchClass
+local Pitch = pitch_module.Pitch
 local isinstance = llx.isinstance
 local tointeger = llx.tointeger
 
@@ -59,9 +64,14 @@ local function octave_to_lilypond(octave)
 end
 
 --- Convert a Pitch to LilyPond notation.
--- @param pitch A Pitch object
+-- Accepts a Pitch object or a MIDI note number (Note stores its pitch as an
+-- integer); integers are spelled with the default enharmonic (sharps).
+-- @param pitch A Pitch object or MIDI note number
 -- @return LilyPond pitch string (e.g., "c'", "fis''", "bes,")
 pitch_to_lilypond = function(pitch)
+  if isinstance(pitch, llx.Number) then
+    pitch = Pitch{midi_index = pitch}
+  end
   local name = lilypond_pitch_names[pitch.pitch_class]
   local acc = accidentals_to_lilypond(pitch.accidentals)
   local oct = octave_to_lilypond(pitch.octave)
@@ -252,8 +262,10 @@ key_to_lilypond = function(key)
     -- Remove octave marks
     local tonic_str =
       pitch_to_lilypond(key.tonic):gsub("[',]", "")
-    local mode_str = key.mode.name or 'major'
-    return string.format('\\key %s \\%s', tonic_str, mode_str:lower())
+    -- LilyPond key signatures only understand \major and \minor; treat the
+    -- aeolian/minor mode as minor and everything else as major.
+    local mode_str = key.mode == Mode.minor and 'minor' or 'major'
+    return string.format('\\key %s \\%s', tonic_str, mode_str)
   end
   return '\\key c \\major'
 end
