@@ -17,10 +17,20 @@ local tointeger = llx.tointeger
 -- For when you want a symbol that is unique, but whose value has no meaning.
 -- @type UniqueSymbol
 UniqueSymbol = class 'UniqueSymbol' {
+  --- Creates a new UniqueSymbol.
+  -- Each instance is distinct; two symbols are equal only if they
+  -- are the same object, regardless of their repr strings.
+  -- @function UniqueSymbol:__init
+  -- @tparam UniqueSymbol self
+  -- @tparam string repr_str String used to represent the symbol
+  -- @usage
+  -- local major = UniqueSymbol('IntervalQuality.major')
   __init = function(self, repr_str)
     self.repr_str = repr_str
   end,
 
+  --- Returns the symbol's representation string.
+  -- @return The repr_str passed at construction
   __repr = function(self)
     return self.repr_str
   end,

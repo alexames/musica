@@ -1,5 +1,11 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
+--- Song representation and MIDI conversion.
+-- A Song is a collection of Channels plus sheet music metadata.
+-- Songs can be built programmatically or imported from a MIDI file,
+-- and can be exported to MIDI or engraved as LilyPond notation.
+-- @module musica.song
+
 local channel = require 'musica.channel'
 local chord = require 'musica.chord'
 local figure = require 'musica.figure'
@@ -26,6 +32,7 @@ local tointeger = llx.tointeger
 local tostringf = tostringf_module.tostringf
 local styles = tostringf_module.styles
 
+--- Maximum MIDI velocity value.
 local MIDI_VOLUME_MAX <const> = 127.0
 
 -- Should we annotate which section you're in?
@@ -39,7 +46,29 @@ local MIDI_VOLUME_MAX <const> = 127.0
 --   * Coda https://en.wikipedia.org/wiki/Coda_(music)
 --   * Bridge https://en.wikipedia.org/wiki/Bridge_(music)
 
+--- Represents a complete song.
+-- @type Song
 Song = class 'Song' {
+  --- Creates a new Song.
+  -- @function Song:__init
+  -- @tparam Song self
+  -- @tparam[opt] table args Table with construction parameters
+  -- @tparam[opt] List args.channels List of Channels
+  -- @tparam[opt] string args.title Title for sheet music
+  -- @tparam[opt] string args.subtitle Subtitle
+  -- @tparam[opt] string args.composer Composer name
+  -- @tparam[opt] string args.arranger Arranger name
+  -- @tparam[opt] string args.opus Opus designation
+  -- @tparam[opt] string args.dedication Dedication text
+  -- @tparam[opt] string args.copyright Copyright notice
+  -- @tparam[opt] Tempo args.tempo Tempo marking
+  -- @tparam[opt] Meter args.meter Meter of the song
+  -- @tparam[opt] Scale args.key Key of the song
+  -- @tparam[opt] MidiFile args.midi_file Parsed lua-midi file to
+  -- import channels and notes from
+  -- @usage
+  -- local song = Song{title='Prelude', channels=llx.List{channel}}
+  -- local imported = Song{midi_file=midi_file}
   __init = function(self, args)
     self.channels = args and args.channels or llx.List{}
     -- Metadata for sheet music
@@ -58,6 +87,13 @@ Song = class 'Song' {
     end
   end,
 
+  --- Populates channels from a parsed MIDI file.
+  -- Converts note begin/end event pairs into Notes, grouping them
+  -- by instrument into one channel per instrument.
+  -- @function Song:_song_from_midi_file
+  -- @tparam Song self
+  -- @tparam MidiFile midi_file Parsed MIDI file from lua-midi
+  -- @local
   _song_from_midi_file = function(self, midi_file)
     local instrument_channel_map = {}
     local current_instrument = midi.instrument.acoustic_grand
@@ -131,12 +167,21 @@ Song = class 'Song' {
     end
   end,
 
+  --- Creates a new Channel and adds it to the song.
+  -- @function Song:make_channel
+  -- @tparam Song self
+  -- @tparam Instrument instrument The instrument for the channel
+  -- @treturn Channel The newly created Channel
   make_channel = function(self, instrument)
     local channel = Channel(instrument)
     self.channels:insert(channel)
     return channel
   end,
 
+  --- Converts the Song to a lua-midi MidiFile.
+  -- Each channel becomes a MIDI track containing a program change
+  -- and the channel's note events.
+  -- @return MidiFile ready to be written to disk
   __tomidifile = function(self)
     local midi_file = midi.MidiFile()
     for i, song_track in ipairs(self.channels) do
@@ -181,12 +226,18 @@ Song = class 'Song' {
     return midi_file
   end,
 
+  --- Formats the song for the tostringf system.
+  -- @function Song:__tostringf
+  -- @tparam Song self
+  -- @tparam StringFormatter formatter The StringFormatter to use
   __tostringf = function(self, formatter)
     formatter:table_cons 'Song' {
       {'channels', self.channels},
     }
   end,
 
+  --- Returns a string representation of the song.
+  -- @return String like "Song{channels=...}"
   __tostring = function(self)
     return tostringf(self, styles.abbrev)
   end,

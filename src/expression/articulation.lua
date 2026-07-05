@@ -1,5 +1,10 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
+--- Articulation support for notes and figures.
+-- Articulations modify how notes are played by scaling their
+-- duration and volume (staccato, legato, accent, and so on).
+-- @module musica.articulation
+
 local llx = require 'llx'
 local note_module = require 'musica.note'
 
@@ -10,6 +15,7 @@ local enum = enum_module.enum
 local Note = note_module.Note
 
 --- Articulation enum representing different ways to play notes
+-- @table Articulation
 Articulation = enum 'Articulation' {
   -- Normal articulation (no modification)
   'normal',
