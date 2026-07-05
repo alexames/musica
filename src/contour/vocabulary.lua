@@ -142,16 +142,21 @@ StepwiseWalk = class 'StepwiseWalk' : extends(Monotonic) {
   score = function(self, melody, frame)
     local base = Monotonic.score(self, melody, frame)
     if frame and frame.scale then
+      -- scale_index_contour yields nil for out-of-scale (chromatic) notes,
+      -- leaving holes in the list, so drive the loop from #melody rather than
+      -- #degrees -- Lua's # on a list with holes may report a short border and
+      -- silently skip the chromatic penalty entirely.
       local degrees = scale_index_contour(melody, frame.scale)
+      local n = #melody
       local big = 0
-      for i = 2, #degrees do
+      for i = 2, n do
         if degrees[i] == nil or degrees[i - 1] == nil then
           big = big + 1  -- out-of-scale (chromatic) note: not a scale step
         elseif math.abs(degrees[i] - degrees[i - 1]) > 1 then
           big = big + 1
         end
       end
-      if #degrees > 1 then base = math.max(base, big / (#degrees - 1)) end
+      if n > 1 then base = math.max(base, big / (n - 1)) end
     end
     return base
   end,

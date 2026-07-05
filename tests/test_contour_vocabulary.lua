@@ -179,16 +179,23 @@ describe('vocabulary.stepwise_walk and resolve', function()
     expect(shape:indices()).to.be_equal_to({2, 1, 0})
   end)
 
-  it('should not currently penalize chromatic notes in a walk', function()
-    -- NOTE: documents current behavior; SUSPECTED BUG. StepwiseWalk.score
-    -- intends to count out-of-scale notes as non-steps, but
-    -- scale_index_contour returns {0, nil, 1} for C4, C#4, D4 and the nil
-    -- hole makes #degrees collapse to 1, so the penalty loop never runs
-    -- and the chromatic line scores as a perfect stepwise walk.
+  it('should penalize chromatic notes in a walk', function()
+    -- C4, C#4, D4 -> scale indices {0, nil, 1} in C major. The C#4 is
+    -- out of scale, so both consecutive steps involve a non-scale note and
+    -- the walk scores as a total miss rather than a perfect stepwise line.
     local chromatic = midi_melody(60, 61, 62)
     local frame = ContourFrame{scale = scale}
     local walk = vocabulary.stepwise_walk{from = 0, to = 1}
-    expect(walk:score(chromatic, frame)).to.be_equal_to(0)
+    expect(walk:score(chromatic, frame)).to.be_equal_to(1)
+  end)
+
+  it('should score an in-scale stepwise line as a perfect fit', function()
+    -- C4, D4, E4 -> scale indices {0, 1, 2}: every move is one scale
+    -- degree, so the conjunct-walk penalty stays at zero.
+    local stepwise = midi_melody(60, 62, 64)
+    local frame = ContourFrame{scale = scale}
+    local walk = vocabulary.stepwise_walk{from = 0, to = 2}
+    expect(walk:score(stepwise, frame)).to.be_equal_to(0)
   end)
 end)
 

@@ -31,6 +31,9 @@ and this project adheres to
   notes store their pitch as a MIDI integer.
 - LilyPond key signatures now render minor keys as `\minor` instead of
   always emitting `\major`.
+- `StepwiseWalk` scoring now penalizes chromatic (out-of-scale) notes as
+  intended; a `nil` hole in the scale-index contour previously truncated
+  the penalty loop so chromatic lines scored as perfect stepwise walks.
 
 ## [0.1.0]
 
