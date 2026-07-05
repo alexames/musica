@@ -26,6 +26,11 @@ and this project adheres to
   test failures propagate through process exit codes.
 - `Song` raises a descriptive error (instead of a bare assertion) when a
   MIDI file contains a `NoteEndEvent` with no matching `NoteBeginEvent`.
+- LilyPond export (`Song:tolilypond`) now engraves songs that contain
+  notes; previously any non-empty figure raised an indexing error because
+  notes store their pitch as a MIDI integer.
+- LilyPond key signatures now render minor keys as `\minor` instead of
+  always emitting `\major`.
 
 ## [0.1.0]
 
