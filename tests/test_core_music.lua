@@ -299,4 +299,4 @@ describe('NoteTrichotomyTests', function()
   end)
 end)
 
-run_unit_tests()
+os.exit(run_unit_tests() == 0)

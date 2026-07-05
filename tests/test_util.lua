@@ -1,6 +1,6 @@
 local unit = require 'llx.unit'
 local llx = require 'llx'
-require 'musica.util'
+local util = require 'musica.util'
 local ring_module = require 'musica.ring'
 local spiral_module = require 'musica.spiral'
 
@@ -12,30 +12,35 @@ local main_file = llx.main_file
 _ENV = unit.create_test_env(_ENV)
 
 describe('UtilTest', function()
-  it('should test reprArgs', function()
-    -- Single unnamed arg
-    -- expect(reprArgs('Test', {{nil}})).to.be_equal_to('Test(nil)')
-    -- expect(reprArgs('Test', {{100}})).to.be_equal_to('Test(100)')
-    -- expect(reprArgs('Test', {{false}})).to.be_equal_to('Test(false)')
-    -- expect(reprArgs('Test', {{true}})).to.be_equal_to('Test(true)')
-    -- expect(reprArgs('Test', {{'string'}})).to.be_equal_to("Test('string')")
-    -- Single named arg
+  it('should convert intervals to cumulative indices', function()
+    local major = util.intervals_to_indices{2, 2, 1, 2, 2, 2, 1}
+    expect(major).to.be_equal_to(List{0, 2, 4, 5, 7, 9, 11, 12})
   end)
 
-  it('should test intervalsToIndices', function()
-    -- No tests yet
+  it('should convert an empty interval list to a lone zero index', function()
+    expect(util.intervals_to_indices{}).to.be_equal_to(List{0})
   end)
 
-  it('should test indicesToIntervals', function()
-    -- No tests yet
+  it('should extend indices within the base range', function()
+    local triad = {0, 4, 7}
+    expect(util.extended_index(0, triad, 12)).to.be_equal_to(0)
+    expect(util.extended_index(1, triad, 12)).to.be_equal_to(4)
+    expect(util.extended_index(2, triad, 12)).to.be_equal_to(7)
   end)
 
-  it('should test extendedIndex', function()
-    -- No tests yet
+  it('should wrap extended indices with an interval offset per wrap', function()
+    local triad = {0, 4, 7}
+    expect(util.extended_index(3, triad, 12)).to.be_equal_to(12)
+    expect(util.extended_index(4, triad, 12)).to.be_equal_to(16)
+    expect(util.extended_index(5, triad, 12)).to.be_equal_to(19)
+    expect(util.extended_index(6, triad, 12)).to.be_equal_to(24)
   end)
 
-  it('should test extendedIndices', function()
-    -- No tests yet
+  it('should wrap negative extended indices downward', function()
+    local triad = {0, 4, 7}
+    expect(util.extended_index(-1, triad, 12)).to.be_equal_to(-5)
+    expect(util.extended_index(-2, triad, 12)).to.be_equal_to(-8)
+    expect(util.extended_index(-3, triad, 12)).to.be_equal_to(-12)
   end)
 end)
 
@@ -292,5 +297,5 @@ describe('SpiralTest', function()
 end)
 
 if main_file() then
-  unit.run_unit_tests()
+  os.exit(unit.run_unit_tests() == 0)
 end

@@ -9,7 +9,8 @@ _ENV = unit.create_test_env(_ENV)
 
 describe('PitchClassTest', function()
   it('should be equal when same pitch class', function()
-    expect(PitchClass.A == PitchClass[1]).to.be_truthy()
+    expect(PitchClass.C == PitchClass[1]).to.be_truthy()
+    expect(PitchClass.A == PitchClass[6]).to.be_truthy()
   end)
 
   it('should not be equal when different pitch classes', function()
@@ -20,12 +21,12 @@ describe('PitchClassTest', function()
     expect(PitchClass.A < PitchClass.B).to.be_truthy()
   end)
 
-  it('should order A less than G', function()
-    expect(PitchClass.A < PitchClass.G).to.be_truthy()
+  it('should order G less than A', function()
+    expect(PitchClass.G < PitchClass.A).to.be_truthy()
   end)
 
-  it('should not order G less than A', function()
-    expect(PitchClass.G < PitchClass.A).to.be_falsy()
+  it('should not order A less than G', function()
+    expect(PitchClass.A < PitchClass.G).to.be_falsy()
   end)
 
   it('should not order A less than A', function()
@@ -50,5 +51,5 @@ describe('PitchClassTest', function()
 end)
 
 if main_file() then
-  unit.run_unit_tests()
+  os.exit(unit.run_unit_tests() == 0)
 end

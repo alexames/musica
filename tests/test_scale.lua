@@ -33,13 +33,13 @@ describe('ScaleTest', function()
            Pitch.e4,
            Pitch.f4,
            Pitch.g4,
-           Pitch.a5,
-           Pitch.b5})
+           Pitch.a4,
+           Pitch.b4})
   end)
 
-  it('should return b3 for index -8', function()
+  it('should return b2 for index -8', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale:to_pitch(-8)).to.be_equal_to(Pitch.b3)
+    expect(scale:to_pitch(-8)).to.be_equal_to(Pitch.b2)
   end)
 
   it('should return c3 for index -7', function()
@@ -67,14 +67,14 @@ describe('ScaleTest', function()
     expect(scale:to_pitch(-3)).to.be_equal_to(Pitch.g3)
   end)
 
-  it('should return a4 for index -2', function()
+  it('should return a3 for index -2', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale:to_pitch(-2)).to.be_equal_to(Pitch.a4)
+    expect(scale:to_pitch(-2)).to.be_equal_to(Pitch.a3)
   end)
 
-  it('should return b4 for index -1', function()
+  it('should return b3 for index -1', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale:to_pitch(-1)).to.be_equal_to(Pitch.b4)
+    expect(scale:to_pitch(-1)).to.be_equal_to(Pitch.b3)
   end)
 
   it('should return c4 for index 0', function()
@@ -102,14 +102,14 @@ describe('ScaleTest', function()
     expect(scale:to_pitch(4)).to.be_equal_to(Pitch.g4)
   end)
 
-  it('should return a5 for index 5', function()
+  it('should return a4 for index 5', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale:to_pitch(5)).to.be_equal_to(Pitch.a5)
+    expect(scale:to_pitch(5)).to.be_equal_to(Pitch.a4)
   end)
 
-  it('should return b5 for index 6', function()
+  it('should return b4 for index 6', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale:to_pitch(6)).to.be_equal_to(Pitch.b5)
+    expect(scale:to_pitch(6)).to.be_equal_to(Pitch.b4)
   end)
 
   it('should return c5 for index 7', function()
@@ -127,22 +127,27 @@ describe('ScaleTest', function()
     expect(scale:to_pitches(
       {-8, -7, -5, -3, -1, 0, 1, 3, 5, 7, 8}
     )).to.be_equal_to(
-      List{Pitch.b3,
+      List{Pitch.b2,
            Pitch.c3,
            Pitch.e3,
            Pitch.g3,
-           Pitch.b4,
+           Pitch.b3,
            Pitch.c4,
            Pitch.d4,
            Pitch.f4,
-           Pitch.a5,
+           Pitch.a4,
            Pitch.c5,
            Pitch.d5})
   end)
 
-  it('should return -2 for scale index of a4', function()
+  it('should return -2 for scale index of a3', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale:to_scale_index(Pitch.a4)).to.be_equal_to(-2)
+    expect(scale:to_scale_index(Pitch.a3)).to.be_equal_to(-2)
+  end)
+
+  it('should return 5 for scale index of a4', function()
+    scale = Scale{tonic=Pitch.c4, mode=Mode.major}
+    expect(scale:to_scale_index(Pitch.a4)).to.be_equal_to(5)
   end)
 
   it('should return 0 for scale index of c4', function()
@@ -158,7 +163,7 @@ describe('ScaleTest', function()
   it('should return relative minor scale going up', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
     expect(scale:relative{mode=Mode.minor}).to.be_equal_to(
-      Scale{tonic=Pitch.a5, mode=Mode.minor})
+      Scale{tonic=Pitch.a4, mode=Mode.minor})
   end)
 
   it('should return relative minor scale going down', function()
@@ -166,7 +171,7 @@ describe('ScaleTest', function()
     expect(scale:relative{
       mode=Mode.minor, direction=Direction.down,
     }).to.be_equal_to(
-      Scale{tonic=Pitch.a4, mode=Mode.minor})
+      Scale{tonic=Pitch.a3, mode=Mode.minor})
   end)
 
   it('should return parallel minor scale', function()
@@ -180,9 +185,9 @@ describe('ScaleTest', function()
     expect(#scale).to.be_equal_to(7)
   end)
 
-  it('should return b3 for index -8', function()
+  it('should return b2 for index -8', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale[-8]).to.be_equal_to(Pitch.b3)
+    expect(scale[-8]).to.be_equal_to(Pitch.b2)
   end)
 
   it('should return c3 for index -7', function()
@@ -210,14 +215,14 @@ describe('ScaleTest', function()
     expect(scale[-3]).to.be_equal_to(Pitch.g3)
   end)
 
-  it('should return a4 for index -2', function()
+  it('should return a3 for index -2', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale[-2]).to.be_equal_to(Pitch.a4)
+    expect(scale[-2]).to.be_equal_to(Pitch.a3)
   end)
 
-  it('should return b4 for index -1', function()
+  it('should return b3 for index -1', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale[-1]).to.be_equal_to(Pitch.b4)
+    expect(scale[-1]).to.be_equal_to(Pitch.b3)
   end)
 
   it('should return c4 for index 0', function()
@@ -245,14 +250,14 @@ describe('ScaleTest', function()
     expect(scale[4]).to.be_equal_to(Pitch.g4)
   end)
 
-  it('should return a5 for index 5', function()
+  it('should return a4 for index 5', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale[5]).to.be_equal_to(Pitch.a5)
+    expect(scale[5]).to.be_equal_to(Pitch.a4)
   end)
 
-  it('should return b5 for index 6', function()
+  it('should return b4 for index 6', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(scale[6]).to.be_equal_to(Pitch.b5)
+    expect(scale[6]).to.be_equal_to(Pitch.b4)
   end)
 
   it('should return c5 for index 7', function()
@@ -268,7 +273,7 @@ describe('ScaleTest', function()
   it('should return list of pitches for list index', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
     expect(scale[{-3, -2, -1, 0, 1, 2}]).to.be_equal_to(
-      List{Pitch.g3, Pitch.a4, Pitch.b4, Pitch.c4, Pitch.d4, Pitch.e4})
+      List{Pitch.g3, Pitch.a3, Pitch.b3, Pitch.c4, Pitch.d4, Pitch.e4})
   end)
 
   it('should return list of pitches for another list index', function()
@@ -338,5 +343,5 @@ describe('FindChordTest', function()
 end)
 
 if main_file() then
-  unit.run_unit_tests()
+  os.exit(unit.run_unit_tests() == 0)
 end
