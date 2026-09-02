@@ -3,7 +3,7 @@ package = "musica"
 version = "scm-1"
 
 source = {
-   url = "git://github.com/alexames/musica.git",
+   url = "git+https://github.com/alexames/musica.git",
    branch = "main",
 }
 
