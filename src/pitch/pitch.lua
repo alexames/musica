@@ -9,6 +9,7 @@
 
 local accidental = require 'musica.accidental'
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local pitch_class = require 'musica.pitch_class'
 local pitch_interval = require 'musica.pitch_interval'
 local pitch_util = require 'musica.pitch_util'
@@ -88,7 +89,8 @@ Pitch = class 'Pitch' {
       pitch_index = midi_index
       pitch_class = pitch_classes[midi_index % 12]
       -- Octave is calculated from C (C-based octave numbering)
-      octave = (midi_index - lowest_pitch_indices[PitchClass.C]) // 12
+      octave = compat.floordiv(
+          midi_index - lowest_pitch_indices[PitchClass.C], 12)
     end
     self.pitch_class = pitch_class
     self.octave = octave
@@ -133,7 +135,9 @@ Pitch = class 'Pitch' {
   -- @tparam Pitch other Another Pitch
   -- @treturn boolean true if notationally equal
   __eq = function(self, other)
-    return self.pitch_class == other.pitch_class
+    -- compat.equals, since a pitch_class read back from a string is a plain
+    -- table, which Lua 5.1 and LuaJIT do not compare through PitchClass.__eq.
+    return compat.equals(self.pitch_class, other.pitch_class)
            and self.octave == other.octave
            and self.accidentals == other.accidentals
   end,

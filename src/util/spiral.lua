@@ -1,6 +1,7 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local util = require 'musica.util'
 
 local _ENV, _M = llx.environment.create_module_environment()
@@ -36,8 +37,8 @@ Spiral = class 'Spiral' {
     local length = #values
     local multiplicative_operand = values[length]
     local modulus = length - 1
-    local coefficient = key // modulus
-    key = (key % modulus) + #self
+    local coefficient = compat.floordiv(key, modulus)
+    key = (key % modulus) + compat.len(self)
     key = (key % modulus) + 1
     return values[key] + coefficient * multiplicative_operand
   end),

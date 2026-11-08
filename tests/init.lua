@@ -16,3 +16,10 @@ require 'musica.tests.song'
 require 'musica.tests.tempo'
 require 'musica.tests.time_signature'
 require 'musica.tests.util'
+
+local compat = require 'llx.compat'
+
+-- Tests that need the Lua 5.3 integer operators, which no earlier Lua parses.
+if compat.integer_bits == 64 then
+  require 'musica.tests.lua53.mode'
+end

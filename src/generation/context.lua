@@ -9,6 +9,7 @@
 -- Require z3 before llx to avoid strict mode conflicts
 local z3 = require 'z3'
 local llx = require 'llx'
+local compat = require 'llx.compat'
 
 -- Require individual musica modules to avoid circular dependency
 -- (musica.init now includes musica.generation)
@@ -64,19 +65,19 @@ GenerationContext = class 'GenerationContext' {
   _create_variables = function(self)
     for i = 1, self.num_notes do
       -- Pitch as integer (MIDI number)
-      local pitch_var = self.z3_ctx:int_const(string.format("pitch_%d", i))
+      local pitch_var = self.z3_ctx:int_const(compat.format("pitch_%d", i))
       self.pitch_vars:insert(pitch_var)
 
       -- Duration as integer (real duration * precision)
       local duration_var = self.z3_ctx:int_const(
-        string.format("duration_%d", i))
+        compat.format("duration_%d", i))
       self.duration_vars:insert(duration_var)
       -- Duration must be positive
       self.solver:add(duration_var:gt(self.z3_ctx:int_val(0)))
 
       -- Volume as integer (real volume * precision,
       -- range 0-1 maps to 0-precision)
-      local volume_var = self.z3_ctx:int_const(string.format("volume_%d", i))
+      local volume_var = self.z3_ctx:int_const(compat.format("volume_%d", i))
       self.volume_vars:insert(volume_var)
       -- Volume must be in range [0, precision] (maps to [0.0, 1.0])
       self.solver:add(volume_var:ge(self.z3_ctx:int_val(0)))
@@ -260,7 +261,7 @@ GenerationContext = class 'GenerationContext' {
   end,
 
   __tostring = function(self)
-    return string.format('GenerationContext{num_notes=%d}', self.num_notes)
+    return compat.format('GenerationContext{num_notes=%d}', self.num_notes)
   end,
 }
 

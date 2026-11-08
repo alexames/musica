@@ -1,3 +1,4 @@
+local compat = require 'llx.compat'
 local unit = require 'llx.unit'
 local llx = require 'llx'
 local rhythm_module = require 'musica.rhythm'
@@ -15,7 +16,7 @@ describe('RhythmTests', function()
 
   it('should return length via __len', function()
     local rhythm = Rhythm{1, 0.5, 0.5, 1}
-    expect(#rhythm).to.be_equal_to(4)
+    expect(compat.len(rhythm)).to.be_equal_to(4)
   end)
 
   it('should calculate total duration correctly', function()

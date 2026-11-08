@@ -5,6 +5,7 @@
 -- @module musica.generation.rules.composite
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local z3 = require 'z3'
 local rule_module = require 'musica.generation.rule'
 
@@ -46,7 +47,7 @@ AllOfRule = class 'AllOfRule' : extends(Rule) {
       if child_rule.enabled then
         local ok, err = child_rule:validate(figure)
         if not ok then
-          return false, string.format('%s failed: %s', child_rule.name, err)
+          return false, compat.format('%s failed: %s', child_rule.name, err)
         end
       end
     end
@@ -70,11 +71,11 @@ AllOfRule = class 'AllOfRule' : extends(Rule) {
     if #constraints == 0 then
       return nil
     end
-    return z3.And(table.unpack(constraints))
+    return z3.And(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
-    return string.format('AllOfRule{%d rules}', #self.rules)
+    return compat.format('AllOfRule{%d rules}', #self.rules)
   end,
 }
 
@@ -133,11 +134,11 @@ AnyOfRule = class 'AnyOfRule' : extends(Rule) {
     if #constraints == 0 then
       return nil
     end
-    return z3.Or(table.unpack(constraints))
+    return z3.Or(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
-    return string.format('AnyOfRule{%d rules}', #self.rules)
+    return compat.format('AnyOfRule{%d rules}', #self.rules)
   end,
 }
 
@@ -162,7 +163,7 @@ NotRule = class 'NotRule' : extends(Rule) {
   validate = function(self, figure)
     local ok, _ = self.child:validate(figure)
     if ok then
-      return false, string.format(
+      return false, compat.format(
         'Child rule %s should have failed',
         self.child.name)
     end
@@ -182,7 +183,7 @@ NotRule = class 'NotRule' : extends(Rule) {
   end,
 
   __tostring = function(self)
-    return string.format('NotRule{%s}', self.child.name)
+    return compat.format('NotRule{%s}', self.child.name)
   end,
 }
 

@@ -9,6 +9,7 @@
 -- @module musica.contour.sequence
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local contour_module = require 'musica.contour.contour'
 
 local _ENV, _M = llx.environment.create_module_environment()
@@ -55,7 +56,7 @@ ContourSequence = class 'ContourSequence' : extends(Contour) {
       local frame = list and frames[i] or frames
       local ok, err = contour:is_realizable(frame)
       if not ok then
-        return false, string.format('segment %d: %s', i, err)
+        return false, compat.format('segment %d: %s', i, err)
       end
     end
     return true
@@ -80,7 +81,7 @@ ContourSequence = class 'ContourSequence' : extends(Contour) {
       expected = expected + frame.length
     end
     if #melody ~= expected then
-      error(string.format(
+      error(compat.format(
         'ContourSequence:score: melody has %d notes but segments declare %d',
         #melody, expected), 2)
     end
@@ -100,7 +101,7 @@ ContourSequence = class 'ContourSequence' : extends(Contour) {
   end,
 
   __tostring = function(self)
-    return string.format('ContourSequence<%d>', #self.contours)
+    return compat.format('ContourSequence<%d>', #self.contours)
   end,
 }
 

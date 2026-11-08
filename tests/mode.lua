@@ -1,3 +1,4 @@
+local compat = require 'llx.compat'
 local unit = require 'llx.unit'
 local llx = require 'llx'
 local mode_module = require 'musica.mode'
@@ -41,19 +42,19 @@ describe('ModeTest', function()
   end)
 
   it('should rotate major left by 5 to get minor', function()
-    expect(Mode.major << 5).to.be_equal_to(Mode.minor)
+    expect(Mode.major:rotate_left(5)).to.be_equal_to(Mode.minor)
   end)
 
   it('should rotate minor left by 2 to get major', function()
-    expect(Mode.minor << 2).to.be_equal_to(Mode.major)
+    expect(Mode.minor:rotate_left(2)).to.be_equal_to(Mode.major)
   end)
 
   it('should rotate major right by 2 to get minor', function()
-    expect(Mode.major >> 2).to.be_equal_to(Mode.minor)
+    expect(Mode.major:rotate_right(2)).to.be_equal_to(Mode.minor)
   end)
 
   it('should rotate minor right by 5 to get major', function()
-    expect(Mode.minor >> 5).to.be_equal_to(Mode.major)
+    expect(Mode.minor:rotate_right(5)).to.be_equal_to(Mode.major)
   end)
 
   it('should return true when ionian equals mode'
@@ -83,7 +84,7 @@ describe('ModeTest', function()
   end)
 
   it('should return length of 7 for major mode', function()
-    expect(#Mode.major).to.be_equal_to(7)
+    expect(compat.len(Mode.major)).to.be_equal_to(7)
   end)
 
   it('should return unison for major mode index 0', function()

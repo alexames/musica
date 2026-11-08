@@ -5,6 +5,7 @@
 -- @module musica.tempo
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -48,7 +49,7 @@ Tempo = class 'Tempo' {
       local marking_lower = args.marking:lower()
       local marking_data = tempo_markings[marking_lower]
       if not marking_data then
-        error(string.format('Unknown tempo marking: %s', args.marking), 2)
+        error(compat.format('Unknown tempo marking: %s', args.marking), 2)
       end
       self.bpm = marking_data.typical
       self.marking = marking_lower
@@ -73,11 +74,11 @@ Tempo = class 'Tempo' {
   -- @return String describing the tempo
   describe = function(self)
     if self.marking then
-      return string.format(
+      return compat.format(
         '%s (%d BPM)',
         self.marking:gsub('^%l', string.upper), self.bpm)
     else
-      return string.format('%d BPM', self.bpm)
+      return compat.format('%d BPM', self.bpm)
     end
   end,
 

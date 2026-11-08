@@ -4,6 +4,7 @@
 -- @module musica.generation.rules.boundary
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local rule_module = require 'musica.generation.rule'
 
 local _ENV, _M = llx.environment.create_module_environment()
@@ -37,7 +38,7 @@ StartOnPitchRule = class 'StartOnPitchRule' : extends(Rule) {
     end
     local first_pitch = figure.notes[1].pitch
     if tointeger(first_pitch) ~= tointeger(self.pitch) then
-      return false, string.format('First note is %s, expected %s',
+      return false, compat.format('First note is %s, expected %s',
         first_pitch, self.pitch)
     end
     return true
@@ -53,7 +54,7 @@ StartOnPitchRule = class 'StartOnPitchRule' : extends(Rule) {
   end,
 
   __tostring = function(self)
-    return string.format('StartOnPitchRule{pitch=%s}', self.pitch)
+    return compat.format('StartOnPitchRule{pitch=%s}', self.pitch)
   end,
 }
 
@@ -81,7 +82,7 @@ EndOnPitchRule = class 'EndOnPitchRule' : extends(Rule) {
     end
     local last_pitch = figure.notes[#figure.notes].pitch
     if tointeger(last_pitch) ~= tointeger(self.pitch) then
-      return false, string.format('Last note is %s, expected %s',
+      return false, compat.format('Last note is %s, expected %s',
         last_pitch, self.pitch)
     end
     return true
@@ -98,7 +99,7 @@ EndOnPitchRule = class 'EndOnPitchRule' : extends(Rule) {
   end,
 
   __tostring = function(self)
-    return string.format('EndOnPitchRule{pitch=%s}', self.pitch)
+    return compat.format('EndOnPitchRule{pitch=%s}', self.pitch)
   end,
 }
 

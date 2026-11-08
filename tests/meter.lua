@@ -1,3 +1,4 @@
+local compat = require 'llx.compat'
 local unit = require 'llx.unit'
 local llx = require 'llx'
 local meter_module = require 'musica.meter'
@@ -152,7 +153,7 @@ describe('MeterTest', function()
                          UnstressedPulse(),
                          StressedPulse(),
                          UnstressedPulse()})
-    expect(#m).to.be_equal_to(4)
+    expect(compat.len(m)).to.be_equal_to(4)
   end)
 
   it('should be equal to meter with same pulses', function()

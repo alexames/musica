@@ -2,6 +2,7 @@
 
 package.path = '../src/?.lua;' .. package.path
 
+local compat = require 'llx.compat'
 local musica = require 'musica'
 
 local Pitch = musica.Pitch
@@ -39,14 +40,14 @@ end
 -- Test pulse
 print('=== pulse ===')
 local r = pulse(0.5, 4)
-check('pulse count', #r == 8)
+check('pulse count', compat.len(r) == 8)
 check('pulse total', approx(r:total_duration(), 4))
 for _, d in ipairs(r.durations) do
   check('pulse duration', approx(d, 0.5))
 end
 
 local r2 = pulse(0.25, 2)
-check('pulse quarter count', #r2 == 8)
+check('pulse quarter count', compat.len(r2) == 8)
 check('pulse quarter total', approx(r2:total_duration(), 2))
 
 -- Test scale_walk

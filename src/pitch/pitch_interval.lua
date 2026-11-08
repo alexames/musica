@@ -3,6 +3,7 @@
 local accidental = require 'musica.accidental'
 local interval_quality = require 'musica.interval_quality'
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local pitch_class = require 'musica.pitch_class'
 local pitch_util = require 'musica.pitch_util'
 
@@ -82,7 +83,7 @@ PitchInterval = llx.class 'PitchInterval' {
       end
     end
     assert(result ~= nil,
-           string.format('invalid quality %s for %s interval',
+           compat.format('invalid quality %s for %s interval',
                          tostring(quality),
                          self:is_perfect() and 'perfect' or 'imperfect'))
     return result
@@ -181,7 +182,7 @@ PitchInterval = llx.class 'PitchInterval' {
         end
       end
     end
-    return string.format('PitchInterval{number=%s,accidentals=%s}',
+    return compat.format('PitchInterval{number=%s,accidentals=%s}',
                          self.number, self.accidentals)
   end,
 

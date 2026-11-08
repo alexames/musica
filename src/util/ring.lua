@@ -1,6 +1,7 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local util = require 'musica.util'
 
 local _ENV, _M = llx.environment.create_module_environment()
@@ -37,7 +38,7 @@ Ring = llx.class 'Ring' {
   __index = multi_index(function(self, key)
     local values = self._values
     local length = #values
-    key = (key % length) + #self
+    key = (key % length) + compat.len(self)
     key = (key % length) + 1
     return values[key]
   end),

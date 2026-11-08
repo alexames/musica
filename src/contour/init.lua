@@ -20,12 +20,15 @@
 
 local llx = require 'llx'
 
-local lock <close> = llx.lock_global_table()
-
-return require 'llx.flatten_submodules' {
-  require 'musica.contour.analysis',
-  require 'musica.contour.frame',
-  require 'musica.contour.contour',
-  require 'musica.contour.sequence',
-  require 'musica.contour.vocabulary',
-}
+-- The global table stays locked while the submodules load, so an accidental
+-- global assignment in one of them raises; `with` unlocks it even when a
+-- load raises.
+return llx.contextlib.with(llx.lock_global_table(), function()
+  return require 'llx.flatten_submodules' {
+    require 'musica.contour.analysis',
+    require 'musica.contour.frame',
+    require 'musica.contour.contour',
+    require 'musica.contour.sequence',
+    require 'musica.contour.vocabulary',
+  }
+end)

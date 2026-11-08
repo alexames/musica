@@ -1,6 +1,7 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -21,7 +22,7 @@ Pulse = class 'Pulse' {
   end,
 
   __tostring = function(self)
-    return string.format('Pulse(%s)', self.duration)
+    return compat.format('Pulse(%s)', self.duration)
   end,
 }
 
@@ -36,7 +37,7 @@ StressedPulse = class 'StressedPulse' :extends(Pulse) {
   end,
 
   __tostring = function(self)
-    return string.format('StressedPulse(%s)', self.duration)
+    return compat.format('StressedPulse(%s)', self.duration)
   end,
 }
 
@@ -51,7 +52,7 @@ UnstressedPulse = class 'UnstressedPulse' :extends(Pulse) {
   end,
 
   __tostring = function(self)
-    return string.format('UnstressedPulse(%s)', self.duration)
+    return compat.format('UnstressedPulse(%s)', self.duration)
   end,
 }
 

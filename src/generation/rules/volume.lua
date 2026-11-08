@@ -4,6 +4,7 @@
 -- @module musica.generation.rules.volume
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local z3 = require 'z3'
 local rule_module = require 'musica.generation.rule'
 
@@ -37,11 +38,11 @@ VolumeRangeRule = class 'VolumeRangeRule' : extends(Rule) {
   validate = function(self, figure)
     for i, note in ipairs(figure.notes) do
       if note.volume < self.min_volume then
-        return false, string.format('Note %d volume %.3f below minimum %.3f',
+        return false, compat.format('Note %d volume %.3f below minimum %.3f',
           i, note.volume, self.min_volume)
       end
       if note.volume > self.max_volume then
-        return false, string.format('Note %d volume %.3f above maximum %.3f',
+        return false, compat.format('Note %d volume %.3f above maximum %.3f',
           i, note.volume, self.max_volume)
       end
     end
@@ -65,11 +66,11 @@ VolumeRangeRule = class 'VolumeRangeRule' : extends(Rule) {
     if #constraints == 0 then
       return nil
     end
-    return z3.And(table.unpack(constraints))
+    return z3.And(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
-    return string.format('VolumeRangeRule{min=%.3f, max=%.3f}',
+    return compat.format('VolumeRangeRule{min=%.3f, max=%.3f}',
       self.min_volume, self.max_volume)
   end,
 }
@@ -96,13 +97,13 @@ FixedVolumeRule = class 'FixedVolumeRule' : extends(Rule) {
   -- @treturn string|nil error message if validation fails
   validate = function(self, figure)
     if self.index > #figure.notes then
-      return false, string.format(
+      return false, compat.format(
         'Note index %d out of range (figure has %d notes)',
         self.index, #figure.notes)
     end
     local note = figure.notes[self.index]
     if math.abs(note.volume - self.volume) > 0.001 then
-      return false, string.format('Note %d volume %.3f != required %.3f',
+      return false, compat.format('Note %d volume %.3f != required %.3f',
         self.index, note.volume, self.volume)
     end
     return true
@@ -122,7 +123,7 @@ FixedVolumeRule = class 'FixedVolumeRule' : extends(Rule) {
   end,
 
   __tostring = function(self)
-    return string.format('FixedVolumeRule{index=%d, volume=%.3f}',
+    return compat.format('FixedVolumeRule{index=%d, volume=%.3f}',
       self.index, self.volume)
   end,
 }
@@ -156,22 +157,22 @@ MonotonicVolumeRule = class 'MonotonicVolumeRule' : extends(Rule) {
       local curr = figure.notes[i].volume
       if self.increasing then
         if self.strict and curr <= prev then
-          return false, string.format(
+          return false, compat.format(
             'Note %d volume %.3f not strictly'
               .. ' greater than %.3f',
             i, curr, prev)
         elseif not self.strict and curr < prev then
-          return false, string.format('Note %d volume %.3f less than %.3f',
+          return false, compat.format('Note %d volume %.3f less than %.3f',
             i, curr, prev)
         end
       else
         if self.strict and curr >= prev then
-          return false, string.format(
+          return false, compat.format(
             'Note %d volume %.3f not strictly'
               .. ' less than %.3f',
             i, curr, prev)
         elseif not self.strict and curr > prev then
-          return false, string.format('Note %d volume %.3f greater than %.3f',
+          return false, compat.format('Note %d volume %.3f greater than %.3f',
             i, curr, prev)
         end
       end
@@ -208,13 +209,13 @@ MonotonicVolumeRule = class 'MonotonicVolumeRule' : extends(Rule) {
     if #constraints == 0 then
       return nil
     end
-    return z3.And(table.unpack(constraints))
+    return z3.And(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
     local dir = self.increasing and 'increasing' or 'decreasing'
     local strictness = self.strict and 'strict' or 'non-strict'
-    return string.format('MonotonicVolumeRule{%s, %s}', dir, strictness)
+    return compat.format('MonotonicVolumeRule{%s, %s}', dir, strictness)
   end,
 }
 

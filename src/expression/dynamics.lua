@@ -1,6 +1,7 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -32,7 +33,7 @@ Dynamic = llx.class 'Dynamic' {
   end,
 
   __tostring = function(self)
-    return string.format('Dynamic.%s', self.short_name)
+    return compat.format('Dynamic.%s', self.short_name)
   end,
 }
 

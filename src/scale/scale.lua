@@ -3,6 +3,7 @@
 local chord = require 'musica.chord'
 local direction = require 'musica.direction'
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local mode = require 'musica.mode'
 local modes = require 'musica.modes'
 local pitch = require 'musica.pitch'
@@ -49,7 +50,7 @@ Scale = llx.class 'Scale' {
     local octave_interval = tointeger(self.mode:octave_interval())
     local normalized = {}
     local pitch_class_set = {}
-    for i=1, #self.mode do
+    for i=1, compat.len(self.mode) do
       local semitones = tointeger(self.mode[i-1])
       normalized[i] = semitones
       pitch_class_set[semitones % octave_interval] = true
@@ -62,7 +63,7 @@ Scale = llx.class 'Scale' {
   get_pitches = function(self)
     check_arguments{self=Scale}
     local result = List{}
-    for i=1, #self.mode do
+    for i=1, compat.len(self.mode) do
       result[i] = self.tonic + self.mode[i-1]
     end
     return result
@@ -86,11 +87,12 @@ Scale = llx.class 'Scale' {
     local pitch_index_offset = pitch_index - tointeger(self.tonic)
     local octave_interval = self._octave_interval
     local offset_modulus = pitch_index_offset % octave_interval
-    local offset_octave = pitch_index_offset // octave_interval
+    local offset_octave =
+      compat.floordiv(pitch_index_offset, octave_interval)
     local normalized = self._normalized_indices
     for i = 1, #normalized do
       if normalized[i] == offset_modulus then
-        return (i - 1) + #self * offset_octave
+        return (i - 1) + compat.len(self) * offset_octave
       end
     end
     return nil
@@ -119,10 +121,10 @@ Scale = llx.class 'Scale' {
         error("unrelated mode")
       end
       if direction == Direction.down then
-        scale_index = scale_index - #self
+        scale_index = scale_index - compat.len(self)
       end
     elseif scale_index ~= nil then
-      mode = self.mode << scale_index
+      mode = self.mode:rotate_left(scale_index)
     end
 
     local tonic_scale_index =
@@ -164,7 +166,7 @@ Scale = llx.class 'Scale' {
   end,
 
   __len = function(self)
-    return #self.mode
+    return compat.len(self.mode)
   end,
 
   __index = multi_index(function(self, index)
@@ -172,7 +174,7 @@ Scale = llx.class 'Scale' {
   end),
 
   __tostring = function(self)
-    return string.format("Scale{tonic=%s, mode=%s}", self.tonic, self.mode)
+    return compat.format("Scale{tonic=%s, mode=%s}", self.tonic, self.mode)
   end,
 }
 
@@ -201,7 +203,7 @@ function find_chord(args)
   local number_found = 0
   -- Search one octave at a time.
   local start = 0
-  local finish = direction * #scale
+  local finish = direction * compat.len(scale)
   local octaves_searched = 0
   while octaves_searched < max_octaves do
     for i, root_scale_index in range(start, finish, direction) do
@@ -219,8 +221,8 @@ function find_chord(args)
         number_found = number_found + 1
       end
     end
-    start = start + direction * #scale
-    finish = finish + direction * #scale
+    start = start + direction * compat.len(scale)
+    finish = finish + direction * compat.len(scale)
     octaves_searched = octaves_searched + 1
     -- If after one full octave there have not been any matches,
     -- there won't be any matches going forward either. We should

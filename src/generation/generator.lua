@@ -7,6 +7,7 @@
 -- @module musica.generation.generator
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local z3 = require 'z3'
 local context_module = require 'musica.generation.context'
 
@@ -118,7 +119,7 @@ Generator = class 'Generator' {
 
       -- At least one variable must be different
       if #exclusion > 0 then
-        solver:add(z3.Or(table.unpack(exclusion)))
+        solver:add(z3.Or(compat.unpack(exclusion)))
       else
         break
       end
@@ -144,7 +145,7 @@ Generator = class 'Generator' {
   end,
 
   __tostring = function(self)
-    return string.format('Generator{rules=%d, max_solutions=%d}',
+    return compat.format('Generator{rules=%d, max_solutions=%d}',
       #self.rules, self.max_solutions)
   end,
 }

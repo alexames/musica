@@ -31,7 +31,7 @@ local diatonic_modes_names = llx.List{
 
 assert(#diatonic_modes_names == #diatonic_intervals)
 for i, name in ipairs(diatonic_modes_names) do
-  Mode[name] = Mode(diatonic_intervals << (i - 1))
+  Mode[name] = Mode(llx.List.__shl(diatonic_intervals, i - 1))
 end
 
 Mode.major = Mode.ionian
