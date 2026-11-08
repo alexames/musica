@@ -15,6 +15,7 @@ local _ENV, _M = llx.environment.create_module_environment()
 local class = llx.class
 local List = llx.List
 local wrap = llx.coroutine.wrap
+local decorated = llx.decorator.decorated
 
 local GenerationContext = context_module.GenerationContext
 
@@ -80,7 +81,7 @@ Generator = class 'Generator' {
   -- Returns an iterator that yields (index, figure) pairs.
   -- @tparam Generator self
   -- @treturn function Iterator function
-  ['generate_all' | wrap] = function(self)
+  [decorated('generate_all', wrap)] = function(self)
     local ctx = self:_setup_context()
     local solver = ctx:get_solver()
     local z3_ctx = ctx:get_z3_context()

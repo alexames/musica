@@ -27,7 +27,7 @@ as well as procedural music generation using constraint solving.
 
 dependencies = {
    "lua >= 5.4",
-   "llx",
+   "llx >= 3.0",
    "lua-midi",
    -- NOTE: `lua-z3` is an OPTIONAL dependency, required only by the
    -- `musica.generation` submodule (Z3 constraint solving). It is not listed
