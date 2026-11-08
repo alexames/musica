@@ -7,6 +7,7 @@
 -- @module musica.chord
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local figure = require 'musica.figure'
 local note = require 'musica.note'
 local pitch = require 'musica.pitch'
@@ -103,7 +104,7 @@ Chord = class 'Chord' {
   -- @return List of Pitch objects
   get_pitches = function(self)
     check_arguments{self=Chord}
-    return self:to_pitches(List(range(0, #self)))
+    return self:to_pitches(List(range(0, compat.len(self))))
   end,
 
   --- Gets the chord's quality.
@@ -194,11 +195,12 @@ Chord = class 'Chord' {
     end
 
     local inverted_intervals = List{}
-    for i=1, #self do
+    local length = compat.len(self)
+    for i=1, length do
       local index = n + i - 1
-      local octave_index = index // #self
+      local octave_index = compat.floordiv(index, length)
       local octave_offset = octave_interval * octave_index
-      inverted_intervals[i] = self.quality[index % #self + 1] + octave_offset
+      inverted_intervals[i] = self.quality[index % length + 1] + octave_offset
     end
     return Chord{root=self.root + inverted_intervals[1],
                  quality=Quality{pitch_intervals=inverted_intervals}}
@@ -263,7 +265,7 @@ Chord = class 'Chord' {
   -- @return Number of pitches
   __len = function(self)
     check_arguments{self=Chord}
-    return #self.quality
+    return compat.len(self.quality)
   end,
 
   --- Allows indexing the chord to get pitches.
@@ -277,7 +279,7 @@ Chord = class 'Chord' {
   -- @return String like "Chord{root=Pitch.c4, quality=Quality.major}"
   __tostring = function(self)
     check_arguments{self=Chord}
-    return string.format('Chord{root=%s, quality=%s}', self.root, self.quality)
+    return compat.format('Chord{root=%s, quality=%s}', self.root, self.quality)
   end,
 }
 
@@ -327,7 +329,7 @@ function arpeggiate(args)
     chord_indices = index_pattern
   else
     local index_pattern_fn = args.index_pattern_fn or range
-    count = args.count or #chord
+    count = args.count or compat.len(chord)
     chord_indices = List(index_pattern_fn(count))
   end
 

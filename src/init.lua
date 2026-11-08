@@ -2,47 +2,50 @@
 
 local llx = require 'llx'
 
-local lock <close> = llx.lock_global_table()
-
---                                           Tested | Docs
-----------------------------------------------------+-----
-return require 'llx.flatten_submodules' { --        |
-  require 'musica.accidental',       -- No     | No
-  require 'musica.articulation',     -- No     | No
-  require 'musica.beat',             -- No     | No
-  require 'musica.channel',          -- No     | No
-  require 'musica.chord',            -- Yes    | No
-  require 'musica.contour',          -- No     | No
-  require 'musica.direction',        -- No     | No
-  require 'musica.drums',             -- No     | No
-  require 'musica.dynamics',         -- No     | No
-  require 'musica.figure',           -- Yes    | No
-  require 'musica.instrument',       -- No     | No
-  require 'musica.interval_quality', -- No     | No
-  require 'musica.lilypond',         -- No     | No
-  require 'musica.melodic',           -- No     | No
-  require 'musica.meter',            -- No     | No
-  require 'musica.mode',             -- Yes    | No
-  require 'musica.modes',            -- No     | No
-  require 'musica.note',             -- Yes    | No
-  require 'musica.pattern',          -- No     | No
-  require 'musica.pitch',            -- Yes    | No
-  require 'musica.pitch_class',      -- No     | No
-  require 'musica.pitch_interval',   -- Yes    | No
-  require 'musica.quality',          -- Yes    | No
-  require 'musica.rhythm',           -- No     | No
-  require 'musica.ring',             -- No     | No
-  require 'musica.scale',            -- Yes    | No
-  require 'musica.stamper',          -- No     | No
-  require 'musica.scale_degree',     -- No     | No
-  require 'musica.scale_index',      -- No     | No
-  require 'musica.song',             -- No     | No
-  require 'musica.spiral',           -- No     | No
-  require 'musica.tempo',            -- No     | No
-  require 'musica.util',             -- No     | No
-  -- NOTE: `musica.generation` is intentionally NOT loaded here. It depends on
-  -- the native z3 binding (lua-z3), which is optional and ABI-bound to the host
-  -- Lua. Keeping it out of the core means `require 'musica'` works everywhere,
-  -- with or without z3. Use `require 'musica.generation'` explicitly when you
-  -- want the constraint generator.
-}
+-- The global table stays locked while the submodules load, so an accidental
+-- global assignment in one of them raises; `with` unlocks it even when a
+-- load raises.
+return llx.contextlib.with(llx.lock_global_table(), function()
+  --                                           Tested | Docs
+  ----------------------------------------------------+-----
+  return require 'llx.flatten_submodules' { --        |
+    require 'musica.accidental',       -- No     | No
+    require 'musica.articulation',     -- No     | No
+    require 'musica.beat',             -- No     | No
+    require 'musica.channel',          -- No     | No
+    require 'musica.chord',            -- Yes    | No
+    require 'musica.contour',          -- No     | No
+    require 'musica.direction',        -- No     | No
+    require 'musica.drums',             -- No     | No
+    require 'musica.dynamics',         -- No     | No
+    require 'musica.figure',           -- Yes    | No
+    require 'musica.instrument',       -- No     | No
+    require 'musica.interval_quality', -- No     | No
+    require 'musica.lilypond',         -- No     | No
+    require 'musica.melodic',           -- No     | No
+    require 'musica.meter',            -- No     | No
+    require 'musica.mode',             -- Yes    | No
+    require 'musica.modes',            -- No     | No
+    require 'musica.note',             -- Yes    | No
+    require 'musica.pattern',          -- No     | No
+    require 'musica.pitch',            -- Yes    | No
+    require 'musica.pitch_class',      -- No     | No
+    require 'musica.pitch_interval',   -- Yes    | No
+    require 'musica.quality',          -- Yes    | No
+    require 'musica.rhythm',           -- No     | No
+    require 'musica.ring',             -- No     | No
+    require 'musica.scale',            -- Yes    | No
+    require 'musica.stamper',          -- No     | No
+    require 'musica.scale_degree',     -- No     | No
+    require 'musica.scale_index',      -- No     | No
+    require 'musica.song',             -- No     | No
+    require 'musica.spiral',           -- No     | No
+    require 'musica.tempo',            -- No     | No
+    require 'musica.util',             -- No     | No
+    -- NOTE: `musica.generation` is intentionally NOT loaded here. It depends
+    -- on the native z3 binding (lua-z3), which is optional and ABI-bound to
+    -- the host Lua. Keeping it out of the core means `require 'musica'` works
+    -- everywhere, with or without z3. Use `require 'musica.generation'`
+    -- explicitly when you want the constraint generator.
+  }
+end)

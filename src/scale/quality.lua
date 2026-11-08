@@ -1,6 +1,7 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local pitch = require 'musica.pitch'
 local pitch_interval = require 'musica.pitch_interval'
 local util = require 'musica.util'
@@ -91,9 +92,9 @@ Quality = llx.class 'Quality' {
 
   __tostring = function(self)
     if self.name then
-      return string.format("Quality.%s", self.name)
+      return compat.format("Quality.%s", self.name)
     end
-    return string.format("Quality{pitch_intervals=%s}", self.pitch_intervals)
+    return compat.format("Quality{pitch_intervals=%s}", self.pitch_intervals)
   end;
 }
 

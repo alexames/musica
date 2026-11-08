@@ -19,6 +19,7 @@
 -- @module musica.contour.contour
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local analysis = require 'musica.contour.analysis'
 local stamper = require 'musica.stamper'
 
@@ -145,7 +146,7 @@ Contour = class 'Contour' {
   end,
 
   __tostring = function(self)
-    return string.format('Contour<%s>', self.name)
+    return compat.format('Contour<%s>', self.name)
   end,
 }
 

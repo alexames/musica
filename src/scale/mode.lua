@@ -1,6 +1,7 @@
 -- Copyright 2024 Alexander Ames <Alexander.Ames@gmail.com>
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local pitch = require 'musica.pitch'
 local pitch_interval= require 'musica.pitch_interval'
 local spiral = require 'musica.spiral'
@@ -9,6 +10,7 @@ local util = require 'musica.util'
 local _ENV, _M = llx.environment.create_module_environment()
 
 local class = llx.class
+local List = llx.List
 local Pitch = pitch.Pitch
 local PitchInterval = pitch_interval.PitchInterval
 local Spiral = spiral.Spiral
@@ -28,7 +30,7 @@ Mode = class 'Mode' {
 
   relative = function(self, mode)
     for i=1, #self.semitone_intervals do
-      local relative_intervals = self.semitone_intervals << i
+      local relative_intervals = List.__shl(self.semitone_intervals, i)
       if relative_intervals == mode.semitone_intervals then
         return i
       end
@@ -37,15 +39,31 @@ Mode = class 'Mode' {
   end,
 
   octave_interval = function(self)
-    return self[#self]
+    return self[compat.len(self)]
+  end,
+
+  --- The mode that starts n degrees later: `Mode.major:rotate_left(5)` is
+  -- `Mode.minor`. Also spelled `mode << n` on Lua 5.3 and later.
+  -- @param n The number of degrees; a negative n rotates right.
+  -- @return A new Mode.
+  rotate_left = function(self, n)
+    return Mode(List.__shl(self.semitone_intervals, n))
+  end,
+
+  --- The mode that starts n degrees earlier: `Mode.major:rotate_right(2)`
+  -- is `Mode.minor`. Also spelled `mode >> n` on Lua 5.3 and later.
+  -- @param n The number of degrees; a negative n rotates left.
+  -- @return A new Mode.
+  rotate_right = function(self, n)
+    return Mode(List.__shr(self.semitone_intervals, n))
   end,
 
   __shr = function(self, n)
-    return Mode(self.semitone_intervals >> n)
+    return self:rotate_right(n)
   end,
 
   __shl = function(self, n)
-    return Mode(self.semitone_intervals << n)
+    return self:rotate_left(n)
   end,
 
   __eq = function(self, other)
@@ -61,7 +79,7 @@ Mode = class 'Mode' {
     end),
 
   __tostring = function(self)
-    return string.format('Mode(%s)',
+    return compat.format('Mode(%s)',
                          self.semitone_intervals)
   end,
 }

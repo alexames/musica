@@ -1,3 +1,4 @@
+local compat = require 'llx.compat'
 local unit = require 'llx.unit'
 local llx = require 'llx'
 local chord_module = require 'musica.chord'
@@ -204,7 +205,7 @@ describe('ChordTest', function()
 
   it('should return length of 3 for major chord', function()
     local c_major = Chord{root=Pitch.c4, quality=Quality.major}
-    expect(#c_major).to.be_equal_to(3)
+    expect(compat.len(c_major)).to.be_equal_to(3)
   end)
 
   it('should return root for index 0', function()

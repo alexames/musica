@@ -5,6 +5,7 @@
 
 local z3 = require 'z3'
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local rule_module = require 'musica.generation.rule'
 
 local _ENV, _M = llx.environment.create_module_environment()
@@ -39,7 +40,7 @@ InScaleRule = class 'InScaleRule' : extends(Rule) {
   validate = function(self, figure)
     for i, note in ipairs(figure.notes) do
       if not self.scale:contains(note.pitch) then
-        return false, string.format('Note %d (%s) not in scale %s',
+        return false, compat.format('Note %d (%s) not in scale %s',
           i, note.pitch, self.scale)
       end
     end
@@ -79,18 +80,18 @@ InScaleRule = class 'InScaleRule' : extends(Rule) {
       end
 
       if #valid_options > 0 then
-        constraints:insert(z3.Or(table.unpack(valid_options)))
+        constraints:insert(z3.Or(compat.unpack(valid_options)))
       end
     end
 
     if #constraints == 0 then
       return nil
     end
-    return z3.And(table.unpack(constraints))
+    return z3.And(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
-    return string.format('InScaleRule{scale=%s}', self.scale)
+    return compat.format('InScaleRule{scale=%s}', self.scale)
   end,
 }
 

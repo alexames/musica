@@ -4,6 +4,7 @@
 -- @module musica.generation.rules.duration
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local z3 = require 'z3'
 local rule_module = require 'musica.generation.rule'
 
@@ -37,11 +38,11 @@ DurationRangeRule = class 'DurationRangeRule' : extends(Rule) {
   validate = function(self, figure)
     for i, note in ipairs(figure.notes) do
       if note.duration < self.min_duration then
-        return false, string.format('Note %d duration %.3f below minimum %.3f',
+        return false, compat.format('Note %d duration %.3f below minimum %.3f',
           i, note.duration, self.min_duration)
       end
       if note.duration > self.max_duration then
-        return false, string.format('Note %d duration %.3f above maximum %.3f',
+        return false, compat.format('Note %d duration %.3f above maximum %.3f',
           i, note.duration, self.max_duration)
       end
     end
@@ -65,11 +66,11 @@ DurationRangeRule = class 'DurationRangeRule' : extends(Rule) {
     if #constraints == 0 then
       return nil
     end
-    return z3.And(table.unpack(constraints))
+    return z3.And(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
-    return string.format('DurationRangeRule{min=%.3f, max=%.3f}',
+    return compat.format('DurationRangeRule{min=%.3f, max=%.3f}',
       self.min_duration, self.max_duration)
   end,
 }
@@ -106,16 +107,16 @@ TotalDurationRule = class 'TotalDurationRule' : extends(Rule) {
     if self.exact_total then
       -- Allow small floating point tolerance
       if math.abs(total - self.exact_total) > 0.001 then
-        return false, string.format('Total duration %.3f != exact %.3f',
+        return false, compat.format('Total duration %.3f != exact %.3f',
           total, self.exact_total)
       end
     else
       if self.min_total and total < self.min_total then
-        return false, string.format('Total duration %.3f below minimum %.3f',
+        return false, compat.format('Total duration %.3f below minimum %.3f',
           total, self.min_total)
       end
       if self.max_total and total > self.max_total then
-        return false, string.format('Total duration %.3f above maximum %.3f',
+        return false, compat.format('Total duration %.3f above maximum %.3f',
           total, self.max_total)
       end
     end
@@ -159,14 +160,14 @@ TotalDurationRule = class 'TotalDurationRule' : extends(Rule) {
     elseif #constraints == 1 then
       return constraints[1]
     end
-    return z3.And(table.unpack(constraints))
+    return z3.And(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
     if self.exact_total then
-      return string.format('TotalDurationRule{exact=%.3f}', self.exact_total)
+      return compat.format('TotalDurationRule{exact=%.3f}', self.exact_total)
     else
-      return string.format('TotalDurationRule{min=%s, max=%s}',
+      return compat.format('TotalDurationRule{min=%s, max=%s}',
         self.min_total or 'nil', self.max_total or 'nil')
     end
   end,
@@ -194,13 +195,13 @@ FixedDurationRule = class 'FixedDurationRule' : extends(Rule) {
   -- @treturn string|nil error message if validation fails
   validate = function(self, figure)
     if self.index > #figure.notes then
-      return false, string.format(
+      return false, compat.format(
         'Note index %d out of range (figure has %d notes)',
         self.index, #figure.notes)
     end
     local note = figure.notes[self.index]
     if math.abs(note.duration - self.duration) > 0.001 then
-      return false, string.format('Note %d duration %.3f != required %.3f',
+      return false, compat.format('Note %d duration %.3f != required %.3f',
         self.index, note.duration, self.duration)
     end
     return true
@@ -220,7 +221,7 @@ FixedDurationRule = class 'FixedDurationRule' : extends(Rule) {
   end,
 
   __tostring = function(self)
-    return string.format('FixedDurationRule{index=%d, duration=%.3f}',
+    return compat.format('FixedDurationRule{index=%d, duration=%.3f}',
       self.index, self.duration)
   end,
 }

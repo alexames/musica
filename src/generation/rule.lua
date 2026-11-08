@@ -6,6 +6,7 @@
 -- @module musica.generation.rule
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -48,7 +49,7 @@ Rule = class 'Rule' {
   end,
 
   __tostring = function(self)
-    return string.format('Rule<%s>', self.name)
+    return compat.format('Rule<%s>', self.name)
   end,
 }
 

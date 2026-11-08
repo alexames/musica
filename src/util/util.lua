@@ -5,6 +5,7 @@
 -- @module musica.util
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -66,7 +67,7 @@ end
 -- @param interval The interval to add for each wrap
 -- @return The extended index value
 function extended_index(index, indices, interval)
-  local extension_index = index // #indices
+  local extension_index = compat.floordiv(index, #indices)
   local extension_offset = interval * extension_index
   return indices[index % #indices + 1] + extension_offset
 end

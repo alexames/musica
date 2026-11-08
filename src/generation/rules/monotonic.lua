@@ -5,6 +5,7 @@
 
 local z3 = require 'z3'
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local rule_module = require 'musica.generation.rule'
 local direction_module = require 'musica.direction'
 
@@ -46,13 +47,13 @@ MonotonicPitchRule = class 'MonotonicPitchRule' : extends(Rule) {
 
       if self.direction == Direction.up then
         if self.strict and curr <= prev then
-          return false, string.format(
+          return false, compat.format(
             'Note %d (%s) not strictly ascending'
               .. ' from note %d (%s)',
             i, figure.notes[i].pitch,
             i-1, figure.notes[i-1].pitch)
         elseif not self.strict and curr < prev then
-          return false, string.format(
+          return false, compat.format(
             'Note %d (%s) not ascending'
               .. ' from note %d (%s)',
             i, figure.notes[i].pitch,
@@ -60,13 +61,13 @@ MonotonicPitchRule = class 'MonotonicPitchRule' : extends(Rule) {
         end
       else
         if self.strict and curr >= prev then
-          return false, string.format(
+          return false, compat.format(
             'Note %d (%s) not strictly descending'
               .. ' from note %d (%s)',
             i, figure.notes[i].pitch,
             i-1, figure.notes[i-1].pitch)
         elseif not self.strict and curr > prev then
-          return false, string.format(
+          return false, compat.format(
             'Note %d (%s) not descending'
               .. ' from note %d (%s)',
             i, figure.notes[i].pitch,
@@ -107,13 +108,13 @@ MonotonicPitchRule = class 'MonotonicPitchRule' : extends(Rule) {
     if #constraints == 0 then
       return nil
     end
-    return z3.And(table.unpack(constraints))
+    return z3.And(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
     local dir = self.direction == Direction.up and 'ascending' or 'descending'
     local strictness = self.strict and 'strict' or 'non-strict'
-    return string.format('MonotonicPitchRule{%s, %s}', dir, strictness)
+    return compat.format('MonotonicPitchRule{%s, %s}', dir, strictness)
   end,
 }
 

@@ -4,6 +4,7 @@
 -- @module musica.generation.rules.range
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local z3 = require 'z3'
 local rule_module = require 'musica.generation.rule'
 
@@ -39,11 +40,11 @@ PitchRangeRule = class 'PitchRangeRule' : extends(Rule) {
     for i, note in ipairs(figure.notes) do
       local pitch_val = tointeger(note.pitch)
       if pitch_val < self.min_pitch then
-        return false, string.format('Note %d (%s, MIDI %d) below minimum %d',
+        return false, compat.format('Note %d (%s, MIDI %d) below minimum %d',
           i, note.pitch, pitch_val, self.min_pitch)
       end
       if pitch_val > self.max_pitch then
-        return false, string.format('Note %d (%s, MIDI %d) above maximum %d',
+        return false, compat.format('Note %d (%s, MIDI %d) above maximum %d',
           i, note.pitch, pitch_val, self.max_pitch)
       end
     end
@@ -66,11 +67,11 @@ PitchRangeRule = class 'PitchRangeRule' : extends(Rule) {
     if #constraints == 0 then
       return nil
     end
-    return z3.And(table.unpack(constraints))
+    return z3.And(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
-    return string.format('PitchRangeRule{min=%d, max=%d}',
+    return compat.format('PitchRangeRule{min=%d, max=%d}',
       self.min_pitch, self.max_pitch)
   end,
 }

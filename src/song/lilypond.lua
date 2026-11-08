@@ -6,6 +6,7 @@
 
 local accidental = require 'musica.accidental'
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local pitch_class = require 'musica.pitch_class'
 
 local _ENV, _M = llx.environment.create_module_environment()
@@ -186,25 +187,25 @@ header_to_lilypond = function(song)
   local lines = {'\\header {'}
 
   if song.title then
-    table.insert(lines, string.format('  title = "%s"', song.title))
+    table.insert(lines, compat.format('  title = "%s"', song.title))
   end
   if song.subtitle then
-    table.insert(lines, string.format('  subtitle = "%s"', song.subtitle))
+    table.insert(lines, compat.format('  subtitle = "%s"', song.subtitle))
   end
   if song.composer then
-    table.insert(lines, string.format('  composer = "%s"', song.composer))
+    table.insert(lines, compat.format('  composer = "%s"', song.composer))
   end
   if song.arranger then
-    table.insert(lines, string.format('  arranger = "Arr. %s"', song.arranger))
+    table.insert(lines, compat.format('  arranger = "Arr. %s"', song.arranger))
   end
   if song.opus then
-    table.insert(lines, string.format('  opus = "%s"', song.opus))
+    table.insert(lines, compat.format('  opus = "%s"', song.opus))
   end
   if song.dedication then
-    table.insert(lines, string.format('  dedication = "%s"', song.dedication))
+    table.insert(lines, compat.format('  dedication = "%s"', song.dedication))
   end
   if song.copyright then
-    table.insert(lines, string.format('  copyright = "%s"', song.copyright))
+    table.insert(lines, compat.format('  copyright = "%s"', song.copyright))
   end
 
   table.insert(lines, '}')
@@ -221,7 +222,7 @@ meter_to_lilypond = function(meter)
   -- Count pulses and determine time signature
   local num_pulses = #meter.pulseSequence
   -- Default to quarter note denominator
-  return string.format('\\time %d/4', num_pulses)
+  return compat.format('\\time %d/4', num_pulses)
 end
 
 --- Convert tempo to LilyPond tempo marking.
@@ -234,9 +235,9 @@ tempo_to_lilypond = function(tempo)
   if tempo.marking then
     -- Use Italian tempo marking with BPM
     local marking_capitalized = tempo.marking:gsub('^%l', string.upper)
-    return string.format('\\tempo "%s" 4 = %d', marking_capitalized, tempo.bpm)
+    return compat.format('\\tempo "%s" 4 = %d', marking_capitalized, tempo.bpm)
   else
-    return string.format('\\tempo 4 = %d', tempo.bpm)
+    return compat.format('\\tempo 4 = %d', tempo.bpm)
   end
 end
 
@@ -253,7 +254,7 @@ key_to_lilypond = function(key)
     local tonic_str =
       pitch_to_lilypond(key.tonic):gsub("[',]", "")
     local mode_str = key.mode.name or 'major'
-    return string.format('\\key %s \\%s', tonic_str, mode_str:lower())
+    return compat.format('\\key %s \\%s', tonic_str, mode_str:lower())
   end
   return '\\key c \\major'
 end
@@ -272,7 +273,7 @@ clef_to_lilypond = function(clef)
     ['bass_8'] = 'bass_8',
   }
   if clef and valid_clefs[clef] then
-    return string.format('\\clef %s', valid_clefs[clef])
+    return compat.format('\\clef %s', valid_clefs[clef])
   end
   return '\\clef treble'
 end
@@ -440,8 +441,8 @@ part_to_lilypond = function(channel, song, part_id)
 
   -- Staff definition
   table.insert(lines, 'part' .. safe_id .. 'Staff = \\new Staff \\with {')
-  table.insert(lines, string.format('  instrumentName = "%s"', part_name))
-  table.insert(lines, string.format('  shortInstrumentName = "%s"', short_name))
+  table.insert(lines, compat.format('  instrumentName = "%s"', part_name))
+  table.insert(lines, compat.format('  shortInstrumentName = "%s"', short_name))
   table.insert(lines, '} { \\' .. var_name .. ' }')
 
   return table.concat(lines, '\n')

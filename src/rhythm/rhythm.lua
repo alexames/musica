@@ -5,6 +5,7 @@
 -- @module musica.rhythm
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -101,7 +102,7 @@ Rhythm = class 'Rhythm' {
     for i, duration in ipairs(self.durations) do
       table.insert(duration_strs, tostring(duration))
     end
-    return string.format('Rhythm{%s}', table.concat(duration_strs, ', '))
+    return compat.format('Rhythm{%s}', table.concat(duration_strs, ', '))
   end,
 }
 

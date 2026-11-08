@@ -5,6 +5,7 @@
 -- @module musica.time_signature
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 
 local _ENV, _M = llx.environment.create_module_environment()
 
@@ -36,7 +37,7 @@ TimeSignature = class 'TimeSignature' {
 
   --- Check if a number is a power of 2
   _is_power_of_two = function(self, n)
-    return n > 0 and (n & (n - 1)) == 0
+    return n > 0 and compat.band(n, n - 1) == 0
   end,
 
   --- Check if this is simple meter (beats divide into 2)
@@ -96,7 +97,7 @@ TimeSignature = class 'TimeSignature' {
   describe = function(self)
     local meter_class = self:is_simple() and 'Simple' or 'Compound'
     local meter_type = self:get_meter_type()
-    return string.format('%s %s (%d/%d)',
+    return compat.format('%s %s (%d/%d)',
                         meter_class,
                         meter_type:gsub('^%l', string.upper),
                         self.numerator,
@@ -104,7 +105,7 @@ TimeSignature = class 'TimeSignature' {
   end,
 
   __tostring = function(self)
-    return string.format('%d/%d', self.numerator, self.denominator)
+    return compat.format('%d/%d', self.numerator, self.denominator)
   end,
 
   __eq = function(self, other)

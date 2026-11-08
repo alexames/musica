@@ -2,6 +2,7 @@
 
 local figure = require 'musica.figure'
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local note = require 'musica.note'
 local tostringf_module = require 'llx.tostringf'
 
@@ -44,7 +45,7 @@ FigureInstance = class 'FigureInstance' {
   end,
 
   __tostring = function(self)
-    return string.format('FigureInstance(%s, %s)', self.time, self.figure)
+    return compat.format('FigureInstance(%s, %s)', self.time, self.figure)
   end,
 }
 

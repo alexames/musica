@@ -6,6 +6,7 @@
 -- @module musica.generation.rules.overshoot
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local z3 = require 'z3'
 local rule_module = require 'musica.generation.rule'
 
@@ -55,13 +56,13 @@ OvershootRule = class 'OvershootRule' : extends(Rule) {
 
     -- Check first note
     if tointeger(notes[1].pitch) ~= source then
-      return false, string.format('First note is %s, expected %s',
+      return false, compat.format('First note is %s, expected %s',
         notes[1].pitch, self.source_pitch)
     end
 
     -- Check last note
     if tointeger(notes[#notes].pitch) ~= target then
-      return false, string.format('Last note is %s, expected %s',
+      return false, compat.format('Last note is %s, expected %s',
         notes[#notes].pitch, self.target_pitch)
     end
 
@@ -77,7 +78,7 @@ OvershootRule = class 'OvershootRule' : extends(Rule) {
 
     -- Peak must exceed target by overshoot_amount
     if peak_val < min_peak then
-      return false, string.format(
+      return false, compat.format(
         'Peak (%d) does not overshoot target'
           .. ' (%d) by %d semitones',
         peak_val, target, self.overshoot_amount)
@@ -90,7 +91,7 @@ OvershootRule = class 'OvershootRule' : extends(Rule) {
 
     -- If peak_position is specified, check it matches
     if self.peak_position and peak_idx ~= self.peak_position then
-      return false, string.format('Peak at position %d, expected %d',
+      return false, compat.format('Peak at position %d, expected %d',
         peak_idx, self.peak_position)
     end
 
@@ -138,7 +139,7 @@ OvershootRule = class 'OvershootRule' : extends(Rule) {
         constraints:insert(pitch_vars[i]:le(pitch_vars[i-1]))
       end
 
-      return z3.And(table.unpack(constraints))
+      return z3.And(compat.unpack(constraints))
     else
       -- Peak position is variable - use disjunction over possible positions
       local peak_options = List{}
@@ -166,16 +167,16 @@ OvershootRule = class 'OvershootRule' : extends(Rule) {
           peak_constraints:insert(pitch_vars[i]:le(pitch_vars[i-1]))
         end
 
-        peak_options:insert(z3.And(table.unpack(peak_constraints)))
+        peak_options:insert(z3.And(compat.unpack(peak_constraints)))
       end
 
-      constraints:insert(z3.Or(table.unpack(peak_options)))
-      return z3.And(table.unpack(constraints))
+      constraints:insert(z3.Or(compat.unpack(peak_options)))
+      return z3.And(compat.unpack(constraints))
     end
   end,
 
   __tostring = function(self)
-    return string.format('OvershootRule{source=%s, target=%s, overshoot=%d}',
+    return compat.format('OvershootRule{source=%s, target=%s, overshoot=%d}',
       self.source_pitch, self.target_pitch, self.overshoot_amount)
   end,
 }

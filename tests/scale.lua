@@ -1,3 +1,4 @@
+local compat = require 'llx.compat'
 local unit = require 'llx.unit'
 local llx = require 'llx'
 local direction_module = require 'musica.direction'
@@ -177,7 +178,7 @@ describe('ScaleTest', function()
 
   it('should return length of 7 for major scale', function()
     scale = Scale{tonic=Pitch.c4, mode=Mode.major}
-    expect(#scale).to.be_equal_to(7)
+    expect(compat.len(scale)).to.be_equal_to(7)
   end)
 
   it('should return b3 for index -8', function()

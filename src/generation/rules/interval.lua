@@ -4,6 +4,7 @@
 -- @module musica.generation.rules.interval
 
 local llx = require 'llx'
+local compat = require 'llx.compat'
 local z3 = require 'z3'
 local rule_module = require 'musica.generation.rule'
 
@@ -39,7 +40,7 @@ MaxIntervalRule = class 'MaxIntervalRule' : extends(Rule) {
       local curr = tointeger(figure.notes[i].pitch)
       local interval = math.abs(curr - prev)
       if interval > self.max_semitones then
-        return false, string.format(
+        return false, compat.format(
           'Interval of %d semitones between notes'
             .. ' %d and %d exceeds maximum %d',
           interval, i-1, i, self.max_semitones)
@@ -72,11 +73,11 @@ MaxIntervalRule = class 'MaxIntervalRule' : extends(Rule) {
     if #constraints == 0 then
       return nil
     end
-    return z3.And(table.unpack(constraints))
+    return z3.And(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
-    return string.format(
+    return compat.format(
       'MaxIntervalRule{max_semitones=%d}', self.max_semitones)
   end,
 }
@@ -107,7 +108,7 @@ ConjunctMotionRule = class 'ConjunctMotionRule' : extends(Rule) {
       local curr = tointeger(figure.notes[i].pitch)
       local interval = math.abs(curr - prev)
       if interval > self.max_step then
-        return false, string.format(
+        return false, compat.format(
           'Leap of %d semitones between notes'
             .. ' %d and %d (max step: %d)',
           interval, i-1, i, self.max_step)
@@ -138,11 +139,11 @@ ConjunctMotionRule = class 'ConjunctMotionRule' : extends(Rule) {
     if #constraints == 0 then
       return nil
     end
-    return z3.And(table.unpack(constraints))
+    return z3.And(compat.unpack(constraints))
   end,
 
   __tostring = function(self)
-    return string.format('ConjunctMotionRule{max_step=%d}', self.max_step)
+    return compat.format('ConjunctMotionRule{max_step=%d}', self.max_step)
   end,
 }
 

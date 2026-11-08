@@ -1,3 +1,4 @@
+local compat = require 'llx.compat'
 local unit = require 'llx.unit'
 local llx = require 'llx'
 local quality_module = require 'musica.quality'
@@ -44,7 +45,7 @@ describe('QualityTest', function()
   end)
 
   it('should return length of 3 for major quality', function()
-    expect(#Quality.major).to.be_equal_to(3)
+    expect(compat.len(Quality.major)).to.be_equal_to(3)
   end)
 
   it('should evaluate repr of major quality correctly', function()

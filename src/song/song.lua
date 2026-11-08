@@ -26,7 +26,7 @@ local tointeger = llx.tointeger
 local tostringf = tostringf_module.tostringf
 local styles = tostringf_module.styles
 
-local MIDI_VOLUME_MAX <const> = 127.0
+local MIDI_VOLUME_MAX = 127.0
 
 -- Should we annotate which section you're in?
 --   * Introduction https://en.wikipedia.org/wiki/Introduction_(music)
